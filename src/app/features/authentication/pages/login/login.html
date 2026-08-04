@@ -1,0 +1,35 @@
+<section class="login-page">
+    <h1>Log in</h1>
+    <p>Enter your details to access your account.</p>
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-field">
+            <label for="email">Email address <span>*</span></label>                
+            <input #emailInput="ngModel" id="email" type="email" name="email" placeholder="Enter your email" [(ngModel)]="email" required>
+            @if (emailInput.invalid && (emailInput.touched || emailInput.dirty)) {
+                @if (emailInput.hasError('required')) {
+                    <p class="error-message">Email address is required</p>
+                }
+                @if (emailInput.hasError('email')) {
+                    <p class="error-message">Enter a valid email address</p>
+                }
+            }
+        </div>
+        <div class="form-field">
+            <label for="password">Password <span>*</span></label>
+            <input #passwordInput="ngModel" type="password" id="password" name="password" placeholder="Enter your password" [(ngModel)]="password" required minlength="8">
+            @if (passwordInput.invalid && (passwordInput.touched || passwordInput.dirty)) {
+                @if (passwordInput.hasError('required')) {
+                    <p class="error-message">Password is required</p>
+                }
+                @if (passwordInput.hasError('minlength')) {
+                    <p class="error-message">Password must contain a minimum of 8 characters</p>
+                }
+            }
+        </div>
+        <button type="submit" [disabled]="loginForm.invalid">Log in</button>
+        @if (loginMessage) {
+            <p [class.success-message]="loginSuccessful" [class.error-message]="!loginSuccessful">{{ loginMessage }}</p>
+        }
+    </form>
+</section>

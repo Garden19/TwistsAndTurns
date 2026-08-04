@@ -7,6 +7,14 @@ nav {
     color: #fff;
 }
 
+.headingText {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+}
+
 span {
     color: #ff0000;
 }
@@ -19,27 +27,45 @@ h1, p {
 h1 {
     font-size: 1.5rem;
     padding-bottom: 0px;
+    width: 100%;
+    color: white;
 }
 
 p {
     font-size: 1rem;
     padding-top: 0px;
+    width: 100%;
 }
 
-button {
-    box-sizing: border-box;
-    background-color: #ff0000;
-    color: #fff;
-    border: none;
-    width: 100px;
-    font-size: clamp(0.7rem, 2vw, 1rem);
-    padding: 10px 15px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    white-space: nowrap;
+button{
+  box-sizing:border-box;
+  background-color:#ff0000;
+  color:#fff;
+  border:none;
+  width:100px;
+  font-size:clamp(.7rem,2vw,1rem);
+  padding:10px 15px;
+  margin:5px;
+  cursor:pointer;
+  border-radius:5px;
+  white-space:nowrap;
+  transition:background .2s ease, transform .12s ease, border-color .2s ease;
+  border-bottom:2px solid transparent;
+  background-image: linear-gradient(#d99a5a, #d99a5a);
+background-size: 0% 0.1em;
+background-position-y: 100%;
+background-position-x: 50%;
+background-repeat: no-repeat;
+transition: background-size 0.2s ease-in-out;
     &:hover {
-        background-color: #e90000;
+        background-color:#e90000;
+    }
+}
+
+.sign-in-buttons {
+    background-color: #e90000b9;
+    &:hover{
+        background-color: #c40000b9;
     }
 }
 
@@ -54,6 +80,7 @@ button {
         text-align: center;
         margin-bottom: 5px;
         width: 100%;
+        align-items: center;
     }
 
     button {
@@ -84,9 +111,13 @@ button {
 }
 
 @media (min-width: 768px) {
-    .headingText h1 { font-size: 3rem; }
-    .headingText p { font-size: 1.2rem; }
-    .headingText { text-align: left; }
+    .headingText {
+        text-align: left;
+        align-items: flex-start;
+        width: auto;
+    }
+    .headingText h1 { font-size: 3rem; width: auto; }
+    .headingText p { font-size: 1.2rem; width: auto; }
     nav { justify-content: space-between; padding: 14px 22px; flex-direction: row; }
     button { font-size: 1.2rem; width: 130px; padding: 12px 18px; border-radius: 6px; }
 }

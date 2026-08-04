@@ -1,0 +1,22 @@
+section {
+    padding: 5px;
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+p {
+    font-size: 1rem;
+}
+
+.success-message{
+  color: green;
+}
+
+@media (max-width:599px){
+  label, input[type="email"], input[type="password"]{
+    display:block;
+    margin-right:0;
+  }
+}

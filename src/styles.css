@@ -1,108 +1,199 @@
-/* You can add global styles to this file, and also import other style files */
-:root{
-  --bg:#f7f9fa;
-  --nav-bg:#333;
-  --accent:#ff3b30;
-  --text:#fff;
-  --muted:#cbd5e1;
-  --radius:6px;
-  --gap:12px;
-  --container:1200px;
+:root {
+  --colour-off-white: #f7f6f2;
+  --colour-white: #ffffff;
+  --colour-text: #222222;
+  --colour-text-muted: #667085;
+  --colour-primary: #ff3b30;
+  --colour-primary-hover: #df2f26;
+  --colour-border: #d8dde5;
+  --colour-border-focus: #ff3b30;
+  --colour-error: #d92d20;
+  --border-radius: 8px;
+  --content-width: 1200px;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:#0f172a}
-.container{max-width:var(--container);margin:0 auto;padding:0 16px}
-
-nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 20px;
-  background-color:var(--nav-bg);
-  color:var(--text);
-  gap:var(--gap);
-  border-radius:var(--radius);
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-.headingText{display:flex;flex-direction:column;padding:5px;margin:0}
-.headingText h1{font-size:clamp(1.25rem,2.5vw,1.5rem);margin:0;padding-bottom:0}
-.headingText p{font-size:clamp(.9rem,1.6vw,1rem);margin:0;padding-top:0;color:var(--muted)}
-
-span{color:var(--accent)}
-.actions{display:flex;gap:8px;align-items:center}
-
-button{
-  box-sizing:border-box;
-  background-color:var(--accent);
-  color:var(--text);
-  border:none;
-  width:100px;
-  font-size:clamp(.7rem,2vw,1rem);
-  padding:10px 15px;
-  margin:5px;
-  cursor:pointer;
-  border-radius:5px;
-  white-space:nowrap;
+html {
+  scroll-behavior: smooth;
 }
 
-button:hover{background-color:#e90000}
-a[routerLink]{color:inherit;text-decoration:none;padding:8px 10px;border-radius:6px;display:inline-block}
-a[routerLink].router-link-active,a[routerLink].active{background:rgba(255,59,48,0.12);color:var(--accent);font-weight:600}
-
-@media (min-width:320px){
-  nav{flex-wrap:wrap;justify-content:center;padding:10px 14px}
-  .headingText{text-align:center;width:100%}
-  .actions{width:100%;justify-content:center}
-  a[routerLink]{width:auto}
+body {
+  margin: 0;
+  background-color: var(--colour-off-white);
+  color: var(--colour-text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.6;
 }
 
-@media (min-width:375px){
-  .headingText h1{font-size:clamp(1.35rem,2.4vw,1.75rem)}
+button,
+input {
+  font: inherit;
 }
 
-@media (min-width:390px){
-  button{padding:10px 16px}
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
-@media (min-width:414px){
-  nav{padding:12px 18px}
-  .headingText{width:auto;text-align:left}
-  button{font-size:clamp(.8rem,1.6vw,1.05rem)}
+h1,
+h2,
+h3 {
+  margin-top: 0;
+  color: var(--colour-text);
+  line-height: 1.2;
+  text-wrap: balance;
 }
 
-@media (min-width:428px){
-  button{width:110px}
+h1 {
+  margin-bottom: 1rem;
+  font-size: clamp(2rem, 5vw, 3.75rem);
 }
 
-@media (min-width:768px){
-  nav{justify-content:space-between;padding:14px 22px;flex-wrap:nowrap}
-  .headingText{flex-direction:row;align-items:center;gap:12px;text-align:left}
-  .headingText h1{font-size:clamp(1.5rem,2.2vw,2.25rem)}
-  .headingText p{font-size:1.05rem}
-  button{font-size:1rem;width:130px;padding:12px 18px;border-radius:6px}
+h2 {
+  margin-bottom: 0.875rem;
+  font-size: clamp(1.6rem, 4vw, 2.75rem);
 }
 
-@media (min-width:1024px){
-  .container{padding:0 20px}
-  .headingText h1{font-size:clamp(1.75rem,1.8vw,2.5rem)}
-  button{width:140px}
+h3 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
 }
 
-@media (min-width:1280px){
-  nav{padding:16px 28px}
-  .headingText h1{font-size:clamp(2rem,1.6vw,3rem)}
-  button{width:150px}
+p {
+  max-width: 70ch;
+  margin-top: 0;
+  color: var(--colour-text-muted);
+  font-size: clamp(1rem, 2vw, 1.1rem);
 }
 
-@media (min-width:1366px){
-  nav{gap:18px}
-  button{padding:12px 20px}
+section {
+  width: 100%;
+  padding-block: clamp(2rem, 6vw, 5rem);
+  padding-inline: max(
+    1rem,
+    calc((100% - var(--content-width)) / 2)
+  );
+  &:nth-of-type(odd) {
+    background-color: var(--colour-off-white);
+  }
+  &:nth-of-type(even){
+    background-color: var(--colour-white);
+  }
 }
 
-@media (min-width:1440px){
-  .headingText h1{font-size:3rem}
-  .headingText p{font-size:1.2rem}
-  nav{padding:20px 36px}
-  button{width:160px;font-size:1.15rem}
+form {
+  display: grid;
+  width: min(100%, 34rem);
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+label {
+  display: inline-block;
+  color: var(--colour-text);
+  font-size: clamp(0.95rem, 2vw, 1rem);
+  font-weight: 600;
+}
+
+label span {
+  color: var(--colour-error);
+}
+
+input:not([type="checkbox"]):not([type="radio"]) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  background-color: var(--colour-white);
+  color: var(--colour-text);
+  border: 1px solid var(--colour-border);
+  border-radius: var(--border-radius);
+  outline: none;
+  font-size: 1rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input::placeholder {
+  color: #98a2b3;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus {
+  border-color: var(--colour-border-focus);
+  box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.15);
+}
+
+input.ng-invalid.ng-touched {
+  border-color: var(--colour-error);
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 7rem;
+  min-height: 44px;
+  padding: 0.7rem 1.25rem;
+  background-color: var(--colour-primary);
+  color: var(--colour-white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--colour-primary-hover);
+    transform: translateY(-2px);
+  }
+  &:active:not(disabled) {
+    transform: translateY(1px);
+  }
+  &:focus-visible {
+    outline: 3px solid rgba(255, 59, 48, 0.3);
+    outline-offset: 3px;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.error-message {
+  margin: 0;
+  color: var(--colour-error);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+@media (max-width: 480px) {
+  section button {
+    width: 100%;
+  }
+
+  form {
+    width: 100%;
+  }
 }

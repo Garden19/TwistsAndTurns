@@ -4,9 +4,13 @@
         <p>Prepare for the unexpected</p>
     </div>
     <div class="button-navigation">
-        @if (isLoggedIn === false) {
-            <button>Login</button>
-            <button>Sign up</button>
+        @if (isLoggedIn()) {
+            <button>Finance</button>
+            <button>Health</button>
+            <button class="sign-in-buttons" (click)="logOut()">Log out</button>
+        } @else {            
+            <button routerLink="/login">Log in</button>
+            <button class="sign-in-buttons">Sign up</button>
         }
     </div>
 </nav>
