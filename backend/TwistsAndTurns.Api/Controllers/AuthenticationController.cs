@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TwistsAndTurns.Api.Models;
 
@@ -7,17 +8,50 @@ namespace TwistsAndTurns.Api.Controllers;
 [Route("api/authentication")]
 public class AuthenticationController : ControllerBase
 {
-    [HttpPost("register")]
-    public IActionResult Register(RegisterRequest request)
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public AuthenticationController(
+        UserManager<ApplicationUser> userManager
+    )
     {
+        _userManager = userManager;
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(
+        RegisterRequest request
+    )
+    {
+        var user = new ApplicationUser
+        {
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Email = request.Email,
+            UserName = request.Email
+        };
+
+        var result = await _userManager.CreateAsync(
+            user,
+            request.Password
+        );
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(new
+            {
+                message = "Registration failed",
+                errors = result.Errors.Select(error => error.Description)
+            });
+        }
+
         return Ok(new
         {
-            message = $"Thank you for signing up {request.FirstName}!",
+            message = $"Thank you for signing up {user.FirstName}!",
             user = new
             {
-                request.FirstName,
-                request.LastName,
-                request.Email
+                user.FirstName,
+                user.LastName,
+                user.Email
             }
         });
     }
