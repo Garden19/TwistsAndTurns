@@ -55,4 +55,48 @@ public class AuthenticationController : ControllerBase
             }
         });
     }
+
+    [HttpPost("login")]
+public async Task<IActionResult> Login(
+    LoginRequest request
+)
+{
+    var user = await _userManager.FindByEmailAsync(
+        request.Email
+    );
+
+    if (user is null)
+    {
+        return Unauthorized(new
+        {
+            message = "Incorrect email or password"
+        });
+    }
+
+    var passwordIsCorrect =
+        await _userManager.CheckPasswordAsync(
+            user,
+            request.Password
+        );
+
+    if (!passwordIsCorrect)
+    {
+        return Unauthorized(new
+        {
+            message = "Incorrect email or password"
+        });
+    }
+
+    return Ok(new
+    {
+        message = "Login successful",
+        user = new
+        {
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.Email
+        }
+        });
+    }
 }
