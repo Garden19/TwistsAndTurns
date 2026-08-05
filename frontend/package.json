@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:e2e": "node --import tsx ./node_modules/@cucumber/cucumber/bin/cucumber-js testing/features/**/*.feature --import \"testing/**/*.ts\""
-},
+  },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
