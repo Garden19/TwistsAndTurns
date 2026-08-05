@@ -1,0 +1,67 @@
+<app-auth-form title="Sign up" description="Create your account">
+    <form #signupForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-field">
+            <label for="firstName">First Name <span>*</span></label>
+            <input type="text" #firstNameInput="ngModel" name="firstName" id="firstName" placeholder="Lou" [(ngModel)]="firstName" required>
+            @if (firstNameInput.hasError('required') && (firstNameInput.touched || firstNameInput.dirty)) {
+                <p class="error-message">First name is required</p>
+            }
+        </div>
+
+        <div class="form-field">
+            <label for="lastName">Last Name <span>*</span></label>
+            <input type="text" #lastNameInput="ngModel" name="lastName" id="lastName" placeholder="Allen" [(ngModel)]="lastName" required>
+            @if (lastNameInput.hasError('required') && (lastNameInput.touched || lastNameInput.dirty)) {
+                <p class="error-message">Last name is required</p>
+            }
+        </div>
+
+        <div class="form-field">
+            <label for="email">Email Address <span>*</span></label>
+            <input type="email" #emailInput="ngModel" name="email" id="email" placeholder="lou.allen@example.com" [(ngModel)]="email" required email>
+
+            @if (emailInput.invalid && (emailInput.touched || emailInput.dirty)) {
+                @if (emailInput.hasError('required')) {
+                    <p class="error-message">Email address is required</p>
+                }
+
+                @if (emailInput.hasError('email')) {
+                    <p class="error-message">Enter a valid email address</p>
+                }
+            }
+        </div>
+
+        <div class="form-field">
+            <label for="password">Password <span>*</span></label>
+            <input type="password" #passwordInput="ngModel" name="password" id="password" placeholder="Password" [(ngModel)]="password" required minlength="8">
+
+            @if (passwordInput.invalid && (passwordInput.touched || passwordInput.dirty)) {
+                @if (passwordInput.hasError('required')) {
+                    <p class="error-message">Password is required</p>
+                }
+
+                @if (passwordInput.hasError('minlength')) {
+                    <p class="error-message">Password must contain a minimum of 8 characters</p>
+                }
+            }
+        </div>
+
+        <div class="form-field">
+            <label for="confirmPassword">Confirm Password <span>*</span></label>
+            <input type="password" #confirmPasswordInput="ngModel" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" [(ngModel)]="confirmPassword" required>
+
+            @if (confirmPasswordInput.hasError('required') && (confirmPasswordInput.touched || confirmPasswordInput.dirty)) {
+                <p class="error-message">Confirm password is required</p>
+            }
+
+            @if ((confirmPasswordInput.touched || confirmPasswordInput.dirty) && confirmPassword.length > 0 && password !== confirmPassword) {
+                <p class="error-message">Passwords do not match</p>
+            }
+        </div>
+
+        <button type="submit" [disabled]="signupForm.invalid || password !== confirmPassword" >Create account</button>
+        @if (signUpMessage) {
+            <p class="success-message">{{ signUpMessage }}</p>
+        }
+    </form>
+</app-auth-form>
