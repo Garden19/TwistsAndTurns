@@ -11,4 +11,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     ) : base(options)
     {
     }
+
+    public DbSet<FinanceEntry> FinanceEntries { get; set; } = null!;
 }
