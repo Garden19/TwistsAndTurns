@@ -31,4 +31,41 @@ public class FinanceEntriesController : ControllerBase
             message = "Finance controller is working"
         });
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(
+        CreateFinanceEntryRequest request
+    )
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        var financeEntry = new FinanceEntry
+        {
+            Name = request.Name,
+            Amount = request.Amount,
+            EntryType = request.EntryType,
+            UserId = user.Id
+        };
+
+        _dbContext.FinanceEntries.Add(financeEntry);
+
+        await _dbContext.SaveChangesAsync();
+
+        var response = new FinanceEntryResponse {
+            Id = financeEntry.Id,
+            Name = financeEntry.Name,
+            Amount = financeEntry.Amount,
+            EntryType = financeEntry.EntryType,
+            CreatedAt = financeEntry.CreatedAt
+        };
+        return Ok(response);
+    }
 }
