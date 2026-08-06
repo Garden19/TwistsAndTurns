@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Authentication } from '../../services/authentication';
 import { AuthForm } from '../../components/auth-form/auth-form';
+import type { LoginRequest } from '../../models/login-request';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +19,20 @@ export class Login {
   constructor(private authentication: Authentication){}
 
   onSubmit(): void {
-    this.loginSuccessful = this.authentication.login(this.email, this.password);
-      if(this.loginSuccessful) {
-        this.loginMessage = 'Login successful';
-      } else {
+    const loginRequest: LoginRequest = {
+      email: this.email,
+      password: this.password,
+    };
+
+    this.authentication.login(loginRequest).subscribe({
+      next: (response) => {
+        this.loginSuccessful = true;
+        this.loginMessage = response.message;
+      },
+      error: () => {
+        this.loginSuccessful = false;
         this.loginMessage = 'Incorrect email or password';
-      }
+      },
+    });
   }
 }

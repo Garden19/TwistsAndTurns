@@ -3,14 +3,15 @@
         <h1>Twists<span>&</span>Turns</h1>
         <p>Prepare for the unexpected</p>
     </div>
+
     <div class="button-navigation">
         @if (isLoggedIn()) {
-            <button>Finance</button>
-            <button>Health</button>
-            <button class="sign-in-buttons" (click)="logOut()">Log out</button>
-        } @else {            
-            <button routerLink="/login" class="sign-in-buttons">Log in</button>
-            <button routerLink="/signup" class="sign-in-buttons">Sign up</button>
+            <button type="button" class="navigation-button">Finance</button>
+            <button type="button" class="navigation-button">Health</button>
+            <button type="button" class="navigation-button" (click)="logOut()">Log out</button>
+        } @else {
+            <button type="button" routerLink="/login" class="navigation-button">Log in</button>
+            <button type="button" routerLink="/signup" class="navigation-button">Sign up</button>
         }
     </div>
 </nav>

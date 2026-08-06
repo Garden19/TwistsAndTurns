@@ -16,6 +16,10 @@ export class Navbar {
   }
 
   logOut(): void {
-    this.authentication.logout();
+    this.authentication.logout().subscribe({
+      error: () => {
+        console.error('Logout failed');
+      },
+    });
   }
 }

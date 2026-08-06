@@ -37,36 +37,49 @@ p {
     width: 100%;
 }
 
-button{
-  box-sizing:border-box;
-  background-color:#ff0000;
-  color:#fff;
-  border:none;
-  width:100px;
-  font-size:clamp(.7rem,2vw,1rem);
-  padding:10px 15px;
-  margin:5px;
-  cursor:pointer;
-  border-radius:5px;
-  white-space:nowrap;
-  transition:background .2s ease, transform .12s ease, border-color .2s ease;
-  border-bottom:2px solid transparent;
-  background-image: linear-gradient(#d99a5a, #d99a5a);
-background-size: 0% 0.1em;
-background-position-y: 100%;
-background-position-x: 50%;
-background-repeat: no-repeat;
-transition: background-size 0.2s ease-in-out;
+button {
+    box-sizing: border-box;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    width: 100px;
+    font-size: clamp(.7rem, 2vw, 1rem);
+    padding: 10px 15px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 5px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    background-image: linear-gradient(#d99a5a, #d99a5a);
+    background-size: 0% 0.1em;
+    background-position-y: 100%;
+    background-position-x: 50%;
+    background-repeat: no-repeat;
+    transition:
+        background-color 0.2s ease,
+        transform 0.12s ease,
+        border-color 0.2s ease,
+        background-size 0.2s ease-in-out;
+
     &:hover {
-        background-color:#e90000;
+        background-color: #e90000;
     }
 }
 
-.sign-in-buttons {
+.navigation-button {
     background-color: #e90000b9;
-    &:hover{
+
+    &:hover {
         background-color: #c40000b9;
     }
+}
+
+.button-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 @media (min-width: 320px) {

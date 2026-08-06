@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import type { NewUser } from '../models/new-user';
 import type { RegisterResponse } from '../models/register-response';
+import type { LoginRequest } from '../models/login-request';
+import type { LoginResponse } from '../models/login-response';
+import type { LogoutResponse } from '../models/logout-response';
 
 @Injectable({
   providedIn: 'root',
@@ -19,21 +22,56 @@ export class Authentication {
     );
   }
 
-  login(email: string, password: string): boolean {
-    if (email === 'admin@hotmail.com' && password === '12345678') {
-      this.loggedIn = true;
-      return true;
-    } else {
-      this.loggedIn = false;
-      return false;
-    }
+  login(loginRequest: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${this.apiUrl}/login`,
+      loginRequest,
+      {
+        withCredentials: true,
+      }
+    ).pipe(
+      tap({
+        next: () => {
+          this.loggedIn = true;
+        },
+        error: () => {
+          this.loggedIn = false;
+        },
+      })
+    );
   }
 
   isLoggedIn(): boolean {
     return this.loggedIn;
   }
 
-  logout(): void {
-    this.loggedIn = false;
+  logout(): Observable<LogoutResponse> {
+    return this.http.post<LogoutResponse>(
+      `${this.apiUrl}/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
+    ).pipe(
+      tap(() => {
+        this.loggedIn = false;
+      })
+    );
+  }
+
+  restoreLoginState(): void {
+    this.http.get<LoginResponse>(
+      `${this.apiUrl}/me`,
+      {
+        withCredentials: true,
+      }
+    ).subscribe({
+      next: () => {
+        this.loggedIn = true;
+      },
+      error: () => {
+        this.loggedIn = false;
+      },
+    });
   }
 }

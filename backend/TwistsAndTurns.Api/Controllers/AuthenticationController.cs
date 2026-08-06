@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TwistsAndTurns.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TwistsAndTurns.Api.Controllers;
 
@@ -9,12 +10,14 @@ namespace TwistsAndTurns.Api.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
-
+    private readonly SignInManager<ApplicationUser> _signInManager;
     public AuthenticationController(
-        UserManager<ApplicationUser> userManager
+    UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signInManager
     )
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     [HttpPost("register")]
@@ -56,40 +59,20 @@ public class AuthenticationController : ControllerBase
         });
     }
 
-    [HttpPost("login")]
-public async Task<IActionResult> Login(
-    LoginRequest request
-)
+[Authorize]
+[HttpGet("me")]
+public async Task<IActionResult> Me()
 {
-    var user = await _userManager.FindByEmailAsync(
-        request.Email
-    );
+    var user = await _userManager.GetUserAsync(User);
 
     if (user is null)
     {
-        return Unauthorized(new
-        {
-            message = "Incorrect email or password"
-        });
-    }
-
-    var passwordIsCorrect =
-        await _userManager.CheckPasswordAsync(
-            user,
-            request.Password
-        );
-
-    if (!passwordIsCorrect)
-    {
-        return Unauthorized(new
-        {
-            message = "Incorrect email or password"
-        });
+        return Unauthorized();
     }
 
     return Ok(new
     {
-        message = "Login successful",
+        message = "User is authenticated",
         user = new
         {
             user.Id,
@@ -97,6 +80,63 @@ public async Task<IActionResult> Login(
             user.LastName,
             user.Email
         }
+    });
+}
+
+[HttpPost("login")]
+public async Task<IActionResult> Login(
+    LoginRequest request
+    )
+    {
+        var user = await _userManager.FindByEmailAsync(
+            request.Email
+        );
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "Incorrect email or password"
+            });
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(
+            user,
+            request.Password,
+            isPersistent: true,
+            lockoutOnFailure: false
+        );
+
+        if (!result.Succeeded)
+        {
+            return Unauthorized(new
+            {
+                message = "Incorrect email or password"
+            });
+        }
+
+        return Ok(new
+        {
+            message = "Login successful",
+            user = new
+            {
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.Email
+            }
+        });
+    }
+    
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+
+        return Ok(new
+        {
+            message = "Logout successful"
         });
     }
 }
