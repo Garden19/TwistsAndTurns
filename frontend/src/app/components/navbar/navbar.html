@@ -6,7 +6,7 @@
 
     <div class="button-navigation">
         @if (isLoggedIn()) {
-            <button type="button" class="navigation-button">Finance</button>
+            <button type="button" routerLink="/finance" class="navigation-button">Finance</button>
             <button type="button" class="navigation-button">Health</button>
             <button type="button" class="navigation-button" (click)="logOut()">Log out</button>
         } @else {
