@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TwistsAndTurns.Api.Data;
 using TwistsAndTurns.Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TwistsAndTurns.Api.Controllers;
 
@@ -67,5 +68,34 @@ public class FinanceEntriesController : ControllerBase
             CreatedAt = financeEntry.CreatedAt
         };
         return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        var financeEntries = await _dbContext.FinanceEntries
+            .Where(entry => entry.UserId == user.Id)
+            .OrderByDescending(entry => entry.CreatedAt)
+            .Select(entry => new FinanceEntryResponse
+            {
+                Id = entry.Id,
+                Name = entry.Name,
+                Amount = entry.Amount,
+                EntryType = entry.EntryType,
+                CreatedAt = entry.CreatedAt
+            })
+            .ToListAsync();
+
+        return Ok(financeEntries);
     }
 }
