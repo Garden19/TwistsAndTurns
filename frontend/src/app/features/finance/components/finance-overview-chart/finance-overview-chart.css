@@ -1,0 +1,32 @@
+.dashboard-module {
+    border: none;
+}
+
+.module-heading {
+    margin-bottom: 1.5rem;
+}
+
+.module-heading h2 {
+    margin: 0 0 0.35rem;
+}
+
+.module-heading p {
+    margin: 0;
+    color: var(--colour-text-muted);
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 140px;
+}
+
+@media (max-width: 600px) {
+    .dashboard-module {
+        padding: 1rem;
+    }
+
+    .chart-container {
+        height: 260px;
+    }
+}

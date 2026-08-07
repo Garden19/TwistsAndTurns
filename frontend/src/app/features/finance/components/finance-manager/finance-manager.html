@@ -1,0 +1,151 @@
+<article class="finance-manager">
+
+    
+    <div class="manager-grid">
+        
+        <!-- SUMMARY -->
+        <div class="manager-column summary-column">
+            <h3>Summary</h3>
+            
+            <div class="summary-item">
+                <span>Total income</span>
+
+                <strong>
+                    {{ totalIncome | currency:'GBP':'symbol':'1.2-2' }}
+                </strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Total outgoings</span>
+
+                <strong>
+                    {{ totalOutgoings | currency:'GBP':'symbol':'1.2-2' }}
+                </strong>
+            </div>
+
+            <div class="summary-item">
+                <span>Money after bills</span>
+                
+                <strong>
+                    {{ moneyAfterBills | currency:'GBP':'symbol':'1.2-2' }}
+                </strong>
+            </div>
+            
+            <div class="summary-item">
+                <span>Outgoing percentage</span>
+                
+                <strong>
+                    {{ outgoingPercentage | percent:'1.2-2' }}
+                </strong>
+            </div>
+
+            <div class="summary-chart">
+                <app-finance-overview-chart [financeEntries]="financeEntries" />
+            </div>
+        </div>
+
+        
+        
+        <div class="manager-column entries-column">
+
+            <div class="entries-header">
+                <h3>Income & outgoings</h3>
+
+                <button type="button">
+                    + Add item
+                </button>
+            </div>
+
+            <div class="table-wrapper">
+                
+                <table class="finance-table">
+
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Paid</th>
+                            <th>Next due</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <!-- INCOME -->
+                        <tr class="group-heading">
+                            <td colspan="5">
+                                Income
+                            </td>
+                        </tr>
+
+                        @for (entry of incomeEntries; track entry.id) {
+                            <tr class="finance-row">
+
+                                <td data-label="Item">
+                                    {{ entry.name }}
+                                </td>
+
+                                <td data-label="Category">
+                                    —
+                                </td>
+
+                                <td data-label="Amount">
+                                    {{ entry.amount | currency:'GBP':'symbol':'1.2-2' }}
+                                </td>
+
+                                <td data-label="Paid">
+                                    —
+                                </td>
+
+                                <td data-label="Next due">
+                                    —
+                                </td>
+
+                            </tr>
+                        }
+
+                        <!-- OUTGOINGS -->
+                        <tr class="group-heading">
+                            <td colspan="5">
+                                Outgoings
+                            </td>
+                        </tr>
+
+                        @for (entry of outgoingEntries; track entry.id) {
+                            <tr class="finance-row">
+
+                                <td data-label="Item">
+                                    {{ entry.name }}
+                                </td>
+
+                                <td data-label="Category">
+                                    —
+                                </td>
+
+                                <td data-label="Amount">
+                                    {{ entry.amount | currency:'GBP':'symbol':'1.2-2' }}
+                                </td>
+
+                                <td data-label="Paid">
+                                    —
+                                </td>
+
+                                <td data-label="Next due">
+                                    —
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</article>
