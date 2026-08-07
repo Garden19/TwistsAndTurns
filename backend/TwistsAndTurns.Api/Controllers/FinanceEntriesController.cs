@@ -53,20 +53,24 @@ public class FinanceEntriesController : ControllerBase
             Name = request.Name,
             Amount = request.Amount,
             EntryType = request.EntryType,
-            UserId = user.Id
+            UserId = user.Id,
+            EntryDate = DateTime.UtcNow
         };
 
         _dbContext.FinanceEntries.Add(financeEntry);
 
         await _dbContext.SaveChangesAsync();
 
-        var response = new FinanceEntryResponse {
+        var response = new FinanceEntryResponse
+        {
             Id = financeEntry.Id,
             Name = financeEntry.Name,
             Amount = financeEntry.Amount,
             EntryType = financeEntry.EntryType,
+            EntryDate = financeEntry.EntryDate,
             CreatedAt = financeEntry.CreatedAt
         };
+
         return Ok(response);
     }
 
@@ -92,6 +96,7 @@ public class FinanceEntriesController : ControllerBase
                 Name = entry.Name,
                 Amount = entry.Amount,
                 EntryType = entry.EntryType,
+                EntryDate = entry.EntryDate,
                 CreatedAt = entry.CreatedAt
             })
             .ToListAsync();

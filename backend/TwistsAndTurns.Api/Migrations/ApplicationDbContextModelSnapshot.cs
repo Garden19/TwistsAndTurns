@@ -242,6 +242,9 @@ namespace TwistsAndTurns.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("EntryDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("EntryType")
                         .HasColumnType("int");
 

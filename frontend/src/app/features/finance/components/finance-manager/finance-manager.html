@@ -1,12 +1,9 @@
 <article class="finance-manager">
-
-    
     <div class="manager-grid">
-        
-        <!-- SUMMARY -->
+
         <div class="manager-column summary-column">
             <h3>Summary</h3>
-            
+
             <div class="summary-item">
                 <span>Total income</span>
 
@@ -25,39 +22,207 @@
 
             <div class="summary-item">
                 <span>Money after bills</span>
-                
+
                 <strong>
                     {{ moneyAfterBills | currency:'GBP':'symbol':'1.2-2' }}
                 </strong>
             </div>
-            
+
             <div class="summary-item">
                 <span>Outgoing percentage</span>
-                
+
                 <strong>
                     {{ outgoingPercentage | percent:'1.2-2' }}
                 </strong>
             </div>
 
             <div class="summary-chart">
-                <app-finance-overview-chart [financeEntries]="financeEntries" />
+                <app-finance-overview-chart
+                    [financeEntries]="financeEntries"
+                />
             </div>
         </div>
 
-        
-        
         <div class="manager-column entries-column">
+
+            @if (isAddFormOpen) {
+                <div class="add-item-form">
+
+                    <div class="add-item-header">
+                        <h3>Add finance item</h3>
+
+                        <button
+                            type="button"
+                            (click)="closeAddForm()"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+
+                    <label for="item-kind">
+                        Type
+                    </label>
+
+                    <select
+                        id="item-kind"
+                        name="itemKind"
+                        [(ngModel)]="itemKind"
+                    >
+                        <option value="income">
+                            Income
+                        </option>
+
+                        <option value="outgoing">
+                            Outgoing
+                        </option>
+
+                        <option value="savings">
+                            Savings
+                        </option>
+
+                        <option value="payslip">
+                            Payslip
+                        </option>
+                    </select>
+
+                    @if (
+                        itemKind === 'income' ||
+                        itemKind === 'outgoing'
+                    ) {
+                        <label for="item-name">
+                            Name
+                        </label>
+
+                        <input
+                            id="item-name"
+                            type="text"
+                            name="itemName"
+                            [(ngModel)]="itemName"
+                        />
+
+                        <label for="item-amount">
+                            Amount
+                        </label>
+
+                        <input
+                            id="item-amount"
+                            type="number"
+                            name="itemAmount"
+                            min="0.01"
+                            step="0.01"
+                            [(ngModel)]="itemAmount"
+                        />
+
+                        @if (itemKind === 'outgoing') {
+                            <label for="item-category">
+                                Category
+                            </label>
+
+                            <select
+                                id="item-category"
+                                name="itemCategory"
+                                [(ngModel)]="itemCategory"
+                            >
+                                <option value="housing">
+                                    Housing
+                                </option>
+
+                                <option value="utilities">
+                                    Utilities
+                                </option>
+
+                                <option value="subscriptions">
+                                    Subscriptions
+                                </option>
+
+                                <option value="transport">
+                                    Transport
+                                </option>
+
+                                <option value="food">
+                                    Food
+                                </option>
+
+                                <option value="debt">
+                                    Debt
+                                </option>
+
+                                <option value="insurance">
+                                    Insurance
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+                            </select>
+
+                            <div class="checkbox-field">
+                                <input
+                                    id="item-recurring"
+                                    type="checkbox"
+                                    name="itemIsRecurring"
+                                    [(ngModel)]="itemIsRecurring"
+                                />
+
+                                <label for="item-recurring">
+                                    Recurring
+                                </label>
+                            </div>
+
+                            @if (itemIsRecurring) {
+                                <label for="item-due-date">
+                                    Next due date
+                                </label>
+
+                                <input
+                                    id="item-due-date"
+                                    type="date"
+                                    name="itemDueDate"
+                                    [(ngModel)]="itemDueDate"
+                                />
+                            }
+                        }
+
+                        <button
+                            type="button"
+                            (click)="saveFinanceEntry()"
+                            [disabled]="isSaving"
+                        >
+                            @if (isSaving) {
+                                Adding...
+                            } @else {
+                                Add item
+                            }
+                        </button>
+                    }
+
+                    @if (itemKind === 'savings') {
+                        <p>
+                            Savings form will go here.
+                        </p>
+                    }
+
+                    @if (itemKind === 'payslip') {
+                        <p>
+                            Payslip form will go here.
+                        </p>
+                    }
+
+                </div>
+            }
 
             <div class="entries-header">
                 <h3>Income & outgoings</h3>
 
-                <button type="button">
+                <button
+                    type="button"
+                    (click)="openAddForm()"
+                >
                     + Add item
                 </button>
             </div>
 
             <div class="table-wrapper">
-                
                 <table class="finance-table">
 
                     <thead>
@@ -72,14 +237,16 @@
 
                     <tbody>
 
-                        <!-- INCOME -->
                         <tr class="group-heading">
                             <td colspan="5">
                                 Income
                             </td>
                         </tr>
 
-                        @for (entry of incomeEntries; track entry.id) {
+                        @for (
+                            entry of incomeEntries;
+                            track entry.id
+                        ) {
                             <tr class="finance-row">
 
                                 <td data-label="Item">
@@ -91,7 +258,10 @@
                                 </td>
 
                                 <td data-label="Amount">
-                                    {{ entry.amount | currency:'GBP':'symbol':'1.2-2' }}
+                                    {{
+                                        entry.amount
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
                                 </td>
 
                                 <td data-label="Paid">
@@ -105,14 +275,16 @@
                             </tr>
                         }
 
-                        <!-- OUTGOINGS -->
                         <tr class="group-heading">
                             <td colspan="5">
                                 Outgoings
                             </td>
                         </tr>
 
-                        @for (entry of outgoingEntries; track entry.id) {
+                        @for (
+                            entry of outgoingEntries;
+                            track entry.id
+                        ) {
                             <tr class="finance-row">
 
                                 <td data-label="Item">
@@ -124,7 +296,10 @@
                                 </td>
 
                                 <td data-label="Amount">
-                                    {{ entry.amount | currency:'GBP':'symbol':'1.2-2' }}
+                                    {{
+                                        entry.amount
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
                                 </td>
 
                                 <td data-label="Paid">
@@ -139,13 +314,10 @@
                         }
 
                     </tbody>
-
                 </table>
-
             </div>
 
         </div>
 
     </div>
-
 </article>

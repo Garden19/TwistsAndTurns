@@ -9,4 +9,5 @@ export interface FinanceEntry {
     amount: number;
     entryType: FinanceEntryType;
     createdAt: string;
+    entryDate: string;
 }

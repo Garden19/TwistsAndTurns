@@ -1,22 +1,31 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { Observable } from 'rxjs';
-import type { FinanceEntry } from '../models/finance-entry';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { FinanceEntry } from '../models/finance-entry';
+import { CreateFinanceEntryRequest } from '../models/create-finance-entry-request';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root'
 })
 export class Finance {
-  private apiUrl = 'http://localhost:5200/api/finance-entries';
+    private apiUrl = 'http://localhost:5200/api/finance-entries';
 
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  getFinanceEntries(): Observable<FinanceEntry[]> {
-    return this.http.get<FinanceEntry[]>(
-      this.apiUrl,
-      {
-        withCredentials: true,
-      }
-    );
-  }
+    getFinanceEntries(): Observable<FinanceEntry[]> {
+        return this.http.get<FinanceEntry[]>(
+            this.apiUrl,
+            { withCredentials: true }
+        );
+    }
+
+    createFinanceEntry(
+        request: CreateFinanceEntryRequest
+    ): Observable<FinanceEntry> {
+        return this.http.post<FinanceEntry>(
+            this.apiUrl,
+            request,
+            { withCredentials: true }
+        );
+    }
 }

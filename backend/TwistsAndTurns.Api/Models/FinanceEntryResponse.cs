@@ -11,4 +11,5 @@ public class FinanceEntryResponse
     public FinanceEntryType EntryType { get; set; }
 
     public DateTime CreatedAt { get; set; }
+    public DateTime EntryDate { get; set; }
 }
