@@ -35,13 +35,14 @@
                     {{ outgoingPercentage | percent:'1.2-2' }}
                 </strong>
             </div>
-                @if (shouldShowOverviewChart) {
-                    <div class="summary-chart">
-                        <app-finance-overview-chart
-                            [financeEntries]="financeEntries"
-                        />
-                    </div>
-                }
+
+            @if (shouldShowOverviewChart) {
+                <div class="summary-chart">
+                    <app-finance-overview-chart
+                        [financeEntries]="financeEntries"
+                    />
+                </div>
+            }
         </div>
 
         <div class="manager-column entries-column">
@@ -66,7 +67,7 @@
                 </div>
             </div>
 
-                    <table class="finance-table">
+            <table class="finance-table">
                 <thead>
                     <tr>
                         <th class="item-column">
@@ -145,7 +146,9 @@
                                 }}
                             </td>
 
-                            <td class="paid-column empty-column"></td>
+                            <td
+                                class="paid-column empty-column"
+                            ></td>
 
                             <td
                                 class="more-column"
@@ -234,6 +237,7 @@
                     }
                 </tbody>
             </table>
+
         </div>
     </div>
 
@@ -276,311 +280,370 @@
                 </div>
 
                 <div class="add-item-form">
-    <label for="item-kind">
-        Type
-        <span class="required-marker">*</span>
-    </label>
+                    <label for="item-kind">
+                        Type
+                        <span class="required-marker">*</span>
+                    </label>
 
-    <select
-        id="item-kind"
-        name="itemKind"
-        [(ngModel)]="itemKind"
-    >
-        <option value="income">
-            Income
-        </option>
+                    <select
+                        id="item-kind"
+                        name="itemKind"
+                        [(ngModel)]="itemKind"
+                    >
+                        <option value="income">
+                            Income
+                        </option>
 
-        <option value="outgoing">
-            Outgoing
-        </option>
+                        <option value="outgoing">
+                            Outgoing
+                        </option>
 
-        <option value="savings">
-            Savings
-        </option>
+                        <option value="savings">
+                            Savings
+                        </option>
 
-        <option value="payslip">
-            Payslip
-        </option>
-    </select>
+                        <option value="payslip">
+                            Payslip
+                        </option>
+                    </select>
 
-    @if (
-        itemKind === 'income' ||
-        itemKind === 'outgoing'
-    ) {
-        <label for="item-name">
-            Name
-            <span class="required-marker">*</span>
-        </label>
+                    @if (
+                        itemKind === 'income' ||
+                        itemKind === 'outgoing'
+                    ) {
+                        <label for="item-name">
+                            Name
+                            <span class="required-marker">*</span>
+                        </label>
 
-        <input
-            id="item-name"
-            type="text"
-            name="itemName"
-            required
-            [(ngModel)]="itemName"
-            #itemNameInput="ngModel"
-        />
+                        <input
+                            id="item-name"
+                            type="text"
+                            name="itemName"
+                            required
+                            [(ngModel)]="itemName"
+                            #itemNameInput="ngModel"
+                        />
 
-        @if (
-            itemNameInput.invalid &&
-            (
-                itemNameInput.touched ||
-                hasAttemptedSave
-            )
-        ) {
-            <p class="field-error">
-                Please enter a name.
-            </p>
-        }
+                        @if (
+                            itemNameInput.invalid &&
+                            (
+                                itemNameInput.touched ||
+                                hasAttemptedSave
+                            )
+                        ) {
+                            <p class="field-error">
+                                Please enter a name.
+                            </p>
+                        }
 
-        <label for="item-amount">
-            Amount
-            <span class="required-marker">*</span>
-        </label>
+                        <label for="item-amount">
+                            Amount
+                            <span class="required-marker">*</span>
+                        </label>
 
-        <input
-            id="item-amount"
-            type="number"
-            name="itemAmount"
-            required
-            min="0.01"
-            step="0.01"
-            [(ngModel)]="itemAmount"
-            #itemAmountInput="ngModel"
-        />
+                        <input
+                            id="item-amount"
+                            type="number"
+                            name="itemAmount"
+                            required
+                            min="0.01"
+                            step="0.01"
+                            [(ngModel)]="itemAmount"
+                            #itemAmountInput="ngModel"
+                        />
 
-        @if (
-            itemAmountInput.invalid &&
-            (
-                itemAmountInput.touched ||
-                hasAttemptedSave
-            )
-        ) {
-            @if (itemAmount === null) {
-                <p class="field-error">
-                    Please enter an amount.
-                </p>
-            } @else {
-                <p class="field-error">
-                    Amount must be greater than £0.
-                </p>
+                        @if (
+                            itemAmountInput.invalid &&
+                            (
+                                itemAmountInput.touched ||
+                                hasAttemptedSave
+                            )
+                        ) {
+                            @if (itemAmount === null) {
+                                <p class="field-error">
+                                    Please enter an amount.
+                                </p>
+                            } @else {
+                                <p class="field-error">
+                                    Amount must be greater than £0.
+                                </p>
+                            }
+                        }
+
+                        @if (itemKind === 'income') {
+                            <label for="income-category">
+                                Category
+                                <span class="required-marker">*</span>
+                            </label>
+
+                            <select
+                                id="income-category"
+                                name="itemCategory"
+                                required
+                                [(ngModel)]="itemCategory"
+                                #incomeCategoryInput="ngModel"
+                            >
+                                <option
+                                    value=""
+                                    disabled
+                                >
+                                    Select category
+                                </option>
+
+                                <option value="salary">
+                                    Salary
+                                </option>
+
+                                <option value="benefits">
+                                    Benefits
+                                </option>
+
+                                <option value="freelance">
+                                    Freelance
+                                </option>
+
+                                <option value="bonus">
+                                    Bonus
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+                            </select>
+
+                            @if (
+                                incomeCategoryInput.invalid &&
+                                (
+                                    incomeCategoryInput.touched ||
+                                    hasAttemptedSave
+                                )
+                            ) {
+                                <p class="field-error">
+                                    Please select a category.
+                                </p>
+                            }
+                        }
+
+                        @if (itemKind === 'outgoing') {
+                            <label for="outgoing-category">
+                                Category
+                                <span class="required-marker">*</span>
+                            </label>
+
+                            <select
+                                id="outgoing-category"
+                                name="itemCategory"
+                                required
+                                [(ngModel)]="itemCategory"
+                                #outgoingCategoryInput="ngModel"
+                            >
+                                <option
+                                    value=""
+                                    disabled
+                                >
+                                    Select category
+                                </option>
+
+                                <option value="housing">
+                                    Housing
+                                </option>
+
+                                <option value="utilities">
+                                    Utilities
+                                </option>
+
+                                <option value="subscriptions">
+                                    Subscriptions
+                                </option>
+
+                                <option value="transport">
+                                    Transport
+                                </option>
+
+                                <option value="food">
+                                    Food
+                                </option>
+
+                                <option value="debt">
+                                    Debt
+                                </option>
+
+                                <option value="insurance">
+                                    Insurance
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+                            </select>
+
+                            @if (
+                                outgoingCategoryInput.invalid &&
+                                (
+                                    outgoingCategoryInput.touched ||
+                                    hasAttemptedSave
+                                )
+                            ) {
+                                <p class="field-error">
+                                    Please select a category.
+                                </p>
+                            }
+                        }
+
+                        <label for="bank-account">
+                            Bank account
+                        </label>
+
+                        <select
+                            id="bank-account"
+                            name="itemBankAccountId"
+                            [(ngModel)]="itemBankAccountId"
+                        >
+                            <option [ngValue]="null">
+                                No account
+                            </option>
+
+                            @for (
+                                account of bankAccounts;
+                                track account.id
+                            ) {
+                                <option [ngValue]="account.id">
+                                    {{ account.bankName }} -
+                                    {{ account.name }}
+                                </option>
+                            }
+                        </select>
+
+                        @if (itemKind === 'outgoing') {
+                            <div class="checkbox-field">
+                                <input
+                                    id="item-recurring"
+                                    type="checkbox"
+                                    name="itemIsRecurring"
+                                    [(ngModel)]="itemIsRecurring"
+                                />
+
+                                <label for="item-recurring">
+                                    Recurring
+                                </label>
+                            </div>
+
+                            @if (itemIsRecurring) {
+                                <label for="item-due-date">
+                                    Next due date
+                                    <span class="required-marker">*</span>
+                                </label>
+
+                                <input
+                                    id="item-due-date"
+                                    type="date"
+                                    name="itemDueDate"
+                                    required
+                                    [(ngModel)]="itemDueDate"
+                                    #itemDueDateInput="ngModel"
+                                />
+
+                                @if (
+                                    itemDueDateInput.invalid &&
+                                    (
+                                        itemDueDateInput.touched ||
+                                        hasAttemptedSave
+                                    )
+                                ) {
+                                    <p class="field-error">
+                                        Please select the next due date.
+                                    </p>
+                                }
+                            }
+                        }
+
+                        <button
+                            type="button"
+                            (click)="saveFinanceEntry()"
+                            [disabled]="isSaving"
+                        >
+                            @if (isSaving) {
+                                Adding...
+                            } @else {
+                                Add item
+                            }
+                        </button>
+                    }
+
+                    @if (itemKind === 'savings') {
+                        <p>
+                            Savings form will go here.
+                        </p>
+                    }
+
+                    @if (itemKind === 'payslip') {
+                        <p>
+                            Payslip form will go here.
+                        </p>
+                    }
+                </div>
             }
-        }
-
-        @if (itemKind === 'income') {
-            <label for="income-category">
-                Category
-                <span class="required-marker">*</span>
-            </label>
-
-            <select
-                id="income-category"
-                name="itemCategory"
-                required
-                [(ngModel)]="itemCategory"
-                #incomeCategoryInput="ngModel"
-            >
-                <option
-                    value=""
-                    disabled
-                >
-                    Select category
-                </option>
-
-                <option value="salary">
-                    Salary
-                </option>
-
-                <option value="benefits">
-                    Benefits
-                </option>
-
-                <option value="freelance">
-                    Freelance
-                </option>
-
-                <option value="bonus">
-                    Bonus
-                </option>
-
-                <option value="other">
-                    Other
-                </option>
-            </select>
 
             @if (
-                incomeCategoryInput.invalid &&
-                (
-                    incomeCategoryInput.touched ||
-                    hasAttemptedSave
-                )
+                activeDrawer === 'entryDetails' &&
+                selectedEntry !== null
             ) {
-                <p class="field-error">
-                    Please select a category.
-                </p>
-            }
-        }
+                <div class="drawer-header">
+                    <h3>
+                        {{ selectedEntry.name }}
+                    </h3>
 
-        @if (itemKind === 'outgoing') {
-            <label for="outgoing-category">
-                Category
-                <span class="required-marker">*</span>
-            </label>
+                    <button
+                        type="button"
+                        (click)="closeDrawer()"
+                    >
+                        Close
+                    </button>
+                </div>
 
-            <select
-                id="outgoing-category"
-                name="itemCategory"
-                required
-                [(ngModel)]="itemCategory"
-                #outgoingCategoryInput="ngModel"
-            >
-                <option
-                    value=""
-                    disabled
-                >
-                    Select category
-                </option>
+                <div class="entry-details">
+                    <div class="entry-detail">
+                        <span>
+                            Amount
+                        </span>
 
-                <option value="housing">
-                    Housing
-                </option>
-
-                <option value="utilities">
-                    Utilities
-                </option>
-
-                <option value="subscriptions">
-                    Subscriptions
-                </option>
-
-                <option value="transport">
-                    Transport
-                </option>
-
-                <option value="food">
-                    Food
-                </option>
-
-                <option value="debt">
-                    Debt
-                </option>
-
-                <option value="insurance">
-                    Insurance
-                </option>
-
-                <option value="other">
-                    Other
-                </option>
-            </select>
-
-            @if (
-                outgoingCategoryInput.invalid &&
-                (
-                    outgoingCategoryInput.touched ||
-                    hasAttemptedSave
-                )
-            ) {
-                <p class="field-error">
-                    Please select a category.
-                </p>
-            }
-        }
-
-        <label for="bank-account">
-            Bank account
-        </label>
-
-        <select
-            id="bank-account"
-            name="itemBankAccountId"
-            [(ngModel)]="itemBankAccountId"
-        >
-            <option [ngValue]="null">
-                No account
-            </option>
-
-            @for (
-                account of bankAccounts;
-                track account.id
-            ) {
-                <option [ngValue]="account.id">
-                    {{ account.bankName }} - {{ account.name }}
-                </option>
-            }
-        </select>
-
-        @if (itemKind === 'outgoing') {
-            <div class="checkbox-field">
-                <input
-                    id="item-recurring"
-                    type="checkbox"
-                    name="itemIsRecurring"
-                    [(ngModel)]="itemIsRecurring"
-                />
-
-                <label for="item-recurring">
-                    Recurring
-                </label>
-            </div>
-
-            @if (itemIsRecurring) {
-                <label for="item-due-date">
-                    Next due date
-                    <span class="required-marker">*</span>
-                </label>
-
-                <input
-                    id="item-due-date"
-                    type="date"
-                    name="itemDueDate"
-                    required
-                    [(ngModel)]="itemDueDate"
-                    #itemDueDateInput="ngModel"
-                />
-
-                @if (
-                    itemDueDateInput.invalid &&
-                    (
-                        itemDueDateInput.touched ||
-                        hasAttemptedSave
-                    )
-                ) {
-                    <p class="field-error">
-                        Please select the next due date.
-                    </p>
-                }
-            }
-        }
-
-        <button
-            type="button"
-            (click)="saveFinanceEntry()"
-            [disabled]="isSaving"
-        >
-            @if (isSaving) {
-                Adding...
-            } @else {
-                Add item
-            }
-        </button>
-    }
-
-   @if (itemKind === 'savings') {
-    <p>
-        Savings form will go here.
-    </p>
-    }
-
-    @if (itemKind === 'payslip') {
-        <p>
-            Payslip form will go here.
-        </p>
-    }
-
+                        <strong>
+                            {{
+                                selectedEntry.amount
+                                    | currency:'GBP':'symbol':'1.2-2'
+                            }}
+                        </strong>
                     </div>
-                }
 
-            </aside>
-        </div>
-    </article>
+                    <div class="entry-detail">
+                        <span>
+                            Category
+                        </span>
+
+                        <strong>
+                            {{ selectedEntry.category }}
+                        </strong>
+                    </div>
+
+                    @if (
+                        selectedEntry.bankName !== null &&
+                        selectedEntry.bankAccountName !== null
+                    ) {
+                        <div class="entry-detail">
+                            <span>
+                                Bank account
+                            </span>
+
+                            <strong>
+                                {{ selectedEntry.bankName }} -
+                                {{ selectedEntry.bankAccountName }}
+                            </strong>
+                        </div>
+                    }
+                </div>
+            }
+
+        </aside>
+    </div>
+</article>
