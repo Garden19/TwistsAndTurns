@@ -15,6 +15,7 @@ export class BankAccountManager implements OnInit {
 
     accountName = '';
     bankName = '';
+    formError = '';
 
     constructor(
         private bankAccountsService: BankAccounts
@@ -36,9 +37,22 @@ export class BankAccountManager implements OnInit {
     }
 
     addBankAccount(): void {
+        const trimmedAccountName = this.accountName.trim();
+        const trimmedBankName = this.bankName.trim();
+
+        if (
+            trimmedAccountName === '' ||
+            trimmedBankName === ''
+        ) {
+            this.formError = 'Please enter an account name and bank.';
+            return;
+        }
+
+        this.formError = '';
+
         const request: CreateBankAccountRequest = {
-            name: this.accountName,
-            bankName: this.bankName
+            name: trimmedAccountName,
+            bankName: trimmedBankName
         };
 
         this.bankAccountsService

@@ -38,6 +38,11 @@
     </div>
 
     <div class="bank-account-intro">
+        @if (formError !== '') {
+            <p class="form-error">
+                {{ formError }}
+            </p>
+        }
         <h4>Add bank account</h4>
 
         <p>
@@ -55,6 +60,7 @@
                 id="account-name"
                 type="text"
                 name="accountName"
+                maxlength="100"
                 placeholder="Bills Account"
                 [(ngModel)]="accountName"
             />
@@ -69,6 +75,7 @@
                 id="bank-name"
                 type="text"
                 name="bankName"
+                maxlength="100"
                 placeholder="Monzo"
                 [(ngModel)]="bankName"
             />

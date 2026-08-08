@@ -125,3 +125,12 @@
 
     margin-top: 0.5rem;
 }
+
+.form-error {
+    margin: 0;
+
+    color: #b42318;
+
+    font-size: 0.9rem;
+    font-weight: 600;
+}
