@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -24,7 +24,8 @@ import { BankAccounts } from '../../services/bank-accounts';
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
 })
-export class FinanceManager {
+
+export class FinanceManager implements OnInit {
 
     constructor(
         private financeService: Finance,
@@ -42,21 +43,27 @@ export class FinanceManager {
     itemIsRecurring = false;
     itemDueDate = '';
     itemBankAccountId: number | null = null;
-
+    hasAttemptedSave = false;
     bankAccounts: BankAccount[] = [];
 
     activeDrawer:
-        | 'addItem'
-        | 'bankAccounts'
-        | null = null;
+      | 'addItem'
+      | 'bankAccounts'
+      | 'entryDetails'
+      | null = null;
 
-    openBankAccounts(): void {
-        this.activeDrawer = 'bankAccounts';
+      selectedEntry: FinanceEntry | null = null;
+
+    ngOnInit(): void {
+      this.loadBankAccounts();
     }
 
-    openAddForm(): void {
-        this.activeDrawer = 'addItem';
+    openEntryDetails(entry: FinanceEntry): void {
+        this.selectedEntry = entry;
+        this.activeDrawer = 'entryDetails';
+    }
 
+    loadBankAccounts(): void {
         this.bankAccountsService
             .getBankAccounts()
             .subscribe({
@@ -69,15 +76,31 @@ export class FinanceManager {
             });
     }
 
+    openBankAccounts(): void {
+        this.activeDrawer = 'bankAccounts';
+    }
+
+    openAddForm(): void {
+      this.activeDrawer = 'addItem';
+    }
+
     closeDrawer(): void {
         this.activeDrawer = null;
+        this.selectedEntry = null;
     }
 
     saveFinanceEntry(): void {
+      this.hasAttemptedSave = true;
         if (
             this.itemName.trim() === '' ||
             this.itemAmount === null ||
-            this.itemCategory === ''
+            this.itemAmount <= 0 ||
+            this.itemCategory === '' ||
+            (
+                this.itemKind === 'outgoing' &&
+                this.itemIsRecurring &&
+                this.itemDueDate === ''
+            )
         ) {
             return;
         }
@@ -113,7 +136,7 @@ export class FinanceManager {
                     this.itemBankAccountId = null;
                     this.itemIsRecurring = false;
                     this.itemDueDate = '';
-
+                    this.hasAttemptedSave = false;
                     this.isSaving = false;
                     this.closeDrawer();
                 },
@@ -199,5 +222,9 @@ export class FinanceManager {
                     console.error(error);
                 }
             });
+    }
+    
+    get shouldShowOverviewChart(): boolean {
+      return this.totalIncome > 0 && this.totalOutgoings > 0;
     }
 }

@@ -1,11 +1,32 @@
-<article class="dashboard-module chart-module">
-    <div class="chart-container">  
-        <canvas
-            baseChart
-            [data]="chartData"
-            [type]="chartType"
-            [options]="chartOptions"
-            [plugins]="chartPlugins"
-        ></canvas>
+@if (totalIncome > 0 && totalOutgoings > 0) {
+    <div class="overview-chart">
+        <div
+            class="donut-chart"
+            [style.background]="chartBackground"
+        >
+            <div class="chart-centre">
+                <div class="centre-stat">
+                    <span>Income</span>
+
+                    <strong>
+                        {{
+                            (totalIncome / totalTracked)
+                                | percent:'1.0-0'
+                        }}
+                    </strong>
+                </div>
+
+                <div class="centre-stat">
+                    <span>Outgoings</span>
+
+                    <strong>
+                        {{
+                            (totalOutgoings / totalTracked)
+                                | percent:'1.0-0'
+                        }}
+                    </strong>
+                </div>
+            </div>
+        </div>
     </div>
-</article>
+}

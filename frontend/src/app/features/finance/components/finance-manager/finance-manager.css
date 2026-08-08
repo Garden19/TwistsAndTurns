@@ -1,6 +1,19 @@
+:host {
+    display: flex;
+    flex: 1;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
 .finance-manager {
     position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     width: 100%;
+    min-width: 0;
     overflow: hidden;
     background-color: var(--colour-white);
 }
@@ -29,12 +42,12 @@
 
 .manager-grid {
     display: grid;
-
+    flex: 1;
     grid-template-columns:
         minmax(200px, 1fr)
         minmax(0, 3fr);
-
     width: 100%;
+    min-height: 0;
 }
 
 .manager-column {
@@ -115,7 +128,6 @@
 .finance-table td {
     padding: 0.9rem 1rem;
 
-    text-align: left;
     vertical-align: middle;
 
     border-bottom: 1px solid #ececec;
@@ -131,42 +143,39 @@
     letter-spacing: 0.03rem;
 }
 
-.finance-table th:nth-child(1),
-.finance-table td:nth-child(1) {
-    width: 22%;
+.item-column {
+    width: 27%;
+
+    text-align: left;
 }
 
-.finance-table th:nth-child(2),
-.finance-table td:nth-child(2) {
-    width: 22%;
+.account-column {
+    width: 28%;
+
+    text-align: left;
+    overflow-wrap: anywhere;
 }
 
-.finance-table th:nth-child(3),
-.finance-table td:nth-child(3) {
-    width: 16%;
+.amount-column {
+    width: 18%;
 
     text-align: right;
 }
 
-.finance-table th:nth-child(4),
-.finance-table td:nth-child(4) {
-    width: 10%;
+.paid-column {
+    width: 12%;
 
     text-align: center;
 }
 
-.finance-table th:nth-child(5),
-.finance-table td:nth-child(5) {
+.more-column {
     width: 15%;
 
     text-align: center;
 }
 
-.finance-table th:nth-child(6),
-.finance-table td:nth-child(6) {
-    width: 15%;
-
-    text-align: center;
+.more-column button {
+    width: auto;
 }
 
 .group-heading td {
@@ -198,7 +207,7 @@
 .add-item-form {
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.45rem;
 
     width: 100%;
 }
@@ -206,7 +215,7 @@
 .add-item-form label {
     margin: 0;
 
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 
@@ -215,7 +224,7 @@
     width: 100%;
     box-sizing: border-box;
 
-    padding: 0.6rem 0.75rem;
+    padding: 0.5rem 0.65rem;
 
     background-color: var(--colour-white);
 
@@ -223,7 +232,7 @@
     border-radius: 6px;
 
     font: inherit;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
 .add-item-form input:focus,
@@ -235,22 +244,22 @@
 .add-item-form button {
     width: 100%;
 
-    margin-top: 0.25rem;
-    padding: 0.65rem 1rem;
+    margin-top: 0.15rem;
+    padding: 0.55rem 0.75rem;
 }
 
 .checkbox-field {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.45rem;
 
     width: fit-content;
-    padding-block: 0.2rem;
+    padding-block: 0.1rem;
 }
 
 .checkbox-field input[type="checkbox"] {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1rem;
+    height: 1rem;
 
     margin: 0;
     padding: 0;
@@ -263,7 +272,7 @@
 
     cursor: pointer;
 
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 
@@ -271,13 +280,10 @@
     position: absolute;
     inset: 0;
     z-index: 100;
-
     background-color: rgb(0 0 0 / 35%);
-
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-
     transition:
         opacity 300ms ease,
         visibility 0s linear 300ms;
@@ -287,7 +293,6 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-
     transition:
         opacity 300ms ease,
         visibility 0s linear 0s;
@@ -297,19 +302,14 @@
     position: absolute;
     top: 0;
     right: 0;
-
-    width: min(420px, 100%);
+    width: min(400px, 100%);
     height: 100%;
-
     box-sizing: border-box;
-    padding: 1.25rem 1.5rem;
-
+    padding: 1rem 1.25rem;
     background-color: var(--colour-white);
-
+    overflow-x: hidden;
     overflow-y: auto;
-
     transform: translateX(100%);
-
     transition:
         transform 300ms ease;
 }
@@ -322,10 +322,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.75rem;
 
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.6rem;
 
     border-bottom: 1px solid #e8e8e8;
 }
@@ -333,13 +333,38 @@
 .drawer-header h3 {
     margin: 0;
 
-    font-size: 1.15rem;
+    font-size: 1.05rem;
 }
 
 .drawer-header button {
     width: auto;
 
-    padding: 0.55rem 0.85rem;
+    padding: 0.45rem 0.7rem;
+}
+
+.required-marker {
+    color: var(--colour-error);
+}
+
+.field-error {
+    margin: -0.15rem 0 0.15rem;
+
+    color: var(--colour-error);
+
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.add-item-form input.ng-invalid.ng-touched,
+.add-item-form select.ng-invalid.ng-touched {
+    border-color: var(--colour-error);
+}
+
+.add-item-form input.ng-invalid.ng-touched:focus,
+.add-item-form select.ng-invalid.ng-touched:focus {
+    border-color: var(--colour-error);
+    box-shadow: 0 0 0 3px rgb(217 45 32 / 15%);
 }
 
 @media (max-width: 1000px) {
@@ -408,6 +433,10 @@
         gap: 0 1rem;
     }
 
+    .finance-table {
+        table-layout: auto;
+    }
+
     .finance-table thead {
         display: none;
     }
@@ -449,6 +478,7 @@
         gap: 1rem;
 
         width: 100%;
+        box-sizing: border-box;
         padding: 0.4rem 0.75rem;
 
         border-bottom: none;
@@ -474,15 +504,24 @@
         display: none;
     }
 
-    .finance-table td:nth-child(1),
-    .finance-table td:nth-child(2),
-    .finance-table td:nth-child(3),
-    .finance-table td:nth-child(4),
-    .finance-table td:nth-child(5),
-    .finance-table td:nth-child(6) {
+    .item-column,
+    .account-column,
+    .amount-column,
+    .paid-column,
+    .more-column {
         width: 100%;
+    }
 
+    .finance-row .item-column,
+    .finance-row .account-column,
+    .finance-row .amount-column,
+    .finance-row .paid-column,
+    .finance-row .more-column {
         text-align: right;
+    }
+
+    .more-column button {
+        width: auto;
     }
 
 }
@@ -507,7 +546,9 @@
 @media (max-width: 420px) {
 
     .summary-column {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 0 1rem;
     }
 
     .entries-actions {
@@ -519,7 +560,23 @@
     }
 
     .finance-drawer {
-        padding: 1rem;
+        width: 100%;
+        padding: 0.85rem 1rem;
+    }
+    
+    .summary-column h3 {
+        margin-bottom: 0.5rem;
     }
 
+    .summary-item {
+        padding: 0.65rem 0;
+    }
+
+    .summary-item span {
+        font-size: 0.8rem;
+    }
+
+    .summary-item strong {
+        font-size: 1.05rem;
+    }
 }

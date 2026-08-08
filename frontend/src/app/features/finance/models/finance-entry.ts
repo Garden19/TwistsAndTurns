@@ -12,4 +12,6 @@ export interface FinanceEntry {
     entryDate: string;
     createdAt: string;
     bankAccountId: number | null;
+    bankAccountName: string | null;
+    bankName: string | null;
 }

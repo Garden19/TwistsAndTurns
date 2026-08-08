@@ -14,4 +14,6 @@ public class FinanceEntryResponse
     public DateTime EntryDate { get; set; }
     public string Category { get; set; } = string.Empty;
     public int? BankAccountId { get; set; }
+    public string? BankAccountName { get; set; }
+    public string? BankName { get; set; }
 }

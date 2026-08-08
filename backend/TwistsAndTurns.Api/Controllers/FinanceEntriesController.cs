@@ -49,24 +49,25 @@ public class FinanceEntriesController : ControllerBase
         }
 
         BankAccount? bankAccount = null;
-            if (request.BankAccountId.HasValue)
-            {
-                bankAccount = await _dbContext.BankAccounts
-                    .FirstOrDefaultAsync(
-                        account =>
-                            account.Id == request.BankAccountId.Value &&
-                            account.UserId == user.Id &&
-                            account.IsActive
-                    );
 
-                if (bankAccount is null)
+        if (request.BankAccountId.HasValue)
+        {
+            bankAccount = await _dbContext.BankAccounts
+                .FirstOrDefaultAsync(
+                    account =>
+                        account.Id == request.BankAccountId.Value &&
+                        account.UserId == user.Id &&
+                        account.IsActive
+                );
+
+            if (bankAccount is null)
+            {
+                return BadRequest(new
                 {
-                    return BadRequest(new
-                    {
-                        message = "The selected bank account could not be found"
-                    });
-                }
+                    message = "The selected bank account could not be found"
+                });
             }
+        }
 
         var financeEntry = new FinanceEntry
         {
@@ -92,7 +93,9 @@ public class FinanceEntriesController : ControllerBase
             Category = financeEntry.Category,
             EntryDate = financeEntry.EntryDate,
             CreatedAt = financeEntry.CreatedAt,
-            BankAccountId = financeEntry.BankAccountId
+            BankAccountId = financeEntry.BankAccountId,
+            BankAccountName = bankAccount?.Name,
+            BankName = bankAccount?.BankName
         };
 
         return Ok(response);
@@ -123,7 +126,13 @@ public class FinanceEntriesController : ControllerBase
                 EntryDate = entry.EntryDate,
                 CreatedAt = entry.CreatedAt,
                 Category = entry.Category,
-                BankAccountId = entry.BankAccountId
+                BankAccountId = entry.BankAccountId,
+                BankAccountName = entry.BankAccount == null
+                    ? null
+                    : entry.BankAccount.Name,
+                BankName = entry.BankAccount == null
+                    ? null
+                    : entry.BankAccount.BankName
             })
             .ToListAsync();
 

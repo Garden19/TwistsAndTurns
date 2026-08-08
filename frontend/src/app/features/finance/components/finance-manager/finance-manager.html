@@ -35,12 +35,13 @@
                     {{ outgoingPercentage | percent:'1.2-2' }}
                 </strong>
             </div>
-
-            <div class="summary-chart">
-                <app-finance-overview-chart
-                    [financeEntries]="financeEntries"
-                />
-            </div>
+                @if (shouldShowOverviewChart) {
+                    <div class="summary-chart">
+                        <app-finance-overview-chart
+                            [financeEntries]="financeEntries"
+                        />
+                    </div>
+                }
         </div>
 
         <div class="manager-column entries-column">
@@ -65,111 +66,174 @@
                 </div>
             </div>
 
-            <div class="table-wrapper">
-                <table class="finance-table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Paid</th>
-                            <th>Next due</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+                    <table class="finance-table">
+                <thead>
+                    <tr>
+                        <th class="item-column">
+                            Item
+                        </th>
 
-                    <tbody>
-                        <tr class="group-heading">
-                            <td colspan="6">
-                                Income
-                            </td>
-                        </tr>
-
-                        @for (
-                            entry of incomeEntries;
-                            track entry.id
-                        ) {
-                            <tr class="finance-row">
-                                <td data-label="Item">
-                                    {{ entry.name }}
-                                </td>
-
-                                <td data-label="Category">
-                                    {{ entry.category }}
-                                </td>
-
-                                <td data-label="Amount">
-                                    {{
-                                        entry.amount
-                                            | currency:'GBP':'symbol':'1.2-2'
-                                    }}
-                                </td>
-
-                                <td class="empty-column"></td>
-
-                                <td class="empty-column"></td>
-
-                                <td data-label="Actions">
-                                    <button
-                                        type="button"
-                                        class="remove-entry-button"
-                                        (click)="deleteFinanceEntry(entry)"
-                                    >
-                                        Remove
-                                    </button>
-                                </td>
-                            </tr>
+                        @if (bankAccounts.length > 0) {
+                            <th class="account-column">
+                                Account
+                            </th>
                         }
 
-                        <tr class="group-heading">
-                            <td colspan="6">
-                                Outgoings
+                        <th class="amount-column">
+                            Amount
+                        </th>
+
+                        <th class="paid-column">
+                            Paid
+                        </th>
+
+                        <th class="more-column">
+                            More
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="group-heading">
+                        <td
+                            [attr.colspan]="
+                                bankAccounts.length > 0
+                                    ? 5
+                                    : 4
+                            "
+                        >
+                            Income
+                        </td>
+                    </tr>
+
+                    @for (
+                        entry of incomeEntries;
+                        track entry.id
+                    ) {
+                        <tr class="finance-row">
+                            <td
+                                class="item-column"
+                                data-label="Item"
+                            >
+                                {{ entry.name }}
+                            </td>
+
+                            @if (bankAccounts.length > 0) {
+                                <td
+                                    class="account-column"
+                                    data-label="Account"
+                                >
+                                    @if (
+                                        entry.bankName !== null &&
+                                        entry.bankAccountName !== null
+                                    ) {
+                                        {{ entry.bankName }} -
+                                        {{ entry.bankAccountName }}
+                                    } @else {
+                                        —
+                                    }
+                                </td>
+                            }
+
+                            <td
+                                class="amount-column"
+                                data-label="Amount"
+                            >
+                                {{
+                                    entry.amount
+                                        | currency:'GBP':'symbol':'1.2-2'
+                                }}
+                            </td>
+
+                            <td class="paid-column empty-column"></td>
+
+                            <td
+                                class="more-column"
+                                data-label="More"
+                            >
+                                <button
+                                    type="button"
+                                    (click)="openEntryDetails(entry)"
+                                >
+                                    More
+                                </button>
                             </td>
                         </tr>
+                    }
 
-                        @for (
-                            entry of outgoingEntries;
-                            track entry.id
-                        ) {
-                            <tr class="finance-row">
-                                <td data-label="Item">
-                                    {{ entry.name }}
+                    <tr class="group-heading">
+                        <td
+                            [attr.colspan]="
+                                bankAccounts.length > 0
+                                    ? 5
+                                    : 4
+                            "
+                        >
+                            Outgoings
+                        </td>
+                    </tr>
+
+                    @for (
+                        entry of outgoingEntries;
+                        track entry.id
+                    ) {
+                        <tr class="finance-row">
+                            <td
+                                class="item-column"
+                                data-label="Item"
+                            >
+                                {{ entry.name }}
+                            </td>
+
+                            @if (bankAccounts.length > 0) {
+                                <td
+                                    class="account-column"
+                                    data-label="Account"
+                                >
+                                    @if (
+                                        entry.bankName !== null &&
+                                        entry.bankAccountName !== null
+                                    ) {
+                                        {{ entry.bankName }} -
+                                        {{ entry.bankAccountName }}
+                                    } @else {
+                                        —
+                                    }
                                 </td>
+                            }
 
-                                <td data-label="Category">
-                                    {{ entry.category }}
-                                </td>
+                            <td
+                                class="amount-column"
+                                data-label="Amount"
+                            >
+                                {{
+                                    entry.amount
+                                        | currency:'GBP':'symbol':'1.2-2'
+                                }}
+                            </td>
 
-                                <td data-label="Amount">
-                                    {{
-                                        entry.amount
-                                            | currency:'GBP':'symbol':'1.2-2'
-                                    }}
-                                </td>
+                            <td
+                                class="paid-column"
+                                data-label="Paid"
+                            >
+                                —
+                            </td>
 
-                                <td data-label="Paid">
-                                    —
-                                </td>
-
-                                <td data-label="Next due">
-                                    —
-                                </td>
-
-                                <td data-label="Actions">
-                                    <button
-                                        type="button"
-                                        class="remove-entry-button"
-                                        (click)="deleteFinanceEntry(entry)"
-                                    >
-                                        Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
+                            <td
+                                class="more-column"
+                                data-label="More"
+                            >
+                                <button
+                                    type="button"
+                                    (click)="openEntryDetails(entry)"
+                                >
+                                    More
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -212,228 +276,311 @@
                 </div>
 
                 <div class="add-item-form">
-                    <label for="item-kind">
-                        Type
-                    </label>
+    <label for="item-kind">
+        Type
+        <span class="required-marker">*</span>
+    </label>
 
-                    <select
-                        id="item-kind"
-                        name="itemKind"
-                        [(ngModel)]="itemKind"
-                    >
-                        <option value="income">
-                            Income
-                        </option>
+    <select
+        id="item-kind"
+        name="itemKind"
+        [(ngModel)]="itemKind"
+    >
+        <option value="income">
+            Income
+        </option>
 
-                        <option value="outgoing">
-                            Outgoing
-                        </option>
+        <option value="outgoing">
+            Outgoing
+        </option>
 
-                        <option value="savings">
-                            Savings
-                        </option>
+        <option value="savings">
+            Savings
+        </option>
 
-                        <option value="payslip">
-                            Payslip
-                        </option>
-                    </select>
+        <option value="payslip">
+            Payslip
+        </option>
+    </select>
 
-                    @if (
-                        itemKind === 'income' ||
-                        itemKind === 'outgoing'
-                    ) {
-                        <label for="item-name">
-                            Name
-                        </label>
+    @if (
+        itemKind === 'income' ||
+        itemKind === 'outgoing'
+    ) {
+        <label for="item-name">
+            Name
+            <span class="required-marker">*</span>
+        </label>
 
-                        <input
-                            id="item-name"
-                            type="text"
-                            name="itemName"
-                            [(ngModel)]="itemName"
-                        />
+        <input
+            id="item-name"
+            type="text"
+            name="itemName"
+            required
+            [(ngModel)]="itemName"
+            #itemNameInput="ngModel"
+        />
 
-                        <label for="item-amount">
-                            Amount
-                        </label>
+        @if (
+            itemNameInput.invalid &&
+            (
+                itemNameInput.touched ||
+                hasAttemptedSave
+            )
+        ) {
+            <p class="field-error">
+                Please enter a name.
+            </p>
+        }
 
-                        <input
-                            id="item-amount"
-                            type="number"
-                            name="itemAmount"
-                            min="0.01"
-                            step="0.01"
-                            [(ngModel)]="itemAmount"
-                        />
+        <label for="item-amount">
+            Amount
+            <span class="required-marker">*</span>
+        </label>
 
-                        @if (itemKind === 'income') {
-                            <label for="income-category">
-                                Category
-                            </label>
+        <input
+            id="item-amount"
+            type="number"
+            name="itemAmount"
+            required
+            min="0.01"
+            step="0.01"
+            [(ngModel)]="itemAmount"
+            #itemAmountInput="ngModel"
+        />
 
-                            <select
-                                id="income-category"
-                                name="itemCategory"
-                                [(ngModel)]="itemCategory"
-                            >
-                                <option
-                                    value=""
-                                    disabled
-                                >
-                                    Select category
-                                </option>
-
-                                <option value="salary">
-                                    Salary
-                                </option>
-
-                                <option value="benefits">
-                                    Benefits
-                                </option>
-
-                                <option value="freelance">
-                                    Freelance
-                                </option>
-
-                                <option value="bonus">
-                                    Bonus
-                                </option>
-
-                                <option value="other">
-                                    Other
-                                </option>
-                            </select>
-                        }
-
-                        @if (itemKind === 'outgoing') {
-                            <label for="outgoing-category">
-                                Category
-                            </label>
-
-                            <select
-                                id="outgoing-category"
-                                name="itemCategory"
-                                [(ngModel)]="itemCategory"
-                            >
-                                <option
-                                    value=""
-                                    disabled
-                                >
-                                    Select category
-                                </option>
-
-                                <option value="housing">
-                                    Housing
-                                </option>
-
-                                <option value="utilities">
-                                    Utilities
-                                </option>
-
-                                <option value="subscriptions">
-                                    Subscriptions
-                                </option>
-
-                                <option value="transport">
-                                    Transport
-                                </option>
-
-                                <option value="food">
-                                    Food
-                                </option>
-
-                                <option value="debt">
-                                    Debt
-                                </option>
-
-                                <option value="insurance">
-                                    Insurance
-                                </option>
-
-                                <option value="other">
-                                    Other
-                                </option>
-                            </select>
-                        }
-
-                        <label for="bank-account">
-                            Bank account
-                        </label>
-
-                        <select
-                            id="bank-account"
-                            name="itemBankAccountId"
-                            [(ngModel)]="itemBankAccountId"
-                        >
-                            <option [ngValue]="null">
-                                No account
-                            </option>
-
-                            @for (
-                                account of bankAccounts;
-                                track account.id
-                            ) {
-                                <option [ngValue]="account.id">
-                                    {{ account.bankName }} - {{ account.name }}
-                                </option>
-                            }
-                        </select>
-
-                        @if (itemKind === 'outgoing') {
-                            <div class="checkbox-field">
-                                <input
-                                    id="item-recurring"
-                                    type="checkbox"
-                                    name="itemIsRecurring"
-                                    [(ngModel)]="itemIsRecurring"
-                                />
-
-                                <label for="item-recurring">
-                                    Recurring
-                                </label>
-                            </div>
-
-                            @if (itemIsRecurring) {
-                                <label for="item-due-date">
-                                    Next due date
-                                </label>
-
-                                <input
-                                    id="item-due-date"
-                                    type="date"
-                                    name="itemDueDate"
-                                    [(ngModel)]="itemDueDate"
-                                />
-                            }
-                        }
-
-                        <button
-                            type="button"
-                            (click)="saveFinanceEntry()"
-                            [disabled]="isSaving"
-                        >
-                            @if (isSaving) {
-                                Adding...
-                            } @else {
-                                Add item
-                            }
-                        </button>
-                    }
-
-                    @if (itemKind === 'savings') {
-                        <p>
-                            Savings form will go here.
-                        </p>
-                    }
-
-                    @if (itemKind === 'payslip') {
-                        <p>
-                            Payslip form will go here.
-                        </p>
-                    }
-                </div>
+        @if (
+            itemAmountInput.invalid &&
+            (
+                itemAmountInput.touched ||
+                hasAttemptedSave
+            )
+        ) {
+            @if (itemAmount === null) {
+                <p class="field-error">
+                    Please enter an amount.
+                </p>
+            } @else {
+                <p class="field-error">
+                    Amount must be greater than £0.
+                </p>
             }
+        }
 
-        </aside>
-    </div>
-</article>
+        @if (itemKind === 'income') {
+            <label for="income-category">
+                Category
+                <span class="required-marker">*</span>
+            </label>
+
+            <select
+                id="income-category"
+                name="itemCategory"
+                required
+                [(ngModel)]="itemCategory"
+                #incomeCategoryInput="ngModel"
+            >
+                <option
+                    value=""
+                    disabled
+                >
+                    Select category
+                </option>
+
+                <option value="salary">
+                    Salary
+                </option>
+
+                <option value="benefits">
+                    Benefits
+                </option>
+
+                <option value="freelance">
+                    Freelance
+                </option>
+
+                <option value="bonus">
+                    Bonus
+                </option>
+
+                <option value="other">
+                    Other
+                </option>
+            </select>
+
+            @if (
+                incomeCategoryInput.invalid &&
+                (
+                    incomeCategoryInput.touched ||
+                    hasAttemptedSave
+                )
+            ) {
+                <p class="field-error">
+                    Please select a category.
+                </p>
+            }
+        }
+
+        @if (itemKind === 'outgoing') {
+            <label for="outgoing-category">
+                Category
+                <span class="required-marker">*</span>
+            </label>
+
+            <select
+                id="outgoing-category"
+                name="itemCategory"
+                required
+                [(ngModel)]="itemCategory"
+                #outgoingCategoryInput="ngModel"
+            >
+                <option
+                    value=""
+                    disabled
+                >
+                    Select category
+                </option>
+
+                <option value="housing">
+                    Housing
+                </option>
+
+                <option value="utilities">
+                    Utilities
+                </option>
+
+                <option value="subscriptions">
+                    Subscriptions
+                </option>
+
+                <option value="transport">
+                    Transport
+                </option>
+
+                <option value="food">
+                    Food
+                </option>
+
+                <option value="debt">
+                    Debt
+                </option>
+
+                <option value="insurance">
+                    Insurance
+                </option>
+
+                <option value="other">
+                    Other
+                </option>
+            </select>
+
+            @if (
+                outgoingCategoryInput.invalid &&
+                (
+                    outgoingCategoryInput.touched ||
+                    hasAttemptedSave
+                )
+            ) {
+                <p class="field-error">
+                    Please select a category.
+                </p>
+            }
+        }
+
+        <label for="bank-account">
+            Bank account
+        </label>
+
+        <select
+            id="bank-account"
+            name="itemBankAccountId"
+            [(ngModel)]="itemBankAccountId"
+        >
+            <option [ngValue]="null">
+                No account
+            </option>
+
+            @for (
+                account of bankAccounts;
+                track account.id
+            ) {
+                <option [ngValue]="account.id">
+                    {{ account.bankName }} - {{ account.name }}
+                </option>
+            }
+        </select>
+
+        @if (itemKind === 'outgoing') {
+            <div class="checkbox-field">
+                <input
+                    id="item-recurring"
+                    type="checkbox"
+                    name="itemIsRecurring"
+                    [(ngModel)]="itemIsRecurring"
+                />
+
+                <label for="item-recurring">
+                    Recurring
+                </label>
+            </div>
+
+            @if (itemIsRecurring) {
+                <label for="item-due-date">
+                    Next due date
+                    <span class="required-marker">*</span>
+                </label>
+
+                <input
+                    id="item-due-date"
+                    type="date"
+                    name="itemDueDate"
+                    required
+                    [(ngModel)]="itemDueDate"
+                    #itemDueDateInput="ngModel"
+                />
+
+                @if (
+                    itemDueDateInput.invalid &&
+                    (
+                        itemDueDateInput.touched ||
+                        hasAttemptedSave
+                    )
+                ) {
+                    <p class="field-error">
+                        Please select the next due date.
+                    </p>
+                }
+            }
+        }
+
+        <button
+            type="button"
+            (click)="saveFinanceEntry()"
+            [disabled]="isSaving"
+        >
+            @if (isSaving) {
+                Adding...
+            } @else {
+                Add item
+            }
+        </button>
+    }
+
+   @if (itemKind === 'savings') {
+    <p>
+        Savings form will go here.
+    </p>
+    }
+
+    @if (itemKind === 'payslip') {
+        <p>
+            Payslip form will go here.
+        </p>
+    }
+
+                    </div>
+                }
+
+            </aside>
+        </div>
+    </article>
