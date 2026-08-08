@@ -1,24 +1,47 @@
-<section class="bank-account-manager">
+<div class="bank-account-manager">
+    <div class="bank-account-intro">
+        <h4>Add a bank account</h4>
 
-    <label for="account-name">
-        Account name
-    </label>
+        <p>
+            Add an account so income and outgoings can be assigned to it.
+        </p>
+    </div>
 
-    <input
-        id="account-name"
-        type="text"
-        name="accountName"
-        [(ngModel)]="accountName"
-    />
+    <div class="bank-account-form">
+        <div class="form-field">
+            <label for="account-name">
+                Account name
+            </label>
 
-    <label for="bank-name">
-        Bank
-    </label>
+            <input
+                id="account-name"
+                type="text"
+                name="accountName"
+                placeholder="Bills Account"
+                [(ngModel)]="accountName"
+            />
+        </div>
 
-    <input
-        id="bank-name"
-        type="text"
-        name="bankName"
-        [(ngModel)]="bankName"
-    />
-</section>
+        <div class="form-field">
+            <label for="bank-name">
+                Bank
+            </label>
+
+            <input
+                id="bank-name"
+                type="text"
+                name="bankName"
+                placeholder="Monzo"
+                [(ngModel)]="bankName"
+            />
+        </div>
+
+        <button
+            type="button"
+            class="add-account-button"
+            (click)="addBankAccount()"
+        >
+            Add bank account
+        </button>
+    </div>
+</div>
