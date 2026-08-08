@@ -1,31 +1,38 @@
 import { Component, Input } from '@angular/core';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FinanceEntryType, type FinanceEntry } from '../../models/finance-entry';
+import {
+    FinanceEntryType,
+    type FinanceEntry
+} from '../../models/finance-entry';
 import { CreateFinanceEntryRequest } from '../../models/create-finance-entry-request';
 import { FinanceOverviewChart } from '../finance-overview-chart/finance-overview-chart';
 import { Finance } from '../../services/finance';
-import { BankAccountManager } from "../bank-account-manager/bank-account-manager";
+import { BankAccountManager } from '../bank-account-manager/bank-account-manager';
+import { BankAccount } from '../../models/bank-account';
+import { BankAccounts } from '../../services/bank-accounts';
 
 @Component({
     selector: 'app-finance-manager',
     imports: [
-    CurrencyPipe,
-    PercentPipe,
-    FinanceOverviewChart,
-    FormsModule,
-    BankAccountManager
-],
+        CurrencyPipe,
+        PercentPipe,
+        FinanceOverviewChart,
+        FormsModule,
+        BankAccountManager
+    ],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
 })
 export class FinanceManager {
 
-    constructor(private financeService: Finance) {}
+    constructor(
+        private financeService: Finance,
+        private bankAccountsService: BankAccounts
+    ) {}
 
     @Input() financeEntries: FinanceEntry[] = [];
 
-    isAddFormOpen = false;
     isSaving = false;
 
     itemName = '';
@@ -34,21 +41,36 @@ export class FinanceManager {
     itemCategory = '';
     itemIsRecurring = false;
     itemDueDate = '';
-    isBankAccountsOpen = false;
+    itemBankAccountId: number | null = null;
+
+    bankAccounts: BankAccount[] = [];
+
+    activeDrawer:
+        | 'addItem'
+        | 'bankAccounts'
+        | null = null;
 
     openBankAccounts(): void {
-      this.isBankAccountsOpen = true;
+        this.activeDrawer = 'bankAccounts';
     }
 
-    closeBankAccounts(): void {
-        this.isBankAccountsOpen = false;
-    }
     openAddForm(): void {
-        this.isAddFormOpen = true;
+        this.activeDrawer = 'addItem';
+
+        this.bankAccountsService
+            .getBankAccounts()
+            .subscribe({
+                next: (accounts) => {
+                    this.bankAccounts = accounts;
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
     }
 
-    closeAddForm(): void {
-        this.isAddFormOpen = false;
+    closeDrawer(): void {
+        this.activeDrawer = null;
     }
 
     saveFinanceEntry(): void {
@@ -71,28 +93,30 @@ export class FinanceManager {
             name: this.itemName,
             amount: this.itemAmount,
             entryType: entryType,
-            category: this.itemCategory
+            category: this.itemCategory,
+            bankAccountId: this.itemBankAccountId
         };
 
         this.financeService
             .createFinanceEntry(request)
             .subscribe({
                 next: (createdEntry) => {
-            this.financeEntries = [
-                createdEntry,
-                ...this.financeEntries
-            ];
+                    this.financeEntries = [
+                        createdEntry,
+                        ...this.financeEntries
+                    ];
 
-            this.itemName = '';
-            this.itemAmount = null;
-            this.itemKind = 'income';
-            this.itemCategory = '';
-            this.itemIsRecurring = false;
-            this.itemDueDate = '';
+                    this.itemName = '';
+                    this.itemAmount = null;
+                    this.itemKind = 'income';
+                    this.itemCategory = '';
+                    this.itemBankAccountId = null;
+                    this.itemIsRecurring = false;
+                    this.itemDueDate = '';
 
-            this.isSaving = false;
-            this.closeAddForm();
-        },
+                    this.isSaving = false;
+                    this.closeDrawer();
+                },
                 error: (error) => {
                     console.error(error);
                     this.isSaving = false;
@@ -107,7 +131,8 @@ export class FinanceManager {
                     entry.entryType === FinanceEntryType.Income
             )
             .reduce(
-                (total, entry) => total + entry.amount,
+                (total, entry) =>
+                    total + entry.amount,
                 0
             );
     }
@@ -119,7 +144,8 @@ export class FinanceManager {
                     entry.entryType === FinanceEntryType.Expense
             )
             .reduce(
-                (total, entry) => total + entry.amount,
+                (total, entry) =>
+                    total + entry.amount,
                 0
             );
     }

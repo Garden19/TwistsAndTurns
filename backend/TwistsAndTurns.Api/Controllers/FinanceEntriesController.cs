@@ -48,6 +48,26 @@ public class FinanceEntriesController : ControllerBase
             });
         }
 
+        BankAccount? bankAccount = null;
+            if (request.BankAccountId.HasValue)
+            {
+                bankAccount = await _dbContext.BankAccounts
+                    .FirstOrDefaultAsync(
+                        account =>
+                            account.Id == request.BankAccountId.Value &&
+                            account.UserId == user.Id &&
+                            account.IsActive
+                    );
+
+                if (bankAccount is null)
+                {
+                    return BadRequest(new
+                    {
+                        message = "The selected bank account could not be found"
+                    });
+                }
+            }
+
         var financeEntry = new FinanceEntry
         {
             Name = request.Name,
@@ -55,7 +75,8 @@ public class FinanceEntriesController : ControllerBase
             EntryType = request.EntryType,
             Category = request.Category,
             UserId = user.Id,
-            EntryDate = DateTime.UtcNow
+            EntryDate = DateTime.UtcNow,
+            BankAccountId = bankAccount?.Id
         };
 
         _dbContext.FinanceEntries.Add(financeEntry);
@@ -70,7 +91,8 @@ public class FinanceEntriesController : ControllerBase
             EntryType = financeEntry.EntryType,
             Category = financeEntry.Category,
             EntryDate = financeEntry.EntryDate,
-            CreatedAt = financeEntry.CreatedAt
+            CreatedAt = financeEntry.CreatedAt,
+            BankAccountId = financeEntry.BankAccountId
         };
 
         return Ok(response);
@@ -100,7 +122,8 @@ public class FinanceEntriesController : ControllerBase
                 EntryType = entry.EntryType,
                 EntryDate = entry.EntryDate,
                 CreatedAt = entry.CreatedAt,
-                Category = entry.Category
+                Category = entry.Category,
+                BankAccountId = entry.BankAccountId
             })
             .ToListAsync();
 

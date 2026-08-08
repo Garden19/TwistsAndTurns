@@ -5,4 +5,5 @@ export interface CreateFinanceEntryRequest {
     amount: number;
     entryType: FinanceEntryType;
     category: string;
+    bankAccountId: number | null;
 }

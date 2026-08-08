@@ -11,4 +11,5 @@ export interface FinanceEntry {
     category: string;
     entryDate: string;
     createdAt: string;
+    bankAccountId: number | null;
 }

@@ -45,20 +45,173 @@
 
         <div class="manager-column entries-column">
 
-            @if (isAddFormOpen) {
+            <div class="entries-header">
+                <h3>Income & outgoings</h3>
+
+                <div class="entries-actions">
+                    <button
+                        type="button"
+                        (click)="openBankAccounts()"
+                    >
+                        Bank accounts
+                    </button>
+
+                    <button
+                        type="button"
+                        (click)="openAddForm()"
+                    >
+                        + Add item
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="finance-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Paid</th>
+                            <th>Next due</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="group-heading">
+                            <td colspan="6">
+                                Income
+                            </td>
+                        </tr>
+
+                        @for (
+                            entry of incomeEntries;
+                            track entry.id
+                        ) {
+                            <tr class="finance-row">
+                                <td data-label="Item">
+                                    {{ entry.name }}
+                                </td>
+
+                                <td data-label="Category">
+                                    {{ entry.category }}
+                                </td>
+
+                                <td data-label="Amount">
+                                    {{
+                                        entry.amount
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </td>
+
+                                <td class="empty-column"></td>
+
+                                <td class="empty-column"></td>
+
+                                <td data-label="Actions">
+                                    <button
+                                        type="button"
+                                        class="remove-entry-button"
+                                        (click)="deleteFinanceEntry(entry)"
+                                    >
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+
+                        <tr class="group-heading">
+                            <td colspan="6">
+                                Outgoings
+                            </td>
+                        </tr>
+
+                        @for (
+                            entry of outgoingEntries;
+                            track entry.id
+                        ) {
+                            <tr class="finance-row">
+                                <td data-label="Item">
+                                    {{ entry.name }}
+                                </td>
+
+                                <td data-label="Category">
+                                    {{ entry.category }}
+                                </td>
+
+                                <td data-label="Amount">
+                                    {{
+                                        entry.amount
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </td>
+
+                                <td data-label="Paid">
+                                    —
+                                </td>
+
+                                <td data-label="Next due">
+                                    —
+                                </td>
+
+                                <td data-label="Actions">
+                                    <button
+                                        type="button"
+                                        class="remove-entry-button"
+                                        (click)="deleteFinanceEntry(entry)"
+                                    >
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div
+        class="drawer-backdrop"
+        [class.drawer-open]="activeDrawer !== null"
+        [attr.aria-hidden]="activeDrawer === null"
+    >
+        <aside
+            class="finance-drawer"
+            role="dialog"
+            aria-modal="true"
+        >
+
+            @if (activeDrawer === 'bankAccounts') {
+                <div class="drawer-header">
+                    <h3>Bank accounts</h3>
+
+                    <button
+                        type="button"
+                        (click)="closeDrawer()"
+                    >
+                        Close
+                    </button>
+                </div>
+
+                <app-bank-account-manager />
+            }
+
+            @if (activeDrawer === 'addItem') {
+                <div class="drawer-header">
+                    <h3>Add finance item</h3>
+
+                    <button
+                        type="button"
+                        (click)="closeDrawer()"
+                    >
+                        Close
+                    </button>
+                </div>
+
                 <div class="add-item-form">
-
-                    <div class="add-item-header">
-                        <h3>Add finance item</h3>
-
-                        <button
-                            type="button"
-                            (click)="closeAddForm()"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-
                     <label for="item-kind">
                         Type
                     </label>
@@ -201,7 +354,32 @@
                                     Other
                                 </option>
                             </select>
+                        }
 
+                        <label for="bank-account">
+                            Bank account
+                        </label>
+
+                        <select
+                            id="bank-account"
+                            name="itemBankAccountId"
+                            [(ngModel)]="itemBankAccountId"
+                        >
+                            <option [ngValue]="null">
+                                No account
+                            </option>
+
+                            @for (
+                                account of bankAccounts;
+                                track account.id
+                            ) {
+                                <option [ngValue]="account.id">
+                                    {{ account.bankName }} - {{ account.name }}
+                                </option>
+                            }
+                        </select>
+
+                        @if (itemKind === 'outgoing') {
                             <div class="checkbox-field">
                                 <input
                                     id="item-recurring"
@@ -253,172 +431,9 @@
                             Payslip form will go here.
                         </p>
                     }
-
                 </div>
             }
 
-            <div class="entries-header">
-                <h3>Income & outgoings</h3>
-
-                <div class="entries-actions">
-                    <button
-                        type="button"
-                        (click)="openBankAccounts()"
-                    >
-                        Bank accounts
-                    </button>
-
-                    <button
-                        type="button"
-                        (click)="openAddForm()"
-                    >
-                        + Add item
-                    </button>
-                </div>
-            </div>
-
-            <div class="table-wrapper">
-                <table class="finance-table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr class="group-heading">
-                            <td colspan="4">
-                                Income
-                            </td>
-                        </tr>
-
-                        @for (
-                            entry of incomeEntries;
-                            track entry.id
-                        ) {
-                            <tr class="finance-row">
-                                <td data-label="Item">
-                                    {{ entry.name }}
-                                </td>
-
-                                <td data-label="Category">
-                                    {{ entry.category }}
-                                </td>
-
-                                <td data-label="Amount">
-                                    {{
-                                        entry.amount
-                                            | currency:'GBP':'symbol':'1.2-2'
-                                    }}
-                                </td>
-
-                                <td data-label="Actions">
-                                    <button
-                                        type="button"
-                                        class="remove-entry-button"
-                                        (click)="deleteFinanceEntry(entry)"
-                                    >
-                                        Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="table-wrapper">
-                <table class="finance-table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Paid</th>
-                            <th>Next due</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr class="group-heading">
-                            <td colspan="6">
-                                Outgoings
-                            </td>
-                        </tr>
-
-                        @for (
-                            entry of outgoingEntries;
-                            track entry.id
-                        ) {
-                            <tr class="finance-row">
-                                <td data-label="Item">
-                                    {{ entry.name }}
-                                </td>
-
-                                <td data-label="Category">
-                                    {{ entry.category }}
-                                </td>
-
-                                <td data-label="Amount">
-                                    {{
-                                        entry.amount
-                                            | currency:'GBP':'symbol':'1.2-2'
-                                    }}
-                                </td>
-
-                                <td data-label="Paid">
-                                    —
-                                </td>
-
-                                <td data-label="Next due">
-                                    —
-                                </td>
-
-                                <td data-label="Actions">
-                                    <button
-                                        type="button"
-                                        class="remove-entry-button"
-                                        (click)="deleteFinanceEntry(entry)"
-                                    >
-                                        Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </div>
-
-    <div
-        class="drawer-backdrop"
-        [class.drawer-open]="isBankAccountsOpen"
-        [attr.aria-hidden]="!isBankAccountsOpen"
-    >
-        <aside
-            class="bank-accounts-drawer"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Manage bank accounts"
-        >
-            <div class="drawer-header">
-                <h3>Bank accounts</h3>
-
-                <button
-                    type="button"
-                    (click)="closeBankAccounts()"
-                >
-                    Close
-                </button>
-            </div>
-
-            <app-bank-account-manager />
         </aside>
     </div>
 </article>
