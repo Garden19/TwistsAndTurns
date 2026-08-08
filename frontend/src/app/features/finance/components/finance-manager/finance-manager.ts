@@ -5,15 +5,17 @@ import { FinanceEntryType, type FinanceEntry } from '../../models/finance-entry'
 import { CreateFinanceEntryRequest } from '../../models/create-finance-entry-request';
 import { FinanceOverviewChart } from '../finance-overview-chart/finance-overview-chart';
 import { Finance } from '../../services/finance';
+import { BankAccountManager } from "../bank-account-manager/bank-account-manager";
 
 @Component({
     selector: 'app-finance-manager',
     imports: [
-        CurrencyPipe,
-        PercentPipe,
-        FinanceOverviewChart,
-        FormsModule
-    ],
+    CurrencyPipe,
+    PercentPipe,
+    FinanceOverviewChart,
+    FormsModule,
+    BankAccountManager
+],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
 })
@@ -32,7 +34,15 @@ export class FinanceManager {
     itemCategory = '';
     itemIsRecurring = false;
     itemDueDate = '';
+    isBankAccountsOpen = false;
 
+    openBankAccounts(): void {
+      this.isBankAccountsOpen = true;
+    }
+
+    closeBankAccounts(): void {
+        this.isBankAccountsOpen = false;
+    }
     openAddForm(): void {
         this.isAddFormOpen = true;
     }

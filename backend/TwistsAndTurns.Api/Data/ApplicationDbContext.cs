@@ -13,4 +13,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<FinanceEntry> FinanceEntries { get; set; } = null!;
+    public DbSet<BankAccount> BankAccounts { get; set; }
 }

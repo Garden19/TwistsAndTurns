@@ -260,12 +260,21 @@
             <div class="entries-header">
                 <h3>Income & outgoings</h3>
 
-                <button
-                    type="button"
-                    (click)="openAddForm()"
-                >
-                    + Add item
-                </button>
+                <div class="entries-actions">
+                    <button
+                        type="button"
+                        (click)="openBankAccounts()"
+                    >
+                        Bank accounts
+                    </button>
+
+                    <button
+                        type="button"
+                        (click)="openAddForm()"
+                    >
+                        + Add item
+                    </button>
+                </div>
             </div>
 
             <div class="table-wrapper">
@@ -385,6 +394,31 @@
             </div>
 
         </div>
+    </div>
 
+    <div
+        class="drawer-backdrop"
+        [class.drawer-open]="isBankAccountsOpen"
+        [attr.aria-hidden]="!isBankAccountsOpen"
+    >
+        <aside
+            class="bank-accounts-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Manage bank accounts"
+        >
+            <div class="drawer-header">
+                <h3>Bank accounts</h3>
+
+                <button
+                    type="button"
+                    (click)="closeBankAccounts()"
+                >
+                    Close
+                </button>
+            </div>
+
+            <app-bank-account-manager />
+        </aside>
     </div>
 </article>
