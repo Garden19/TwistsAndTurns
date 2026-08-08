@@ -12,4 +12,5 @@ public class FinanceEntryResponse
 
     public DateTime CreatedAt { get; set; }
     public DateTime EntryDate { get; set; }
+    public string Category { get; set; } = string.Empty;
 }

@@ -8,6 +8,7 @@ export interface FinanceEntry {
     name: string;
     amount: number;
     entryType: FinanceEntryType;
-    createdAt: string;
+    category: string;
     entryDate: string;
+    createdAt: string;
 }

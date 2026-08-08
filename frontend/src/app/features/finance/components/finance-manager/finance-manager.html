@@ -113,16 +113,62 @@
                             [(ngModel)]="itemAmount"
                         />
 
-                        @if (itemKind === 'outgoing') {
-                            <label for="item-category">
+                        @if (itemKind === 'income') {
+                            <label for="income-category">
                                 Category
                             </label>
 
                             <select
-                                id="item-category"
+                                id="income-category"
                                 name="itemCategory"
                                 [(ngModel)]="itemCategory"
                             >
+                                <option
+                                    value=""
+                                    disabled
+                                >
+                                    Select category
+                                </option>
+
+                                <option value="salary">
+                                    Salary
+                                </option>
+
+                                <option value="benefits">
+                                    Benefits
+                                </option>
+
+                                <option value="freelance">
+                                    Freelance
+                                </option>
+
+                                <option value="bonus">
+                                    Bonus
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+                            </select>
+                        }
+
+                        @if (itemKind === 'outgoing') {
+                            <label for="outgoing-category">
+                                Category
+                            </label>
+
+                            <select
+                                id="outgoing-category"
+                                name="itemCategory"
+                                [(ngModel)]="itemCategory"
+                            >
+                                <option
+                                    value=""
+                                    disabled
+                                >
+                                    Select category
+                                </option>
+
                                 <option value="housing">
                                     Housing
                                 </option>
@@ -224,21 +270,18 @@
 
             <div class="table-wrapper">
                 <table class="finance-table">
-
                     <thead>
                         <tr>
                             <th>Item</th>
                             <th>Category</th>
                             <th>Amount</th>
-                            <th>Paid</th>
-                            <th>Next due</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
-
                         <tr class="group-heading">
-                            <td colspan="5">
+                            <td colspan="4">
                                 Income
                             </td>
                         </tr>
@@ -248,13 +291,12 @@
                             track entry.id
                         ) {
                             <tr class="finance-row">
-
                                 <td data-label="Item">
                                     {{ entry.name }}
                                 </td>
 
                                 <td data-label="Category">
-                                    —
+                                    {{ entry.category }}
                                 </td>
 
                                 <td data-label="Amount">
@@ -264,19 +306,37 @@
                                     }}
                                 </td>
 
-                                <td data-label="Paid">
-                                    —
+                                <td data-label="Actions">
+                                    <button
+                                        type="button"
+                                        class="remove-entry-button"
+                                        (click)="deleteFinanceEntry(entry)"
+                                    >
+                                        Remove
+                                    </button>
                                 </td>
-
-                                <td data-label="Next due">
-                                    —
-                                </td>
-
                             </tr>
                         }
+                    </tbody>
+                </table>
+            </div>
 
+            <div class="table-wrapper">
+                <table class="finance-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Paid</th>
+                            <th>Next due</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
                         <tr class="group-heading">
-                            <td colspan="5">
+                            <td colspan="6">
                                 Outgoings
                             </td>
                         </tr>
@@ -286,13 +346,12 @@
                             track entry.id
                         ) {
                             <tr class="finance-row">
-
                                 <td data-label="Item">
                                     {{ entry.name }}
                                 </td>
 
                                 <td data-label="Category">
-                                    —
+                                    {{ entry.category }}
                                 </td>
 
                                 <td data-label="Amount">
@@ -310,9 +369,17 @@
                                     —
                                 </td>
 
+                                <td data-label="Actions">
+                                    <button
+                                        type="button"
+                                        class="remove-entry-button"
+                                        (click)="deleteFinanceEntry(entry)"
+                                    >
+                                        Remove
+                                    </button>
+                                </td>
                             </tr>
                         }
-
                     </tbody>
                 </table>
             </div>

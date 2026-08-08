@@ -13,4 +13,5 @@ public class CreateFinanceEntryRequest
 
     [EnumDataType(typeof(FinanceEntryType))]
     public FinanceEntryType EntryType { get; set; }
+    public string Category { get; set; } = string.Empty;
 }

@@ -28,4 +28,11 @@ export class Finance {
             { withCredentials: true }
         );
     }
+
+    deleteFinanceEntry(id: number): Observable<void> {
+        return this.http.delete<void>(
+            `${this.apiUrl}/${id}`,
+            { withCredentials: true }
+        );
+    }
 }

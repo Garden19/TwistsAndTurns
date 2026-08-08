@@ -4,4 +4,5 @@ export interface CreateFinanceEntryRequest {
     name: string;
     amount: number;
     entryType: FinanceEntryType;
+    category: string;
 }

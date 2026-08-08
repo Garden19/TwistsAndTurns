@@ -53,6 +53,7 @@ public class FinanceEntriesController : ControllerBase
             Name = request.Name,
             Amount = request.Amount,
             EntryType = request.EntryType,
+            Category = request.Category,
             UserId = user.Id,
             EntryDate = DateTime.UtcNow
         };
@@ -67,6 +68,7 @@ public class FinanceEntriesController : ControllerBase
             Name = financeEntry.Name,
             Amount = financeEntry.Amount,
             EntryType = financeEntry.EntryType,
+            Category = financeEntry.Category,
             EntryDate = financeEntry.EntryDate,
             CreatedAt = financeEntry.CreatedAt
         };
@@ -97,10 +99,46 @@ public class FinanceEntriesController : ControllerBase
                 Amount = entry.Amount,
                 EntryType = entry.EntryType,
                 EntryDate = entry.EntryDate,
-                CreatedAt = entry.CreatedAt
+                CreatedAt = entry.CreatedAt,
+                Category = entry.Category
             })
             .ToListAsync();
 
         return Ok(financeEntries);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        var financeEntry = await _dbContext.FinanceEntries
+            .FirstOrDefaultAsync(
+                entry =>
+                    entry.Id == id &&
+                    entry.UserId == user.Id
+            );
+
+        if (financeEntry is null)
+        {
+            return NotFound(new
+            {
+                message = "Finance entry could not be found"
+            });
+        }
+
+        _dbContext.FinanceEntries.Remove(financeEntry);
+
+        await _dbContext.SaveChangesAsync();
+
+        return NoContent();
     }
 }

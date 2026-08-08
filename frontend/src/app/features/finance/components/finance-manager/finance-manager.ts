@@ -29,7 +29,7 @@ export class FinanceManager {
     itemName = '';
     itemAmount: number | null = null;
     itemKind = 'income';
-    itemCategory = 'housing';
+    itemCategory = '';
     itemIsRecurring = false;
     itemDueDate = '';
 
@@ -43,8 +43,9 @@ export class FinanceManager {
 
     saveFinanceEntry(): void {
         if (
-          this.itemName.trim() === '' ||
-          this.itemAmount === null
+            this.itemName.trim() === '' ||
+            this.itemAmount === null ||
+            this.itemCategory === ''
         ) {
             return;
         }
@@ -57,10 +58,11 @@ export class FinanceManager {
                 : FinanceEntryType.Expense;
 
         const request: CreateFinanceEntryRequest = {
-          name: this.itemName,
-          amount: this.itemAmount,
-          entryType: entryType
-      };
+            name: this.itemName,
+            amount: this.itemAmount,
+            entryType: entryType,
+            category: this.itemCategory
+        };
 
         this.financeService
             .createFinanceEntry(request)
@@ -74,7 +76,7 @@ export class FinanceManager {
             this.itemName = '';
             this.itemAmount = null;
             this.itemKind = 'income';
-            this.itemCategory = 'housing';
+            this.itemCategory = '';
             this.itemIsRecurring = false;
             this.itemDueDate = '';
 
@@ -136,5 +138,30 @@ export class FinanceManager {
             (entry) =>
                 entry.entryType === FinanceEntryType.Expense
         );
+    }
+
+    deleteFinanceEntry(entry: FinanceEntry): void {
+        const confirmed = window.confirm(
+            `Are you sure you want to remove "${entry.name}"?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        this.financeService
+            .deleteFinanceEntry(entry.id)
+            .subscribe({
+                next: () => {
+                    this.financeEntries =
+                        this.financeEntries.filter(
+                            (financeEntry) =>
+                                financeEntry.id !== entry.id
+                        );
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
     }
 }
