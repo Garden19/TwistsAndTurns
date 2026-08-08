@@ -93,4 +93,40 @@ public class BankAccountsController : ControllerBase
 
         return Ok(bankAccounts);
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Archive(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        var bankAccount = await _dbContext.BankAccounts
+            .FirstOrDefaultAsync(
+                account =>
+                    account.Id == id &&
+                    account.UserId == user.Id &&
+                    account.IsActive
+            );
+
+        if (bankAccount is null)
+        {
+            return NotFound(new
+            {
+                message = "Bank account could not be found"
+            });
+        }
+
+        bankAccount.IsActive = false;
+
+        await _dbContext.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

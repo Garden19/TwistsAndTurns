@@ -28,4 +28,11 @@ export class BankAccounts {
             { withCredentials: true }
         );
     }
+
+    archiveBankAccount(id: number): Observable<void> {
+        return this.http.delete<void>(
+            `${this.apiUrl}/${id}`,
+            { withCredentials: true }
+        );
+    }
 }

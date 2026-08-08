@@ -1,6 +1,44 @@
 <div class="bank-account-manager">
+
+    <div class="saved-accounts">
+        <h4>Your accounts</h4>
+
+        @if (bankAccounts.length === 0) {
+            <p class="empty-accounts">
+                You haven't added any bank accounts yet.
+            </p>
+        } @else {
+            <div class="account-list">
+                @for (
+                    account of bankAccounts;
+                    track account.id
+                ) {
+                    <div class="account-item">
+                        <div class="account-details">
+                            <strong>
+                                {{ account.name }}
+                            </strong>
+
+                            <span>
+                                {{ account.bankName }}
+                            </span>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="remove-account-button"
+                            (click)="removeBankAccount(account)"
+                        >
+                            Remove
+                        </button>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
     <div class="bank-account-intro">
-        <h4>Add a bank account</h4>
+        <h4>Add bank account</h4>
 
         <p>
             Add an account so income and outgoings can be assigned to it.
@@ -44,4 +82,5 @@
             Add bank account
         </button>
     </div>
+
 </div>
