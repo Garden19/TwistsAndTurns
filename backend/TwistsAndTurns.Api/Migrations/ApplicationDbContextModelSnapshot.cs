@@ -272,6 +272,9 @@ namespace TwistsAndTurns.Api.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("BankAccountId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -294,6 +297,8 @@ namespace TwistsAndTurns.Api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BankAccountId");
 
                     b.HasIndex("UserId");
 
@@ -364,11 +369,17 @@ namespace TwistsAndTurns.Api.Migrations
 
             modelBuilder.Entity("TwistsAndTurns.Api.Models.FinanceEntry", b =>
                 {
+                    b.HasOne("TwistsAndTurns.Api.Models.BankAccount", "BankAccount")
+                        .WithMany()
+                        .HasForeignKey("BankAccountId");
+
                     b.HasOne("TwistsAndTurns.Api.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BankAccount");
 
                     b.Navigation("User");
                 });
