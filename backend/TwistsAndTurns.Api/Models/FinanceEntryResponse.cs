@@ -18,4 +18,5 @@ public class FinanceEntryResponse
     public string? BankName { get; set; }
     public int? RecurringFinanceItemId { get; set; }
     public bool IsRecurringActive { get; set; }
+    public bool IsSkipped { get; set; }
 }

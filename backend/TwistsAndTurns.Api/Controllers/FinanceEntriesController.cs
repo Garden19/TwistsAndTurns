@@ -100,7 +100,8 @@ public class FinanceEntriesController : ControllerBase
             BankName = bankAccount?.BankName,
             RecurringFinanceItemId =
                 financeEntry.RecurringFinanceItemId,
-            IsRecurringActive = false
+            IsRecurringActive = false,
+            IsSkipped = financeEntry.IsSkipped
         };
 
         return Ok(response);
@@ -153,7 +154,8 @@ public class FinanceEntriesController : ControllerBase
                             entry.RecurringFinanceItemId,
                         IsRecurringActive =
                             entry.RecurringFinanceItem != null &&
-                            entry.RecurringFinanceItem.IsActive
+                            entry.RecurringFinanceItem.IsActive,
+                        IsSkipped = entry.IsSkipped
                     }
             )
             .ToListAsync();
@@ -191,9 +193,19 @@ public class FinanceEntriesController : ControllerBase
             });
         }
 
-        _dbContext.FinanceEntries.Remove(
-            financeEntry
-        );
+        if (
+            financeEntry.RecurringFinanceItemId
+            is not null
+        )
+        {
+            financeEntry.IsSkipped = true;
+        }
+        else
+        {
+            _dbContext.FinanceEntries.Remove(
+                financeEntry
+            );
+        }
 
         await _dbContext.SaveChangesAsync();
 
@@ -281,7 +293,8 @@ public class FinanceEntriesController : ControllerBase
                 financeEntry.RecurringFinanceItemId,
             IsRecurringActive =
                 financeEntry.RecurringFinanceItem != null &&
-                financeEntry.RecurringFinanceItem.IsActive
+                financeEntry.RecurringFinanceItem.IsActive,
+            IsSkipped = financeEntry.IsSkipped
         };
 
         return Ok(response);

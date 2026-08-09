@@ -428,7 +428,8 @@ export class FinanceManager implements OnInit {
                     entryDate.getFullYear() ===
                         this.selectedYear &&
                     entryDate.getMonth() + 1 ===
-                        this.selectedMonth
+                        this.selectedMonth &&
+                    !entry.isSkipped
                 );
             }
         );

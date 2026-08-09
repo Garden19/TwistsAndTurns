@@ -289,6 +289,9 @@ namespace TwistsAndTurns.Api.Migrations
                     b.Property<int>("EntryType")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsSkipped")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
