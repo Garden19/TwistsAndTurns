@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TwistsAndTurns.Api.Data;
 using TwistsAndTurns.Api.Models;
+using TwistsAndTurns.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ var connectionString =
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<RecurringFinanceEntryGenerator>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

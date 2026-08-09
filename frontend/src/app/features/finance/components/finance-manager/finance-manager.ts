@@ -48,13 +48,12 @@ export class FinanceManager implements OnInit {
     itemBankAccountId: number | null = null;
     itemRecurrenceUnit = RecurrenceUnit.Month;
     itemRecurrenceInterval = 1;
-
+    currentDate = new Date();
+    selectedYear = this.currentDate.getFullYear();    
+    selectedMonth = this.currentDate.getMonth() + 1;
     hasAttemptedSave = false;
-
     recurrenceUnits = RecurrenceUnit;
-
     bankAccounts: BankAccount[] = [];
-
     isConfirmingDelete = false;
     isEditingEntry = false;
 
@@ -68,6 +67,7 @@ export class FinanceManager implements OnInit {
 
     ngOnInit(): void {
         this.loadBankAccounts();
+        this.loadSelectedMonth();
     }
 
     startDeleteConfirmation(): void {
@@ -89,6 +89,31 @@ export class FinanceManager implements OnInit {
             .subscribe({
                 next: (accounts) => {
                     this.bankAccounts = accounts;
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
+    }
+
+    loadSelectedMonth(): void {
+        this.recurringFinanceItemsService
+            .generateForMonth(
+                this.selectedYear,
+                this.selectedMonth
+            )
+            .subscribe({
+                next: () => {
+                    this.financeService
+                        .getFinanceEntries()
+                        .subscribe({
+                            next: (entries) => {
+                                this.financeEntries = entries;
+                            },
+                            error: (error) => {
+                                console.error(error);
+                            }
+                        });
                 },
                 error: (error) => {
                     console.error(error);
@@ -132,8 +157,46 @@ export class FinanceManager implements OnInit {
     }
 
     cancelEditingEntry(): void {
-        this.isEditingEntry = false;
-        this.hasAttemptedSave = false;
+            this.isEditingEntry = false;
+            this.hasAttemptedSave = false;
+        }
+
+        previousMonth(): void {
+            this.selectedMonth--;
+
+            if (this.selectedMonth < 1) {
+                this.selectedMonth = 12;
+                this.selectedYear--;
+            }
+
+            this.loadSelectedMonth();
+        }
+
+    nextMonth(): void {
+        this.selectedMonth++;
+
+        if (this.selectedMonth > 12) {
+            this.selectedMonth = 1;
+            this.selectedYear++;
+        }
+
+        this.loadSelectedMonth();
+    }
+
+    get selectedMonthLabel(): string {
+        const date = new Date(
+            this.selectedYear,
+            this.selectedMonth - 1,
+            1
+        );
+
+        return date.toLocaleString(
+            'en-GB',
+            {
+                month: 'long',
+                year: 'numeric'
+            }
+        );
     }
 
     saveEditedEntry(): void {
@@ -238,9 +301,7 @@ export class FinanceManager implements OnInit {
                         this.financeService
                             .getFinanceEntries()
                             .subscribe({
-                                next: (entries) => {
-                                    this.financeEntries = entries;
-
+                                next: () => {
                                     this.itemName = '';
                                     this.itemAmount = null;
                                     this.itemKind = 'income';
@@ -255,6 +316,7 @@ export class FinanceManager implements OnInit {
                                     this.isSaving = false;
 
                                     this.closeDrawer();
+                                    this.loadSelectedMonth();
                                 },
                                 error: (error) => {
                                     console.error(error);
@@ -331,8 +393,49 @@ export class FinanceManager implements OnInit {
             });
     }
 
+    stopSelectedRecurringItem(): void {
+        if (
+            this.selectedEntry === null ||
+            this.selectedEntry.recurringFinanceItemId === null
+        ) {
+            return;
+        }
+
+       this.recurringFinanceItemsService
+        .stopRecurringFinanceItem(
+            this.selectedEntry.recurringFinanceItemId,
+            this.selectedEntry.entryDate
+        )
+            .subscribe({
+                next: () => {
+                    this.loadSelectedMonth();
+                    this.closeDrawer();
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
+    }
+
+    get selectedMonthEntries(): FinanceEntry[] {
+        return this.financeEntries.filter(
+            (entry) => {
+                const entryDate = new Date(
+                    entry.entryDate
+                );
+
+                return (
+                    entryDate.getFullYear() ===
+                        this.selectedYear &&
+                    entryDate.getMonth() + 1 ===
+                        this.selectedMonth
+                );
+            }
+        );
+    }
+
     get totalIncome(): number {
-        return this.financeEntries
+        return this.selectedMonthEntries
             .filter(
                 (entry) =>
                     entry.entryType ===
@@ -346,7 +449,7 @@ export class FinanceManager implements OnInit {
     }
 
     get totalOutgoings(): number {
-        return this.financeEntries
+        return this.selectedMonthEntries
             .filter(
                 (entry) =>
                     entry.entryType ===
@@ -375,7 +478,7 @@ export class FinanceManager implements OnInit {
     }
 
     get incomeEntries(): FinanceEntry[] {
-        return this.financeEntries.filter(
+        return this.selectedMonthEntries.filter(
             (entry) =>
                 entry.entryType ===
                 FinanceEntryType.Income
@@ -383,7 +486,7 @@ export class FinanceManager implements OnInit {
     }
 
     get outgoingEntries(): FinanceEntry[] {
-        return this.financeEntries.filter(
+        return this.selectedMonthEntries.filter(
             (entry) =>
                 entry.entryType ===
                 FinanceEntryType.Expense

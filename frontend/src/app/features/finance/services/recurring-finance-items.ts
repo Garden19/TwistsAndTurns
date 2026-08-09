@@ -26,4 +26,32 @@ export class RecurringFinanceItems {
             }
         );
     }
+
+    generateForMonth(
+        year: number,
+        month: number
+    ): Observable<{ generatedCount: number }> {
+        return this.http.post<{ generatedCount: number }>(
+            `${this.apiUrl}/generate?year=${year}&month=${month}`,
+            {},
+            {
+                withCredentials: true
+            }
+        );
+    }
+
+    stopRecurringFinanceItem(
+        id: number,
+        stopAfterDate: string
+    ): Observable<void> {
+        return this.http.post<void>(
+            `${this.apiUrl}/${id}/stop`,
+            {
+                stopAfterDate: stopAfterDate
+            },
+            {
+                withCredentials: true
+            }
+        );
+    }
 }

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TwistsAndTurns.Api.Data;
 using TwistsAndTurns.Api.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace TwistsAndTurns.Api.Controllers;
 
@@ -80,7 +80,9 @@ public class FinanceEntriesController : ControllerBase
             BankAccountId = bankAccount?.Id
         };
 
-        _dbContext.FinanceEntries.Add(financeEntry);
+        _dbContext.FinanceEntries.Add(
+            financeEntry
+        );
 
         await _dbContext.SaveChangesAsync();
 
@@ -95,7 +97,10 @@ public class FinanceEntriesController : ControllerBase
             CreatedAt = financeEntry.CreatedAt,
             BankAccountId = financeEntry.BankAccountId,
             BankAccountName = bankAccount?.Name,
-            BankName = bankAccount?.BankName
+            BankName = bankAccount?.BankName,
+            RecurringFinanceItemId =
+                financeEntry.RecurringFinanceItemId,
+            IsRecurringActive = false
         };
 
         return Ok(response);
@@ -115,32 +120,51 @@ public class FinanceEntriesController : ControllerBase
         }
 
         var financeEntries = await _dbContext.FinanceEntries
-            .Where(entry => entry.UserId == user.Id)
-            .OrderByDescending(entry => entry.CreatedAt)
-            .Select(entry => new FinanceEntryResponse
-            {
-                Id = entry.Id,
-                Name = entry.Name,
-                Amount = entry.Amount,
-                EntryType = entry.EntryType,
-                EntryDate = entry.EntryDate,
-                CreatedAt = entry.CreatedAt,
-                Category = entry.Category,
-                BankAccountId = entry.BankAccountId,
-                BankAccountName = entry.BankAccount == null
-                    ? null
-                    : entry.BankAccount.Name,
-                BankName = entry.BankAccount == null
-                    ? null
-                    : entry.BankAccount.BankName
-            })
+            .Where(
+                entry =>
+                    entry.UserId == user.Id
+            )
+            .OrderByDescending(
+                entry =>
+                    entry.CreatedAt
+            )
+            .Select(
+                entry =>
+                    new FinanceEntryResponse
+                    {
+                        Id = entry.Id,
+                        Name = entry.Name,
+                        Amount = entry.Amount,
+                        EntryType = entry.EntryType,
+                        EntryDate = entry.EntryDate,
+                        CreatedAt = entry.CreatedAt,
+                        Category = entry.Category,
+                        BankAccountId =
+                            entry.BankAccountId,
+                        BankAccountName =
+                            entry.BankAccount == null
+                                ? null
+                                : entry.BankAccount.Name,
+                        BankName =
+                            entry.BankAccount == null
+                                ? null
+                                : entry.BankAccount.BankName,
+                        RecurringFinanceItemId =
+                            entry.RecurringFinanceItemId,
+                        IsRecurringActive =
+                            entry.RecurringFinanceItem != null &&
+                            entry.RecurringFinanceItem.IsActive
+                    }
+            )
             .ToListAsync();
 
         return Ok(financeEntries);
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(
+        int id
+    )
     {
         var user = await _userManager.GetUserAsync(User);
 
@@ -167,7 +191,9 @@ public class FinanceEntriesController : ControllerBase
             });
         }
 
-        _dbContext.FinanceEntries.Remove(financeEntry);
+        _dbContext.FinanceEntries.Remove(
+            financeEntry
+        );
 
         await _dbContext.SaveChangesAsync();
 
@@ -191,6 +217,10 @@ public class FinanceEntriesController : ControllerBase
         }
 
         var financeEntry = await _dbContext.FinanceEntries
+            .Include(
+                entry =>
+                    entry.RecurringFinanceItem
+            )
             .FirstOrDefaultAsync(
                 entry =>
                     entry.Id == id &&
@@ -230,7 +260,8 @@ public class FinanceEntriesController : ControllerBase
         financeEntry.Amount = request.Amount;
         financeEntry.EntryType = request.EntryType;
         financeEntry.Category = request.Category;
-        financeEntry.BankAccountId = bankAccount?.Id;
+        financeEntry.BankAccountId =
+            bankAccount?.Id;
 
         await _dbContext.SaveChangesAsync();
 
@@ -245,7 +276,12 @@ public class FinanceEntriesController : ControllerBase
             CreatedAt = financeEntry.CreatedAt,
             BankAccountId = financeEntry.BankAccountId,
             BankAccountName = bankAccount?.Name,
-            BankName = bankAccount?.BankName
+            BankName = bankAccount?.BankName,
+            RecurringFinanceItemId =
+                financeEntry.RecurringFinanceItemId,
+            IsRecurringActive =
+                financeEntry.RecurringFinanceItem != null &&
+                financeEntry.RecurringFinanceItem.IsActive
         };
 
         return Ok(response);

@@ -16,4 +16,6 @@ public class FinanceEntryResponse
     public int? BankAccountId { get; set; }
     public string? BankAccountName { get; set; }
     public string? BankName { get; set; }
+    public int? RecurringFinanceItemId { get; set; }
+    public bool IsRecurringActive { get; set; }
 }

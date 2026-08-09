@@ -47,6 +47,26 @@
 
         <div class="manager-column entries-column">
 
+            <div class="month-navigation">
+                <button
+                    type="button"
+                    (click)="previousMonth()"
+                >
+                    ← Previous
+                </button>
+
+                <h3>
+                    {{ selectedMonthLabel }}
+                </h3>
+
+                <button
+                    type="button"
+                    (click)="nextMonth()"
+                >
+                    Next →
+                </button>
+            </div>
+
             <div class="entries-header">
                 <h3>Income & outgoings</h3>
 
@@ -753,52 +773,64 @@
                     </div>
 
                     <div class="entry-actions">
-                        @if (!isConfirmingDelete) {
-                            <button
-                                type="button"
-                                class="edit-entry-button"
-                                (click)="startEditingEntry()"
-                            >
-                                Edit item
-                            </button>
+        @if (!isConfirmingDelete) {
+            <button
+                type="button"
+                class="edit-entry-button"
+                (click)="startEditingEntry()"
+            >
+                Edit item
+            </button>
 
-                            <button
-                                type="button"
-                                class="remove-entry-button"
-                                (click)="startDeleteConfirmation()"
-                            >
-                                Remove item
-                            </button>
-                        } @else {
-                            <div class="delete-confirmation">
-                                <strong>
-                                    Remove {{ selectedEntry.name }}?
-                                </strong>
+            @if (
+                selectedEntry.recurringFinanceItemId !== null &&
+                selectedEntry.isRecurringActive
+            ) {
+                <button
+                    type="button"
+                    (click)="stopSelectedRecurringItem()"
+                >
+                    Stop recurring
+                </button>
+            }
 
-                                <p>
-                                    This will permanently remove this finance item.
-                                </p>
+            <button
+                type="button"
+                class="remove-entry-button"
+                (click)="startDeleteConfirmation()"
+            >
+                Remove item
+            </button>
+        } @else {
+            <div class="delete-confirmation">
+                <strong>
+                    Remove {{ selectedEntry.name }}?
+                </strong>
 
-                                <div class="delete-confirmation-actions">
-                                    <button
-                                        type="button"
-                                        class="cancel-delete-button"
-                                        (click)="cancelDeleteConfirmation()"
-                                    >
-                                        Cancel
-                                    </button>
+                <p>
+                    This will permanently remove this finance item.
+                </p>
 
-                                    <button
-                                        type="button"
-                                        class="remove-entry-button"
-                                        (click)="deleteFinanceEntry(selectedEntry)"
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                    </div>
+                <div class="delete-confirmation-actions">
+                    <button
+                        type="button"
+                        class="cancel-delete-button"
+                        (click)="cancelDeleteConfirmation()"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="remove-entry-button"
+                        (click)="deleteFinanceEntry(selectedEntry)"
+                    >
+                        Remove
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
                 } @else {
                     <div class="edit-entry-form">
                         <label for="edit-item-kind">

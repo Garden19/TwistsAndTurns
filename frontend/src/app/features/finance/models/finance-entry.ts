@@ -14,4 +14,6 @@ export interface FinanceEntry {
     bankAccountId: number | null;
     bankAccountName: string | null;
     bankName: string | null;
+    recurringFinanceItemId: number | null;
+    isRecurringActive: boolean;
 }

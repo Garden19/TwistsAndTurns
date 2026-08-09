@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TwistsAndTurns.Api.Data;
 using TwistsAndTurns.Api.Models;
+using TwistsAndTurns.Api.Services;
 
 namespace TwistsAndTurns.Api.Controllers;
 
@@ -14,14 +15,17 @@ public class RecurringFinanceItemsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly UserManager<ApplicationUser> _userManager;
-
+    private readonly RecurringFinanceEntryGenerator _recurringEntryGenerator;
+    
     public RecurringFinanceItemsController(
         ApplicationDbContext dbContext,
-        UserManager<ApplicationUser> userManager
+        UserManager<ApplicationUser> userManager,
+        RecurringFinanceEntryGenerator recurringEntryGenerator
     )
     {
         _dbContext = dbContext;
         _userManager = userManager;
+        _recurringEntryGenerator = recurringEntryGenerator;
     }
 
     [HttpPost]
@@ -147,24 +151,22 @@ public class RecurringFinanceItemsController : ControllerBase
 
         await _dbContext.SaveChangesAsync();
 
-        var firstFinanceEntry =
-            new FinanceEntry
-            {
-                Name = recurringFinanceItem.Name,
-                Amount = recurringFinanceItem.Amount,
-                EntryType = recurringFinanceItem.EntryType,
-                Category = recurringFinanceItem.Category,
-                EntryDate = recurringFinanceItem.StartDate,
-                UserId = user.Id,
-                BankAccountId =
-                    recurringFinanceItem.BankAccountId,
-                RecurringFinanceItemId =
-                    recurringFinanceItem.Id
-            };
+        var today = DateTime.UtcNow.Date;
 
-        _dbContext.FinanceEntries.Add(
-            firstFinanceEntry
+        var endOfCurrentMonth = new DateTime(
+            today.Year,
+            today.Month,
+            DateTime.DaysInMonth(
+                today.Year,
+                today.Month
+            )
         );
+
+        await _recurringEntryGenerator
+            .GenerateMissingEntriesAsync(
+                recurringFinanceItem,
+                endOfCurrentMonth
+            );
 
         await _dbContext.SaveChangesAsync();
 
@@ -198,5 +200,132 @@ public class RecurringFinanceItemsController : ControllerBase
             $"/api/recurring-finance-items/{recurringFinanceItem.Id}",
             response
         );
+    }
+
+    [HttpPost("generate")]
+    public async Task<ActionResult> GenerateForMonth(
+        int year,
+        int month
+    )
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        if (
+            month < 1 ||
+            month > 12
+        )
+        {
+            return BadRequest(new
+            {
+                message = "Month must be between 1 and 12"
+            });
+        }
+
+        if (year < 2000)
+        {
+            return BadRequest(new
+            {
+                message = "The year is invalid"
+            });
+        }
+
+        var endOfMonth = new DateTime(
+            year,
+            month,
+            DateTime.DaysInMonth(
+                year,
+                month
+            )
+        );
+
+        var recurringItems = await _dbContext
+            .RecurringFinanceItems
+            .Where(
+                item =>
+                    item.UserId == user.Id &&
+                    item.IsActive &&
+                    item.StartDate <= endOfMonth
+            )
+            .ToListAsync();
+
+        var generatedCount = 0;
+
+        foreach (var recurringItem in recurringItems)
+        {
+            var generatedEntries =
+                await _recurringEntryGenerator
+                    .GenerateMissingEntriesAsync(
+                        recurringItem,
+                        endOfMonth
+                    );
+
+            generatedCount += generatedEntries.Count;
+        }
+
+        return Ok(new
+        {
+            generatedCount
+        });
+    }
+
+    [HttpPost("{id:int}/stop")]
+    public async Task<IActionResult> Stop(
+        int id,
+        StopRecurringFinanceItemRequest request
+    )
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        var recurringFinanceItem =
+            await _dbContext.RecurringFinanceItems
+                .FirstOrDefaultAsync(
+                    item =>
+                        item.Id == id &&
+                        item.UserId == user.Id
+                );
+
+        if (recurringFinanceItem is null)
+        {
+            return NotFound(new
+            {
+                message = "Recurring finance item could not be found"
+            });
+        }
+
+        recurringFinanceItem.IsActive = false;
+
+        var futureEntries =
+            await _dbContext.FinanceEntries
+                .Where(
+                    entry =>
+                        entry.UserId == user.Id &&
+                        entry.RecurringFinanceItemId == id &&
+                        entry.EntryDate > request.StopAfterDate.Date
+                )
+                .ToListAsync();
+
+        _dbContext.FinanceEntries.RemoveRange(
+            futureEntries
+        );
+
+        await _dbContext.SaveChangesAsync();
+
+        return NoContent();
     }
 }
