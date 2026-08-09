@@ -515,46 +515,100 @@
                             }
                         </select>
 
-                        @if (itemKind === 'outgoing') {
-                            <div class="checkbox-field">
-                                <input
-                                    id="item-recurring"
-                                    type="checkbox"
-                                    name="itemIsRecurring"
-                                    [(ngModel)]="itemIsRecurring"
-                                />
+                        <div class="checkbox-field">
+                            <input
+                                id="item-recurring"
+                                type="checkbox"
+                                name="itemIsRecurring"
+                                [(ngModel)]="itemIsRecurring"
+                            />
 
-                                <label for="item-recurring">
-                                    Recurring
-                                </label>
-                            </div>
+                            <label for="item-recurring">
+                                Recurring
+                            </label>
+                        </div>
 
-                            @if (itemIsRecurring) {
-                                <label for="item-due-date">
-                                    Next due date
-                                    <span class="required-marker">*</span>
-                                </label>
+                        @if (itemIsRecurring) {
+                            <label for="item-recurrence-interval">
+                                Repeat every
+                                <span class="required-marker">*</span>
+                            </label>
 
-                                <input
-                                    id="item-due-date"
-                                    type="date"
-                                    name="itemDueDate"
-                                    required
-                                    [(ngModel)]="itemDueDate"
-                                    #itemDueDateInput="ngModel"
-                                />
+                            <input
+                                id="item-recurrence-interval"
+                                type="number"
+                                name="itemRecurrenceInterval"
+                                min="1"
+                                required
+                                [(ngModel)]="itemRecurrenceInterval"
+                                #itemRecurrenceIntervalInput="ngModel"
+                            />
 
-                                @if (
-                                    itemDueDateInput.invalid &&
-                                    (
-                                        itemDueDateInput.touched ||
-                                        hasAttemptedSave
-                                    )
-                                ) {
-                                    <p class="field-error">
-                                        Please select the next due date.
-                                    </p>
-                                }
+                            @if (
+                                itemRecurrenceIntervalInput.invalid &&
+                                (
+                                    itemRecurrenceIntervalInput.touched ||
+                                    hasAttemptedSave
+                                )
+                            ) {
+                                <p class="field-error">
+                                    Repeat interval must be at least 1.
+                                </p>
+                            }
+
+                            <label for="item-recurrence-unit">
+                                Period
+                                <span class="required-marker">*</span>
+                            </label>
+
+                            <select
+                                id="item-recurrence-unit"
+                                name="itemRecurrenceUnit"
+                                [(ngModel)]="itemRecurrenceUnit"
+                            >
+                                <option
+                                    [ngValue]="recurrenceUnits.Week"
+                                >
+                                    Week
+                                </option>
+
+                                <option
+                                    [ngValue]="recurrenceUnits.Month"
+                                >
+                                    Month
+                                </option>
+
+                                <option
+                                    [ngValue]="recurrenceUnits.Year"
+                                >
+                                    Year
+                                </option>
+                            </select>
+
+                            <label for="item-due-date">
+                                Start date
+                                <span class="required-marker">*</span>
+                            </label>
+
+                            <input
+                                id="item-due-date"
+                                type="date"
+                                name="itemDueDate"
+                                required
+                                [(ngModel)]="itemDueDate"
+                                #itemDueDateInput="ngModel"
+                            />
+
+                            @if (
+                                itemDueDateInput.invalid &&
+                                (
+                                    itemDueDateInput.touched ||
+                                    hasAttemptedSave
+                                )
+                            ) {
+                                <p class="field-error">
+                                    Please select a start date.
+                                </p>
                             }
                         }
 

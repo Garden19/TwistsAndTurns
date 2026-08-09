@@ -11,6 +11,9 @@ import { Finance } from '../../services/finance';
 import { BankAccountManager } from '../bank-account-manager/bank-account-manager';
 import { BankAccount } from '../../models/bank-account';
 import { BankAccounts } from '../../services/bank-accounts';
+import { RecurrenceUnit } from '../../models/recurring-finance-item';
+import { CreateRecurringFinanceItemRequest } from '../../models/create-recurring-finance-item-request';
+import { RecurringFinanceItems } from '../../services/recurring-finance-items';
 
 @Component({
     selector: 'app-finance-manager',
@@ -28,7 +31,8 @@ export class FinanceManager implements OnInit {
 
     constructor(
         private financeService: Finance,
-        private bankAccountsService: BankAccounts
+        private bankAccountsService: BankAccounts,
+        private recurringFinanceItemsService: RecurringFinanceItems
     ) {}
 
     @Input() financeEntries: FinanceEntry[] = [];
@@ -42,8 +46,12 @@ export class FinanceManager implements OnInit {
     itemIsRecurring = false;
     itemDueDate = '';
     itemBankAccountId: number | null = null;
+    itemRecurrenceUnit = RecurrenceUnit.Month;
+    itemRecurrenceInterval = 1;
 
     hasAttemptedSave = false;
+
+    recurrenceUnits = RecurrenceUnit;
 
     bankAccounts: BankAccount[] = [];
 
@@ -193,9 +201,11 @@ export class FinanceManager implements OnInit {
             this.itemAmount <= 0 ||
             this.itemCategory === '' ||
             (
-                this.itemKind === 'outgoing' &&
                 this.itemIsRecurring &&
-                this.itemDueDate === ''
+                (
+                    this.itemDueDate === '' ||
+                    this.itemRecurrenceInterval <= 0
+                )
             )
         ) {
             return;
@@ -207,6 +217,59 @@ export class FinanceManager implements OnInit {
             this.itemKind === 'income'
                 ? FinanceEntryType.Income
                 : FinanceEntryType.Expense;
+
+        if (this.itemIsRecurring) {
+            const request: CreateRecurringFinanceItemRequest = {
+                name: this.itemName.trim(),
+                amount: this.itemAmount,
+                entryType: entryType,
+                category: this.itemCategory,
+                recurrenceUnit: this.itemRecurrenceUnit,
+                recurrenceInterval:
+                    this.itemRecurrenceInterval,
+                startDate: this.itemDueDate,
+                bankAccountId: this.itemBankAccountId
+            };
+
+            this.recurringFinanceItemsService
+                .createRecurringFinanceItem(request)
+                .subscribe({
+                    next: () => {
+                        this.financeService
+                            .getFinanceEntries()
+                            .subscribe({
+                                next: (entries) => {
+                                    this.financeEntries = entries;
+
+                                    this.itemName = '';
+                                    this.itemAmount = null;
+                                    this.itemKind = 'income';
+                                    this.itemCategory = '';
+                                    this.itemBankAccountId = null;
+                                    this.itemIsRecurring = false;
+                                    this.itemDueDate = '';
+                                    this.itemRecurrenceUnit =
+                                        RecurrenceUnit.Month;
+                                    this.itemRecurrenceInterval = 1;
+                                    this.hasAttemptedSave = false;
+                                    this.isSaving = false;
+
+                                    this.closeDrawer();
+                                },
+                                error: (error) => {
+                                    console.error(error);
+                                    this.isSaving = false;
+                                }
+                            });
+                    },
+                    error: (error) => {
+                        console.error(error);
+                        this.isSaving = false;
+                    }
+                });
+
+            return;
+        }
 
         const request: CreateFinanceEntryRequest = {
             name: this.itemName.trim(),
@@ -232,6 +295,9 @@ export class FinanceManager implements OnInit {
                     this.itemBankAccountId = null;
                     this.itemIsRecurring = false;
                     this.itemDueDate = '';
+                    this.itemRecurrenceUnit =
+                        RecurrenceUnit.Month;
+                    this.itemRecurrenceInterval = 1;
                     this.hasAttemptedSave = false;
                     this.isSaving = false;
 
