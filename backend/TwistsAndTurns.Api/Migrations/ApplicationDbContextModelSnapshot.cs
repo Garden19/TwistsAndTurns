@@ -270,6 +270,7 @@ namespace TwistsAndTurns.Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("BankAccountId")
@@ -303,6 +304,86 @@ namespace TwistsAndTurns.Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("FinanceEntries");
+                });
+
+            modelBuilder.Entity("TwistsAndTurns.Api.Models.RecurringBill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("BankAccountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DueDay")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankAccountId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecurringBills");
+                });
+
+            modelBuilder.Entity("TwistsAndTurns.Api.Models.RecurringBillOccurrence", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RecurringBillId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecurringBillId", "DueDate")
+                        .IsUnique();
+
+                    b.ToTable("RecurringBillOccurrences");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -382,6 +463,34 @@ namespace TwistsAndTurns.Api.Migrations
                     b.Navigation("BankAccount");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TwistsAndTurns.Api.Models.RecurringBill", b =>
+                {
+                    b.HasOne("TwistsAndTurns.Api.Models.BankAccount", "BankAccount")
+                        .WithMany()
+                        .HasForeignKey("BankAccountId");
+
+                    b.HasOne("TwistsAndTurns.Api.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BankAccount");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TwistsAndTurns.Api.Models.RecurringBillOccurrence", b =>
+                {
+                    b.HasOne("TwistsAndTurns.Api.Models.RecurringBill", "RecurringBill")
+                        .WithMany()
+                        .HasForeignKey("RecurringBillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RecurringBill");
                 });
 #pragma warning restore 612, 618
         }
