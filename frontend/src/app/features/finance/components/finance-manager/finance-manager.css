@@ -374,6 +374,135 @@
     overflow-wrap: anywhere;
 }
 
+.entry-chart-section {
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+
+    padding: 1rem 0 0.75rem;
+}
+
+.entry-donut-chart {
+    display: grid;
+    place-items: center;
+
+    width: 130px;
+    aspect-ratio: 1 / 1;
+
+    border-radius: 50%;
+}
+
+.entry-donut-centre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 74%;
+    aspect-ratio: 1 / 1;
+
+    background-color: var(--colour-white);
+
+    border-radius: 50%;
+}
+
+.entry-donut-centre strong {
+    font-size: 1.15rem;
+}
+
+.entry-donut-centre span {
+    color: var(--colour-text-muted);
+
+    font-size: 0.75rem;
+}
+
+.entry-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.entry-actions > button {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+.edit-entry-button {
+    width: 100%;
+}
+
+.remove-entry-button {
+    width: 100%;
+    background-color: var(--colour-error);
+}
+
+.delete-confirmation {
+    grid-column: 1 / -1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    width: 100%;
+    padding: 1rem;
+
+    background-color: rgb(217 45 32 / 6%);
+
+    border: 1px solid rgb(217 45 32 / 35%);
+    border-radius: var(--border-radius);
+}
+
+.delete-confirmation strong {
+    color: var(--colour-text);
+    font-size: 1rem;
+}
+
+.delete-confirmation p {
+    margin: 0;
+
+    color: var(--colour-text-muted);
+
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.delete-confirmation-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+
+    width: 100%;
+}
+
+.delete-confirmation-actions button {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+.cancel-delete-button {
+    background-color: #667085;
+}
+
+.cancel-delete-button:hover:not(:disabled) {
+    background-color: #475467;
+}
+
+@media (max-width: 420px) {
+    .entry-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .delete-confirmation-actions {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 @media (max-width: 1000px) {
 
     .finance-table th,

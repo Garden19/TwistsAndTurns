@@ -586,63 +586,160 @@
             }
 
             @if (
-                activeDrawer === 'entryDetails' &&
-                selectedEntry !== null
-            ) {
-                <div class="drawer-header">
-                    <h3>
-                        {{ selectedEntry.name }}
-                    </h3>
+    activeDrawer === 'entryDetails' &&
+    selectedEntry !== null
+) {
+    <div class="drawer-header">
+        <h3>
+            {{ selectedEntry.name }}
+        </h3>
+
+        <button
+            type="button"
+            (click)="closeDrawer()"
+        >
+            Close
+        </button>
+    </div>
+
+    <div class="entry-chart-section">
+        <div
+            class="entry-donut-chart"
+            [style.background]="
+                selectedEntryIncomeChartBackground
+            "
+        >
+            <div class="entry-donut-centre">
+                <strong>
+                    {{
+                        selectedEntryIncomePercentage
+                            | percent:'1.0-1'
+                    }}
+                </strong>
+
+                <span>
+                    of income
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="entry-details">
+        <div class="entry-detail">
+            <span>
+                Amount
+            </span>
+
+            <strong>
+                {{
+                    selectedEntry.amount
+                        | currency:'GBP':'symbol':'1.2-2'
+                }}
+            </strong>
+        </div>
+
+        <div class="entry-detail">
+            <span>
+                Percentage of income
+            </span>
+
+            <strong>
+                {{
+                    selectedEntryIncomePercentage
+                        | percent:'1.2-2'
+                }}
+            </strong>
+        </div>
+
+        @if (selectedEntryOutgoingPercentage > 0) {
+            <div class="entry-detail">
+                <span>
+                    Percentage of outgoings
+                </span>
+
+                <strong>
+                    {{
+                        selectedEntryOutgoingPercentage
+                            | percent:'1.2-2'
+                    }}
+                </strong>
+            </div>
+        }
+
+        <div class="entry-detail">
+            <span>
+                Category
+            </span>
+
+            <strong>
+                {{ selectedEntry.category }}
+            </strong>
+        </div>
+
+        @if (
+            selectedEntry.bankName !== null &&
+            selectedEntry.bankAccountName !== null
+        ) {
+            <div class="entry-detail">
+                <span>
+                    Bank account
+                </span>
+
+                <strong>
+                    {{ selectedEntry.bankName }} -
+                    {{ selectedEntry.bankAccountName }}
+                </strong>
+            </div>
+        }
+    </div>
+
+    <div class="entry-actions">
+        @if (!isConfirmingDelete) {
+            <button
+                type="button"
+                class="edit-entry-button"
+            >
+                Edit item
+            </button>
+
+            <button
+                type="button"
+                class="remove-entry-button"
+                (click)="startDeleteConfirmation()"
+            >
+                Remove item
+            </button>
+        } @else {
+            <div class="delete-confirmation">
+                <strong>
+                    Remove {{ selectedEntry.name }}?
+                </strong>
+
+                <p>
+                    This will permanently remove this finance item.
+                </p>
+
+                <div class="delete-confirmation-actions">
+                    <button
+                        type="button"
+                        class="cancel-delete-button"
+                        (click)="cancelDeleteConfirmation()"
+                    >
+                        Cancel
+                    </button>
 
                     <button
                         type="button"
-                        (click)="closeDrawer()"
+                        class="remove-entry-button"
+                        (click)="deleteFinanceEntry(selectedEntry)"
                     >
-                        Close
+                        Remove
                     </button>
                 </div>
-
-                <div class="entry-details">
-                    <div class="entry-detail">
-                        <span>
-                            Amount
-                        </span>
-
-                        <strong>
-                            {{
-                                selectedEntry.amount
-                                    | currency:'GBP':'symbol':'1.2-2'
-                            }}
-                        </strong>
-                    </div>
-
-                    <div class="entry-detail">
-                        <span>
-                            Category
-                        </span>
-
-                        <strong>
-                            {{ selectedEntry.category }}
-                        </strong>
-                    </div>
-
-                    @if (
-                        selectedEntry.bankName !== null &&
-                        selectedEntry.bankAccountName !== null
-                    ) {
-                        <div class="entry-detail">
-                            <span>
-                                Bank account
-                            </span>
-
-                            <strong>
-                                {{ selectedEntry.bankName }} -
-                                {{ selectedEntry.bankAccountName }}
-                            </strong>
-                        </div>
-                    }
-                </div>
-            }
+            </div>
+        }
+    </div>
+}
 
         </aside>
     </div>

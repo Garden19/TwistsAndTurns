@@ -4,7 +4,7 @@ import { FinanceEntryType, type FinanceEntry } from '../../models/finance-entry'
 
 @Component({
     selector: 'app-finance-overview-chart',
-    imports: [CurrencyPipe, PercentPipe],
+    imports: [PercentPipe],
     templateUrl: './finance-overview-chart.html',
     styleUrl: './finance-overview-chart.css',
 })

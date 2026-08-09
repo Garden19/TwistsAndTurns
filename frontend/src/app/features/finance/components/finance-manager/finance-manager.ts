@@ -45,6 +45,7 @@ export class FinanceManager implements OnInit {
     itemBankAccountId: number | null = null;
     hasAttemptedSave = false;
     bankAccounts: BankAccount[] = [];
+    isConfirmingDelete = false;
 
     activeDrawer:
       | 'addItem'
@@ -56,6 +57,14 @@ export class FinanceManager implements OnInit {
 
     ngOnInit(): void {
       this.loadBankAccounts();
+    }
+
+    startDeleteConfirmation(): void {
+        this.isConfirmingDelete = true;
+    }
+
+    cancelDeleteConfirmation(): void {
+        this.isConfirmingDelete = false;
     }
 
     openEntryDetails(entry: FinanceEntry): void {
@@ -85,8 +94,9 @@ export class FinanceManager implements OnInit {
     }
 
     closeDrawer(): void {
-        this.activeDrawer = null;
-        this.selectedEntry = null;
+      this.activeDrawer = null;
+      this.selectedEntry = null;
+      this.isConfirmingDelete = false;
     }
 
     saveFinanceEntry(): void {
@@ -200,14 +210,6 @@ export class FinanceManager implements OnInit {
     }
 
     deleteFinanceEntry(entry: FinanceEntry): void {
-        const confirmed = window.confirm(
-            `Are you sure you want to remove "${entry.name}"?`
-        );
-
-        if (!confirmed) {
-            return;
-        }
-
         this.financeService
             .deleteFinanceEntry(entry.id)
             .subscribe({
@@ -217,6 +219,8 @@ export class FinanceManager implements OnInit {
                             (financeEntry) =>
                                 financeEntry.id !== entry.id
                         );
+
+                    this.closeDrawer();
                 },
                 error: (error) => {
                     console.error(error);
@@ -226,5 +230,42 @@ export class FinanceManager implements OnInit {
     
     get shouldShowOverviewChart(): boolean {
       return this.totalIncome > 0 && this.totalOutgoings > 0;
+    }
+
+    get selectedEntryIncomePercentage(): number {
+        if (
+            this.selectedEntry === null ||
+            this.totalIncome === 0
+        ) {
+            return 0;
+        }
+
+        return this.selectedEntry.amount / this.totalIncome;
+    }
+
+    get selectedEntryOutgoingPercentage(): number {
+        if (
+            this.selectedEntry === null ||
+            this.selectedEntry.entryType !== FinanceEntryType.Expense ||
+            this.totalOutgoings === 0
+        ) {
+            return 0;
+        }
+
+        return this.selectedEntry.amount / this.totalOutgoings;
+    }
+
+    get selectedEntryIncomeChartBackground(): string {
+        const percentage = Math.min(
+            this.selectedEntryIncomePercentage,
+            1
+        );
+
+        const degrees = percentage * 360;
+
+        return `conic-gradient(
+            var(--colour-primary) 0deg ${degrees}deg,
+            #e8e8e8 ${degrees}deg 360deg
+        )`;
     }
 }
