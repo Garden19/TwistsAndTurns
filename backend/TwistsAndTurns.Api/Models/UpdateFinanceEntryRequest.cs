@@ -1,0 +1,14 @@
+namespace TwistsAndTurns.Api.Models;
+
+public class UpdateFinanceEntryRequest
+{
+    public string Name { get; set; } = string.Empty;
+
+    public decimal Amount { get; set; }
+
+    public FinanceEntryType EntryType { get; set; }
+
+    public string Category { get; set; } = string.Empty;
+
+    public int? BankAccountId { get; set; }
+}

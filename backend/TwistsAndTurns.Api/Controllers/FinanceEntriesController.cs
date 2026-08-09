@@ -173,4 +173,81 @@ public class FinanceEntriesController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<FinanceEntryResponse>> Update(
+        int id,
+        UpdateFinanceEntryRequest request
+    )
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        var financeEntry = await _dbContext.FinanceEntries
+            .FirstOrDefaultAsync(
+                entry =>
+                    entry.Id == id &&
+                    entry.UserId == user.Id
+            );
+
+        if (financeEntry is null)
+        {
+            return NotFound(new
+            {
+                message = "Finance entry could not be found"
+            });
+        }
+
+        BankAccount? bankAccount = null;
+
+        if (request.BankAccountId.HasValue)
+        {
+            bankAccount = await _dbContext.BankAccounts
+                .FirstOrDefaultAsync(
+                    account =>
+                        account.Id == request.BankAccountId.Value &&
+                        account.UserId == user.Id &&
+                        account.IsActive
+                );
+
+            if (bankAccount is null)
+            {
+                return BadRequest(new
+                {
+                    message = "The selected bank account could not be found"
+                });
+            }
+        }
+
+        financeEntry.Name = request.Name;
+        financeEntry.Amount = request.Amount;
+        financeEntry.EntryType = request.EntryType;
+        financeEntry.Category = request.Category;
+        financeEntry.BankAccountId = bankAccount?.Id;
+
+        await _dbContext.SaveChangesAsync();
+
+        var response = new FinanceEntryResponse
+        {
+            Id = financeEntry.Id,
+            Name = financeEntry.Name,
+            Amount = financeEntry.Amount,
+            EntryType = financeEntry.EntryType,
+            Category = financeEntry.Category,
+            EntryDate = financeEntry.EntryDate,
+            CreatedAt = financeEntry.CreatedAt,
+            BankAccountId = financeEntry.BankAccountId,
+            BankAccountName = bankAccount?.Name,
+            BankName = bankAccount?.BankName
+        };
+
+        return Ok(response);
+    }
 }
