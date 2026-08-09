@@ -46,6 +46,7 @@ export class FinanceManager implements OnInit {
     hasAttemptedSave = false;
     bankAccounts: BankAccount[] = [];
     isConfirmingDelete = false;
+    isEditingEntry = false;
 
     activeDrawer:
       | 'addItem'
@@ -94,9 +95,90 @@ export class FinanceManager implements OnInit {
     }
 
     closeDrawer(): void {
-      this.activeDrawer = null;
-      this.selectedEntry = null;
-      this.isConfirmingDelete = false;
+        this.activeDrawer = null;
+        this.selectedEntry = null;
+        this.isConfirmingDelete = false;
+        this.isEditingEntry = false;
+    }
+
+    startEditingEntry(): void {
+        if (this.selectedEntry === null) {
+            return;
+        }
+
+        this.itemName = this.selectedEntry.name;
+        this.itemAmount = this.selectedEntry.amount;
+        this.itemCategory = this.selectedEntry.category;
+        this.itemBankAccountId = this.selectedEntry.bankAccountId;
+
+        this.itemKind =
+            this.selectedEntry.entryType === FinanceEntryType.Income
+                ? 'income'
+                : 'outgoing';
+
+        this.hasAttemptedSave = false;
+        this.isEditingEntry = true;
+    }
+
+    cancelEditingEntry(): void {
+        this.isEditingEntry = false;
+        this.hasAttemptedSave = false;
+    }
+
+    saveEditedEntry(): void {
+        this.hasAttemptedSave = true;
+
+        if (
+            this.selectedEntry === null ||
+            this.itemName.trim() === '' ||
+            this.itemAmount === null ||
+            this.itemAmount <= 0 ||
+            this.itemCategory === ''
+        ) {
+            return;
+        }
+
+        this.isSaving = true;
+
+        const entryType =
+            this.itemKind === 'income'
+                ? FinanceEntryType.Income
+                : FinanceEntryType.Expense;
+
+        const request: CreateFinanceEntryRequest = {
+            name: this.itemName.trim(),
+            amount: this.itemAmount,
+            entryType: entryType,
+            category: this.itemCategory,
+            bankAccountId: this.itemBankAccountId
+        };
+
+        this.financeService
+            .updateFinanceEntry(
+                this.selectedEntry.id,
+                request
+            )
+            .subscribe({
+                next: (updatedEntry) => {
+                    this.financeEntries =
+                        this.financeEntries.map(
+                            (entry) =>
+                                entry.id === updatedEntry.id
+                                    ? updatedEntry
+                                    : entry
+                        );
+
+                    this.selectedEntry = updatedEntry;
+
+                    this.isEditingEntry = false;
+                    this.hasAttemptedSave = false;
+                    this.isSaving = false;
+                },
+                error: (error) => {
+                    console.error(error);
+                    this.isSaving = false;
+                }
+            });
     }
 
     saveFinanceEntry(): void {

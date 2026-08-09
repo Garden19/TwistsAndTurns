@@ -29,6 +29,17 @@ export class Finance {
         );
     }
 
+    updateFinanceEntry(
+        id: number,
+        request: CreateFinanceEntryRequest
+    ): Observable<FinanceEntry> {
+        return this.http.put<FinanceEntry>(
+            `${this.apiUrl}/${id}`,
+            request,
+            { withCredentials: true }
+        );
+    }
+
     deleteFinanceEntry(id: number): Observable<void> {
         return this.http.delete<void>(
             `${this.apiUrl}/${id}`,

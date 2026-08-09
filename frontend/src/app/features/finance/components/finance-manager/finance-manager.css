@@ -479,6 +479,39 @@
     width: 100%;
 }
 
+.edit-entry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    width: 100%;
+}
+
+.edit-entry-form input,
+.edit-entry-form select {
+    width: 100%;
+}
+
+.edit-entry-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.edit-entry-actions button {
+    width: 100%;
+    min-width: 0;
+}
+
+@media (max-width: 420px) {
+    .edit-entry-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
 .delete-confirmation-actions button {
     width: 100%;
     min-width: 0;

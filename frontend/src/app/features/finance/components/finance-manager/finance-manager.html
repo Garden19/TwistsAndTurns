@@ -586,160 +586,341 @@
             }
 
             @if (
-    activeDrawer === 'entryDetails' &&
-    selectedEntry !== null
-) {
-    <div class="drawer-header">
-        <h3>
-            {{ selectedEntry.name }}
-        </h3>
-
-        <button
-            type="button"
-            (click)="closeDrawer()"
-        >
-            Close
-        </button>
-    </div>
-
-    <div class="entry-chart-section">
-        <div
-            class="entry-donut-chart"
-            [style.background]="
-                selectedEntryIncomeChartBackground
-            "
-        >
-            <div class="entry-donut-centre">
-                <strong>
-                    {{
-                        selectedEntryIncomePercentage
-                            | percent:'1.0-1'
-                    }}
-                </strong>
-
-                <span>
-                    of income
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div class="entry-details">
-        <div class="entry-detail">
-            <span>
-                Amount
-            </span>
-
-            <strong>
-                {{
-                    selectedEntry.amount
-                        | currency:'GBP':'symbol':'1.2-2'
-                }}
-            </strong>
-        </div>
-
-        <div class="entry-detail">
-            <span>
-                Percentage of income
-            </span>
-
-            <strong>
-                {{
-                    selectedEntryIncomePercentage
-                        | percent:'1.2-2'
-                }}
-            </strong>
-        </div>
-
-        @if (selectedEntryOutgoingPercentage > 0) {
-            <div class="entry-detail">
-                <span>
-                    Percentage of outgoings
-                </span>
-
-                <strong>
-                    {{
-                        selectedEntryOutgoingPercentage
-                            | percent:'1.2-2'
-                    }}
-                </strong>
-            </div>
-        }
-
-        <div class="entry-detail">
-            <span>
-                Category
-            </span>
-
-            <strong>
-                {{ selectedEntry.category }}
-            </strong>
-        </div>
-
-        @if (
-            selectedEntry.bankName !== null &&
-            selectedEntry.bankAccountName !== null
-        ) {
-            <div class="entry-detail">
-                <span>
-                    Bank account
-                </span>
-
-                <strong>
-                    {{ selectedEntry.bankName }} -
-                    {{ selectedEntry.bankAccountName }}
-                </strong>
-            </div>
-        }
-    </div>
-
-    <div class="entry-actions">
-        @if (!isConfirmingDelete) {
-            <button
-                type="button"
-                class="edit-entry-button"
-            >
-                Edit item
-            </button>
-
-            <button
-                type="button"
-                class="remove-entry-button"
-                (click)="startDeleteConfirmation()"
-            >
-                Remove item
-            </button>
-        } @else {
-            <div class="delete-confirmation">
-                <strong>
-                    Remove {{ selectedEntry.name }}?
-                </strong>
-
-                <p>
-                    This will permanently remove this finance item.
-                </p>
-
-                <div class="delete-confirmation-actions">
-                    <button
-                        type="button"
-                        class="cancel-delete-button"
-                        (click)="cancelDeleteConfirmation()"
-                    >
-                        Cancel
-                    </button>
+                activeDrawer === 'entryDetails' &&
+                selectedEntry !== null
+            ) {
+                <div class="drawer-header">
+                    <h3>
+                        @if (isEditingEntry) {
+                            Edit {{ selectedEntry.name }}
+                        } @else {
+                            {{ selectedEntry.name }}
+                        }
+                    </h3>
 
                     <button
                         type="button"
-                        class="remove-entry-button"
-                        (click)="deleteFinanceEntry(selectedEntry)"
+                        (click)="closeDrawer()"
                     >
-                        Remove
+                        Close
                     </button>
                 </div>
-            </div>
-        }
-    </div>
-}
+
+                @if (!isEditingEntry) {
+                    <div class="entry-chart-section">
+                        <div
+                            class="entry-donut-chart"
+                            [style.background]="
+                                selectedEntryIncomeChartBackground
+                            "
+                        >
+                            <div class="entry-donut-centre">
+                                <strong>
+                                    {{
+                                        selectedEntryIncomePercentage
+                                            | percent:'1.0-1'
+                                    }}
+                                </strong>
+
+                                <span>
+                                    of income
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="entry-details">
+                        <div class="entry-detail">
+                            <span>
+                                Amount
+                            </span>
+
+                            <strong>
+                                {{
+                                    selectedEntry.amount
+                                        | currency:'GBP':'symbol':'1.2-2'
+                                }}
+                            </strong>
+                        </div>
+
+                        <div class="entry-detail">
+                            <span>
+                                Percentage of income
+                            </span>
+
+                            <strong>
+                                {{
+                                    selectedEntryIncomePercentage
+                                        | percent:'1.2-2'
+                                }}
+                            </strong>
+                        </div>
+
+                        @if (selectedEntryOutgoingPercentage > 0) {
+                            <div class="entry-detail">
+                                <span>
+                                    Percentage of outgoings
+                                </span>
+
+                                <strong>
+                                    {{
+                                        selectedEntryOutgoingPercentage
+                                            | percent:'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+                        }
+
+                        <div class="entry-detail">
+                            <span>
+                                Category
+                            </span>
+
+                            <strong>
+                                {{ selectedEntry.category }}
+                            </strong>
+                        </div>
+
+                        @if (
+                            selectedEntry.bankName !== null &&
+                            selectedEntry.bankAccountName !== null
+                        ) {
+                            <div class="entry-detail">
+                                <span>
+                                    Bank account
+                                </span>
+
+                                <strong>
+                                    {{ selectedEntry.bankName }} -
+                                    {{ selectedEntry.bankAccountName }}
+                                </strong>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="entry-actions">
+                        @if (!isConfirmingDelete) {
+                            <button
+                                type="button"
+                                class="edit-entry-button"
+                                (click)="startEditingEntry()"
+                            >
+                                Edit item
+                            </button>
+
+                            <button
+                                type="button"
+                                class="remove-entry-button"
+                                (click)="startDeleteConfirmation()"
+                            >
+                                Remove item
+                            </button>
+                        } @else {
+                            <div class="delete-confirmation">
+                                <strong>
+                                    Remove {{ selectedEntry.name }}?
+                                </strong>
+
+                                <p>
+                                    This will permanently remove this finance item.
+                                </p>
+
+                                <div class="delete-confirmation-actions">
+                                    <button
+                                        type="button"
+                                        class="cancel-delete-button"
+                                        (click)="cancelDeleteConfirmation()"
+                                    >
+                                        Cancel
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="remove-entry-button"
+                                        (click)="deleteFinanceEntry(selectedEntry)"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                } @else {
+                    <div class="edit-entry-form">
+                        <label for="edit-item-kind">
+                            Type
+                            <span class="required-marker">*</span>
+                        </label>
+
+                        <select
+                            id="edit-item-kind"
+                            name="editItemKind"
+                            [(ngModel)]="itemKind"
+                        >
+                            <option value="income">
+                                Income
+                            </option>
+
+                            <option value="outgoing">
+                                Outgoing
+                            </option>
+                        </select>
+
+                        <label for="edit-item-name">
+                            Name
+                            <span class="required-marker">*</span>
+                        </label>
+
+                        <input
+                            id="edit-item-name"
+                            type="text"
+                            name="editItemName"
+                            required
+                            [(ngModel)]="itemName"
+                        />
+
+                        <label for="edit-item-amount">
+                            Amount
+                            <span class="required-marker">*</span>
+                        </label>
+
+                        <input
+                            id="edit-item-amount"
+                            type="number"
+                            name="editItemAmount"
+                            required
+                            min="0.01"
+                            step="0.01"
+                            [(ngModel)]="itemAmount"
+                        />
+
+                        @if (itemKind === 'income') {
+                            <label for="edit-income-category">
+                                Category
+                                <span class="required-marker">*</span>
+                            </label>
+
+                            <select
+                                id="edit-income-category"
+                                name="editIncomeCategory"
+                                required
+                                [(ngModel)]="itemCategory"
+                            >
+                                <option value="salary">
+                                    Salary
+                                </option>
+
+                                <option value="benefits">
+                                    Benefits
+                                </option>
+
+                                <option value="freelance">
+                                    Freelance
+                                </option>
+
+                                <option value="bonus">
+                                    Bonus
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+                            </select>
+                        }
+
+                        @if (itemKind === 'outgoing') {
+                            <label for="edit-outgoing-category">
+                                Category
+                                <span class="required-marker">*</span>
+                            </label>
+
+                            <select
+                                id="edit-outgoing-category"
+                                name="editOutgoingCategory"
+                                required
+                                [(ngModel)]="itemCategory"
+                            >
+                                <option value="housing">
+                                    Housing
+                                </option>
+
+                                <option value="utilities">
+                                    Utilities
+                                </option>
+
+                                <option value="subscriptions">
+                                    Subscriptions
+                                </option>
+
+                                <option value="transport">
+                                    Transport
+                                </option>
+
+                                <option value="food">
+                                    Food
+                                </option>
+
+                                <option value="debt">
+                                    Debt
+                                </option>
+
+                                <option value="insurance">
+                                    Insurance
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+                            </select>
+                        }
+
+                        <label for="edit-bank-account">
+                            Bank account
+                        </label>
+
+                        <select
+                            id="edit-bank-account"
+                            name="editBankAccount"
+                            [(ngModel)]="itemBankAccountId"
+                        >
+                            <option [ngValue]="null">
+                                No account
+                            </option>
+
+                            @for (
+                                account of bankAccounts;
+                                track account.id
+                            ) {
+                                <option [ngValue]="account.id">
+                                    {{ account.bankName }} -
+                                    {{ account.name }}
+                                </option>
+                            }
+                        </select>
+
+                        <div class="edit-entry-actions">
+                            <button
+                                type="button"
+                                (click)="cancelEditingEntry()"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                (click)="saveEditedEntry()"
+                                [disabled]="isSaving"
+                            >
+                                @if (isSaving) {
+                                    Saving...
+                                } @else {
+                                    Save changes
+                                }
+                            </button>
+                        </div>
+                    </div>
+                }
+            }
 
         </aside>
     </div>
