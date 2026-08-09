@@ -39,7 +39,7 @@
             @if (shouldShowOverviewChart) {
                 <div class="summary-chart">
                     <app-finance-overview-chart
-                        [financeEntries]="financeEntries"
+                        [financeEntries]="selectedMonthEntries"
                     />
                 </div>
             }
