@@ -755,6 +755,7 @@
                         <select
                             id="edit-item-kind"
                             name="editItemKind"
+                            required
                             [(ngModel)]="itemKind"
                         >
                             <option value="income">
@@ -777,7 +778,20 @@
                             name="editItemName"
                             required
                             [(ngModel)]="itemName"
+                            #editItemNameInput="ngModel"
                         />
+
+                        @if (
+                            editItemNameInput.invalid &&
+                            (
+                                editItemNameInput.touched ||
+                                hasAttemptedSave
+                            )
+                        ) {
+                            <p class="field-error">
+                                Please enter a name.
+                            </p>
+                        }
 
                         <label for="edit-item-amount">
                             Amount
@@ -792,7 +806,26 @@
                             min="0.01"
                             step="0.01"
                             [(ngModel)]="itemAmount"
+                            #editItemAmountInput="ngModel"
                         />
+
+                        @if (
+                            editItemAmountInput.invalid &&
+                            (
+                                editItemAmountInput.touched ||
+                                hasAttemptedSave
+                            )
+                        ) {
+                            @if (itemAmount === null) {
+                                <p class="field-error">
+                                    Please enter an amount.
+                                </p>
+                            } @else {
+                                <p class="field-error">
+                                    Amount must be greater than £0.
+                                </p>
+                            }
+                        }
 
                         @if (itemKind === 'income') {
                             <label for="edit-income-category">
@@ -805,7 +838,15 @@
                                 name="editIncomeCategory"
                                 required
                                 [(ngModel)]="itemCategory"
+                                #editIncomeCategoryInput="ngModel"
                             >
+                                <option
+                                    value=""
+                                    disabled
+                                >
+                                    Select category
+                                </option>
+
                                 <option value="salary">
                                     Salary
                                 </option>
@@ -826,6 +867,18 @@
                                     Other
                                 </option>
                             </select>
+
+                            @if (
+                                editIncomeCategoryInput.invalid &&
+                                (
+                                    editIncomeCategoryInput.touched ||
+                                    hasAttemptedSave
+                                )
+                            ) {
+                                <p class="field-error">
+                                    Please select a category.
+                                </p>
+                            }
                         }
 
                         @if (itemKind === 'outgoing') {
@@ -839,7 +892,15 @@
                                 name="editOutgoingCategory"
                                 required
                                 [(ngModel)]="itemCategory"
+                                #editOutgoingCategoryInput="ngModel"
                             >
+                                <option
+                                    value=""
+                                    disabled
+                                >
+                                    Select category
+                                </option>
+
                                 <option value="housing">
                                     Housing
                                 </option>
@@ -872,6 +933,18 @@
                                     Other
                                 </option>
                             </select>
+
+                            @if (
+                                editOutgoingCategoryInput.invalid &&
+                                (
+                                    editOutgoingCategoryInput.touched ||
+                                    hasAttemptedSave
+                                )
+                            ) {
+                                <p class="field-error">
+                                    Please select a category.
+                                </p>
+                            }
                         }
 
                         <label for="edit-bank-account">
