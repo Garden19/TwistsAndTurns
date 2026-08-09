@@ -19,4 +19,6 @@ public class FinanceEntry
     public ApplicationUser User { get; set; } = null!;
     public int? BankAccountId { get; set; }
     public BankAccount? BankAccount { get; set; }
+    public int? RecurringFinanceItemId { get; set; }
+    public RecurringFinanceItem? RecurringFinanceItem { get; set; }
 }

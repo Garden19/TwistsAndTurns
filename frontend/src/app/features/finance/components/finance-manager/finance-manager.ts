@@ -24,7 +24,6 @@ import { BankAccounts } from '../../services/bank-accounts';
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
 })
-
 export class FinanceManager implements OnInit {
 
     constructor(
@@ -43,21 +42,24 @@ export class FinanceManager implements OnInit {
     itemIsRecurring = false;
     itemDueDate = '';
     itemBankAccountId: number | null = null;
+
     hasAttemptedSave = false;
+
     bankAccounts: BankAccount[] = [];
+
     isConfirmingDelete = false;
     isEditingEntry = false;
 
     activeDrawer:
-      | 'addItem'
-      | 'bankAccounts'
-      | 'entryDetails'
-      | null = null;
+        | 'addItem'
+        | 'bankAccounts'
+        | 'entryDetails'
+        | null = null;
 
-      selectedEntry: FinanceEntry | null = null;
+    selectedEntry: FinanceEntry | null = null;
 
     ngOnInit(): void {
-      this.loadBankAccounts();
+        this.loadBankAccounts();
     }
 
     startDeleteConfirmation(): void {
@@ -91,7 +93,7 @@ export class FinanceManager implements OnInit {
     }
 
     openAddForm(): void {
-      this.activeDrawer = 'addItem';
+        this.activeDrawer = 'addItem';
     }
 
     closeDrawer(): void {
@@ -109,7 +111,8 @@ export class FinanceManager implements OnInit {
         this.itemName = this.selectedEntry.name;
         this.itemAmount = this.selectedEntry.amount;
         this.itemCategory = this.selectedEntry.category;
-        this.itemBankAccountId = this.selectedEntry.bankAccountId;
+        this.itemBankAccountId =
+            this.selectedEntry.bankAccountId;
 
         this.itemKind =
             this.selectedEntry.entryType === FinanceEntryType.Income
@@ -182,7 +185,8 @@ export class FinanceManager implements OnInit {
     }
 
     saveFinanceEntry(): void {
-      this.hasAttemptedSave = true;
+        this.hasAttemptedSave = true;
+
         if (
             this.itemName.trim() === '' ||
             this.itemAmount === null ||
@@ -205,7 +209,7 @@ export class FinanceManager implements OnInit {
                 : FinanceEntryType.Expense;
 
         const request: CreateFinanceEntryRequest = {
-            name: this.itemName,
+            name: this.itemName.trim(),
             amount: this.itemAmount,
             entryType: entryType,
             category: this.itemCategory,
@@ -230,6 +234,7 @@ export class FinanceManager implements OnInit {
                     this.itemDueDate = '';
                     this.hasAttemptedSave = false;
                     this.isSaving = false;
+
                     this.closeDrawer();
                 },
                 error: (error) => {
@@ -239,59 +244,9 @@ export class FinanceManager implements OnInit {
             });
     }
 
-    get totalIncome(): number {
-        return this.financeEntries
-            .filter(
-                (entry) =>
-                    entry.entryType === FinanceEntryType.Income
-            )
-            .reduce(
-                (total, entry) =>
-                    total + entry.amount,
-                0
-            );
-    }
-
-    get totalOutgoings(): number {
-        return this.financeEntries
-            .filter(
-                (entry) =>
-                    entry.entryType === FinanceEntryType.Expense
-            )
-            .reduce(
-                (total, entry) =>
-                    total + entry.amount,
-                0
-            );
-    }
-
-    get moneyAfterBills(): number {
-        return this.totalIncome - this.totalOutgoings;
-    }
-
-    get outgoingPercentage(): number {
-        if (this.totalIncome === 0) {
-            return 0;
-        }
-
-        return this.totalOutgoings / this.totalIncome;
-    }
-
-    get incomeEntries(): FinanceEntry[] {
-        return this.financeEntries.filter(
-            (entry) =>
-                entry.entryType === FinanceEntryType.Income
-        );
-    }
-
-    get outgoingEntries(): FinanceEntry[] {
-        return this.financeEntries.filter(
-            (entry) =>
-                entry.entryType === FinanceEntryType.Expense
-        );
-    }
-
-    deleteFinanceEntry(entry: FinanceEntry): void {
+    deleteFinanceEntry(
+        entry: FinanceEntry
+    ): void {
         this.financeService
             .deleteFinanceEntry(entry.id)
             .subscribe({
@@ -309,9 +264,71 @@ export class FinanceManager implements OnInit {
                 }
             });
     }
-    
+
+    get totalIncome(): number {
+        return this.financeEntries
+            .filter(
+                (entry) =>
+                    entry.entryType ===
+                    FinanceEntryType.Income
+            )
+            .reduce(
+                (total, entry) =>
+                    total + entry.amount,
+                0
+            );
+    }
+
+    get totalOutgoings(): number {
+        return this.financeEntries
+            .filter(
+                (entry) =>
+                    entry.entryType ===
+                    FinanceEntryType.Expense
+            )
+            .reduce(
+                (total, entry) =>
+                    total + entry.amount,
+                0
+            );
+    }
+
+    get moneyAfterBills(): number {
+        return this.totalIncome - this.totalOutgoings;
+    }
+
+    get outgoingPercentage(): number {
+        if (this.totalIncome === 0) {
+            return 0;
+        }
+
+        return (
+            this.totalOutgoings /
+            this.totalIncome
+        );
+    }
+
+    get incomeEntries(): FinanceEntry[] {
+        return this.financeEntries.filter(
+            (entry) =>
+                entry.entryType ===
+                FinanceEntryType.Income
+        );
+    }
+
+    get outgoingEntries(): FinanceEntry[] {
+        return this.financeEntries.filter(
+            (entry) =>
+                entry.entryType ===
+                FinanceEntryType.Expense
+        );
+    }
+
     get shouldShowOverviewChart(): boolean {
-      return this.totalIncome > 0 && this.totalOutgoings > 0;
+        return (
+            this.totalIncome > 0 &&
+            this.totalOutgoings > 0
+        );
     }
 
     get selectedEntryIncomePercentage(): number {
@@ -322,19 +339,26 @@ export class FinanceManager implements OnInit {
             return 0;
         }
 
-        return this.selectedEntry.amount / this.totalIncome;
+        return (
+            this.selectedEntry.amount /
+            this.totalIncome
+        );
     }
 
     get selectedEntryOutgoingPercentage(): number {
         if (
             this.selectedEntry === null ||
-            this.selectedEntry.entryType !== FinanceEntryType.Expense ||
+            this.selectedEntry.entryType !==
+                FinanceEntryType.Expense ||
             this.totalOutgoings === 0
         ) {
             return 0;
         }
 
-        return this.selectedEntry.amount / this.totalOutgoings;
+        return (
+            this.selectedEntry.amount /
+            this.totalOutgoings
+        );
     }
 
     get selectedEntryIncomeChartBackground(): string {

@@ -1,6 +1,13 @@
 namespace TwistsAndTurns.Api.Models;
 
-public class RecurringBill
+public enum RecurrenceUnit
+{
+    Week,
+    Month,
+    Year
+}
+
+public class RecurringFinanceItem
 {
     public int Id { get; set; }
 
@@ -8,9 +15,15 @@ public class RecurringBill
 
     public decimal Amount { get; set; }
 
+    public FinanceEntryType EntryType { get; set; }
+
     public string Category { get; set; } = string.Empty;
 
-    public int DueDay { get; set; }
+    public RecurrenceUnit RecurrenceUnit { get; set; }
+
+    public int RecurrenceInterval { get; set; } = 1;
+
+    public DateTime StartDate { get; set; }
 
     public bool IsActive { get; set; } = true;
 
