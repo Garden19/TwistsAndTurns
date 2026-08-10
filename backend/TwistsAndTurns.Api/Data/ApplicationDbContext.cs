@@ -18,6 +18,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<RecurringFinanceItem> RecurringFinanceItems { get; set; } = null!;
 
+    public DbSet<SavingsGoal> SavingsGoals { get; set; } = null!;
+
     protected override void OnModelCreating(
             ModelBuilder builder
         )
@@ -48,5 +50,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 )
                 .IsUnique()
                 .HasFilter("[RecurringFinanceItemId] IS NOT NULL");
+
+            builder.Entity<SavingsGoal>()
+                .Property(goal => goal.TargetAmount)
+                .HasPrecision(18, 2);
+
+            builder.Entity<SavingsGoal>()
+                .Property(goal => goal.CurrentAmount)
+                .HasPrecision(18, 2);
         }
 }
