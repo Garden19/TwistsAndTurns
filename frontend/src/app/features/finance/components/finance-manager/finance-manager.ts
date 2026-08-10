@@ -36,6 +36,8 @@ export class FinanceManager implements OnInit {
 
      @ViewChild('financeDrawer')
     financeDrawer?: ElementRef<HTMLElement>;
+    @ViewChild(SavingsGoals)
+    savingsGoalsComponent?: SavingsGoals;
 
     constructor(
         private financeService: Finance,
@@ -495,6 +497,13 @@ export class FinanceManager implements OnInit {
     openSavingsGoalForm(): void {
         this.itemKind = 'savings';
         this.openAddForm();
+    }
+
+    handleSavingsGoalCreated(): void {
+        this.savingsGoalsComponent
+            ?.loadSavingsGoals();
+
+        this.closeDrawer();
     }
 
     getNextDueDate(

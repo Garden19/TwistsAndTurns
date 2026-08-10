@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()">
+<form #goalForm="ngForm" (ngSubmit)="onSubmit()">
     <h3>
         Add savings goal
     </h3>
@@ -53,7 +53,23 @@
         [(ngModel)]="targetDate"
     >
 
-    <button type="submit">
-        Create goal
+    @if (errorMessage !== '') {
+        <p class="field-error">
+            {{ errorMessage }}
+        </p>
+    }
+
+    <button
+        type="submit"
+        [disabled]="
+            isSaving ||
+            goalForm.invalid
+        "
+    >
+        @if (isSaving) {
+            Creating...
+        } @else {
+            Create goal
+        }
     </button>
 </form>

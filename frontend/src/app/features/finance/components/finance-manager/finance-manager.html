@@ -865,7 +865,11 @@
                     }
 
                     @if (itemKind === 'savings') {
-                        <app-savings-goal-form />
+                        <app-savings-goal-form
+                            (goalCreated)="
+                                handleSavingsGoalCreated()
+                            "
+                        />
                     }
 
                     @if (itemKind === 'payslip') {
