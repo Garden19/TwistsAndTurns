@@ -13,17 +13,21 @@ import { CreateRecurringFinanceItemRequest } from '../../models/create-recurring
 import { RecurringFinanceItems } from '../../services/recurring-finance-items';
 import { PaymentHistoryChart } from "../payment-history-chart/payment-history-chart";
 import { MonthlyCostTrend } from '../monthly-cost-trend/monthly-cost-trend';
+import { SavingsGoalForm } from "../savings-goal-form/savings-goal-form";
+import { SavingsGoals } from "../savings-goals/savings-goals";
+type FinanceView = 'transactions' | 'savings' | 'payslips';
 
 @Component({
     selector: 'app-finance-manager',
     imports: [
     CurrencyPipe,
     PercentPipe,
-    FinanceOverviewChart,
     FormsModule,
     BankAccountManager,
     DatePipe,
-    MonthlyCostTrend
+    MonthlyCostTrend,
+    SavingsGoalForm,
+    SavingsGoals
 ],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
@@ -42,7 +46,6 @@ export class FinanceManager implements OnInit {
     @Input() financeEntries: FinanceEntry[] = [];
 
     isSaving = false;
-
     itemName = '';
     itemAmount: number | null = null;
     itemKind = 'income';
@@ -60,6 +63,13 @@ export class FinanceManager implements OnInit {
     bankAccounts: BankAccount[] = [];
     isConfirmingDelete = false;
     isEditingEntry = false;
+
+    activeView: FinanceView = 'transactions';
+    setActiveView(
+        view: FinanceView
+    ): void {
+        this.activeView = view;
+    }
 
     activeDrawer:
         | 'addItem'
@@ -480,6 +490,11 @@ export class FinanceManager implements OnInit {
                     console.error(error);
                 }
             });
+    }
+
+    openSavingsGoalForm(): void {
+        this.itemKind = 'savings';
+        this.openAddForm();
     }
 
     getNextDueDate(

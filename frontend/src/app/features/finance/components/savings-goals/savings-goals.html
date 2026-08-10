@@ -1,0 +1,154 @@
+<section class="savings-goals">
+    <div class="savings-goals-list">
+        @for (
+            goal of savingsGoals;
+            track goal.id
+        ) {
+            <article class="savings-goal-card">
+                <div class="savings-goal-header">
+                    <div class="savings-goal-title-block">
+                        <h3>
+                            {{ goal.name }}
+                        </h3>
+
+                        <p class="savings-goal-subtitle">
+                            {{
+                                goal.currentAmount
+                                    | currency:'GBP':'symbol':'1.2-2'
+                            }}
+                            of
+                            {{
+                                goal.targetAmount
+                                    | currency:'GBP':'symbol':'1.2-2'
+                            }}
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="add-toggle-button"
+                        (click)="toggleAddAmount(goal.id)"
+                    >
+                        @if (activeAddGoalId === goal.id) {
+                            Close
+                        } @else {
+                            Add
+                        }
+                    </button>
+                </div>
+
+                <div class="savings-goal-content">
+                    <div class="savings-chart-section">
+                        <div
+                            class="savings-donut-chart"
+                            [style.background]="getGoalChartBackground(goal)"
+                        >
+                            <div class="savings-donut-centre">
+                                <strong>
+                                    {{ getProgress(goal).toFixed(0) }}%
+                                </strong>
+
+                                <span>
+                                    saved
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="savings-details">
+                        <div class="savings-detail-row">
+                            <span>
+                                Saved
+                            </span>
+
+                            <strong>
+                                {{
+                                    goal.currentAmount
+                                        | currency:'GBP':'symbol':'1.2-2'
+                                }}
+                            </strong>
+                        </div>
+
+                        <div class="savings-detail-row">
+                            <span>
+                                Remaining
+                            </span>
+
+                            <strong>
+                                {{
+                                    getRemainingAmount(goal)
+                                        | currency:'GBP':'symbol':'1.2-2'
+                                }}
+                            </strong>
+                        </div>
+
+                        <div class="savings-detail-row">
+                            <span>
+                                Target
+                            </span>
+
+                            <strong>
+                                {{
+                                    goal.targetAmount
+                                        | currency:'GBP':'symbol':'1.2-2'
+                                }}
+                            </strong>
+                        </div>
+
+                        @if (goal.targetDate !== null) {
+                            <div class="savings-detail-row">
+                                <span>
+                                    Target date
+                                </span>
+
+                                <strong>
+                                    {{ goal.targetDate | date:'d MMM yyyy' }}
+                                </strong>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (activeAddGoalId === goal.id) {
+                    <div class="add-savings-panel">
+                        <label [for]="'add-amount-' + goal.id">
+                            Add to savings
+                        </label>
+
+                        <div class="add-savings-row">
+                            <input
+                                [id]="'add-amount-' + goal.id"
+                                [name]="'addAmount' + goal.id"
+                                type="number"
+                                min="0.01"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder="Enter amount"
+                                [(ngModel)]="goalAmounts[goal.id]"
+                            />
+
+                            <button
+                                type="button"
+                                class="confirm-add-button"
+                                (click)="confirmAddAmount(goal)"
+                                [disabled]="isSavingAmount"
+                            >
+                                @if (isSavingAmount) {
+                                    Saving...
+                                } @else {
+                                    Confirm
+                                }
+                            </button>
+                        </div>
+
+                        @if (goalAmounts[goal.id] !== null && goalAmounts[goal.id] !== undefined && goalAmounts[goal.id]! <= 0) {
+                            <p class="field-error">
+                                Please enter an amount greater than £0.
+                            </p>
+                        }
+                    </div>
+                }
+            </article>
+        }
+    </div>
+</section>

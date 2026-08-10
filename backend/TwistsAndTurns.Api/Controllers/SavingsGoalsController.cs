@@ -65,4 +65,75 @@ public class SavingsGoalsController : ControllerBase
             savingsGoal
         );
     }
+
+    [HttpGet]
+    public async Task<ActionResult> GetSavingsGoals()
+    {
+        var userId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier
+        );
+
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+
+        var savingsGoals = await _context.SavingsGoals
+            .Where(
+                goal =>
+                    goal.UserId == userId
+            )
+            .OrderBy(
+                goal =>
+                    goal.CreatedAt
+            )
+            .ToListAsync();
+
+        return Ok(
+            savingsGoals
+        );
+    }
+
+    [HttpPost("{id}/contributions")]
+    public async Task<ActionResult> AddContribution(
+        int id,
+        AddSavingsContributionRequest request
+    )
+    {
+        var userId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier
+        );
+
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+
+        if (request.Amount <= 0)
+        {
+            return BadRequest(
+                "Contribution amount must be greater than zero."
+            );
+        }
+
+        var savingsGoal = await _context.SavingsGoals
+            .FirstOrDefaultAsync(
+                goal =>
+                    goal.Id == id &&
+                    goal.UserId == userId
+            );
+
+        if (savingsGoal == null)
+        {
+            return NotFound();
+        }
+
+        savingsGoal.CurrentAmount += request.Amount;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(
+            savingsGoal
+        );
+    }
 }

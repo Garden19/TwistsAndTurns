@@ -2,7 +2,9 @@
     <div class="manager-grid">
 
         <div class="manager-column summary-column">
-            <h3>Summary</h3>
+            <h3>
+                Summary
+            </h3>
 
             <div class="summary-grid">
                 <div class="summary-item">
@@ -70,293 +72,390 @@
                     </strong>
                 </div>
             </div>
-
-            @if (shouldShowOverviewChart) {
-                <div class="summary-chart">
-                    <app-finance-overview-chart
-                        [financeEntries]="selectedMonthEntries"
-                    />
-                </div>
-            }
         </div>
 
         <div class="manager-column entries-column">
 
-            <div class="month-navigation">
+            <div class="finance-view-tabs">
                 <button
                     type="button"
-                    (click)="previousMonth()"
+                    [class.active]="
+                        activeView === 'transactions'
+                    "
+                    (click)="
+                        setActiveView('transactions')
+                    "
                 >
-                    ← Previous
+                    Transactions
                 </button>
-
-                <h3>
-                    {{ selectedMonthLabel }}
-                </h3>
 
                 <button
                     type="button"
-                    (click)="nextMonth()"
+                    [class.active]="
+                        activeView === 'savings'
+                    "
+                    (click)="
+                        setActiveView('savings')
+                    "
                 >
-                    Next →
+                    Savings
                 </button>
+
+                <button
+                    type="button"
+                    [class.active]="
+                        activeView === 'payslips'
+                    "
+                    (click)="
+                        setActiveView('payslips')
+                    "
+                >
+                    Payslips
+                </button>
+
+                @if (activeView === 'savings') {
+                    <button
+                        type="button"
+                        class="savings-page-action"
+                        (click)="openSavingsGoalForm()"
+                    >
+                        + Add goal
+                    </button>
+                }
             </div>
 
-            <div class="entries-header">
-                <h3>
-                    Income & outgoings
-                </h3>
+            @if (activeView === 'transactions') {
+                <div class="transactions-view">
 
-                <div class="entries-actions">
-                    <button
-                        type="button"
-                        (click)="openBankAccounts()"
-                    >
-                        Bank accounts
-                    </button>
+                    <div class="month-navigation">
+                        <button
+                            type="button"
+                            (click)="previousMonth()"
+                        >
+                            ← Previous
+                        </button>
 
-                    <button
-                        type="button"
-                        (click)="openAddForm()"
-                    >
-                        + Add item
-                    </button>
+                        <h3>
+                            {{ selectedMonthLabel }}
+                        </h3>
+
+                        <button
+                            type="button"
+                            (click)="nextMonth()"
+                        >
+                            Next →
+                        </button>
+                    </div>
+
+                    <div class="entries-header">
+                        <h3>
+                            Income & outgoings
+                        </h3>
+
+                        <div class="entries-actions">
+                            <button
+                                type="button"
+                                (click)="openBankAccounts()"
+                            >
+                                Bank accounts
+                            </button>
+
+                            <button
+                                type="button"
+                                (click)="openAddForm()"
+                            >
+                                + Add item
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <div class="finance-table-scroll">
+                            <table class="finance-table">
+                                <thead>
+                                    <tr>
+                                        <th class="item-column">
+                                            Item
+                                        </th>
+
+                                        @if (
+                                            bankAccounts.length > 0
+                                        ) {
+                                            <th class="account-column">
+                                                Account
+                                            </th>
+                                        }
+
+                                        <th class="amount-column">
+                                            Amount
+                                        </th>
+
+                                        <th class="next-due-column">
+                                            Next due
+                                        </th>
+
+                                        <th class="paid-column">
+                                            Paid
+                                        </th>
+
+                                        <th class="more-column">
+                                            More
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr class="group-heading">
+                                        <td
+                                            [attr.colspan]="
+                                                bankAccounts.length > 0
+                                                    ? 6
+                                                    : 5
+                                            "
+                                        >
+                                            Income
+                                        </td>
+                                    </tr>
+
+                                    @for (
+                                        entry of incomeEntries;
+                                        track entry.id
+                                    ) {
+                                        <tr class="finance-row">
+                                            <td
+                                                class="item-column"
+                                                data-label="Item"
+                                            >
+                                                {{ entry.name }}
+                                            </td>
+
+                                            @if (
+                                                bankAccounts.length > 0
+                                            ) {
+                                                <td
+                                                    class="account-column"
+                                                    data-label="Account"
+                                                >
+                                                    @if (
+                                                        entry.bankName !== null &&
+                                                        entry.bankAccountName !== null
+                                                    ) {
+                                                        {{ entry.bankName }} -
+                                                        {{ entry.bankAccountName }}
+                                                    } @else {
+                                                        —
+                                                    }
+                                                </td>
+                                            }
+
+                                            <td
+                                                class="amount-column"
+                                                data-label="Amount"
+                                            >
+                                                {{
+                                                    entry.amount
+                                                        | currency:'GBP':'symbol':'1.2-2'
+                                                }}
+                                            </td>
+
+                                            <td
+                                                class="next-due-column"
+                                                data-label="Next due"
+                                            >
+                                                @if (
+                                                    getNextDueDate(entry);
+                                                    as nextDueDate
+                                                ) {
+                                                    {{
+                                                        nextDueDate
+                                                            | date:'d MMM yyyy'
+                                                    }}
+                                                } @else {
+                                                    —
+                                                }
+                                            </td>
+
+                                            <td
+                                                class="paid-column"
+                                                data-label="Paid"
+                                            >
+                                                <input
+                                                    class="paid-checkbox"
+                                                    type="checkbox"
+                                                    [checked]="entry.isPaid"
+                                                    (change)="
+                                                        updatePaidStatus(entry)
+                                                    "
+                                                    [attr.aria-label]="
+                                                        entry.isPaid
+                                                            ? 'Mark ' + entry.name + ' as unpaid'
+                                                            : 'Mark ' + entry.name + ' as paid'
+                                                    "
+                                                />
+                                            </td>
+
+                                            <td
+                                                class="more-column"
+                                                data-label="More"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    (click)="
+                                                        openEntryDetails(entry)
+                                                    "
+                                                >
+                                                    More
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    <tr class="group-heading">
+                                        <td
+                                            [attr.colspan]="
+                                                bankAccounts.length > 0
+                                                    ? 6
+                                                    : 5
+                                            "
+                                        >
+                                            Outgoings
+                                        </td>
+                                    </tr>
+
+                                    @for (
+                                        entry of outgoingEntries;
+                                        track entry.id
+                                    ) {
+                                        <tr class="finance-row">
+                                            <td
+                                                class="item-column"
+                                                data-label="Item"
+                                            >
+                                                {{ entry.name }}
+                                            </td>
+
+                                            @if (
+                                                bankAccounts.length > 0
+                                            ) {
+                                                <td
+                                                    class="account-column"
+                                                    data-label="Account"
+                                                >
+                                                    @if (
+                                                        entry.bankName !== null &&
+                                                        entry.bankAccountName !== null
+                                                    ) {
+                                                        {{ entry.bankName }} -
+                                                        {{ entry.bankAccountName }}
+                                                    } @else {
+                                                        —
+                                                    }
+                                                </td>
+                                            }
+
+                                            <td
+                                                class="amount-column"
+                                                data-label="Amount"
+                                            >
+                                                {{
+                                                    entry.amount
+                                                        | currency:'GBP':'symbol':'1.2-2'
+                                                }}
+                                            </td>
+
+                                            <td
+                                                class="next-due-column"
+                                                data-label="Next due"
+                                            >
+                                                @if (
+                                                    getNextDueDate(entry);
+                                                    as nextDueDate
+                                                ) {
+                                                    {{
+                                                        nextDueDate
+                                                            | date:'d MMM yyyy'
+                                                    }}
+                                                } @else {
+                                                    —
+                                                }
+                                            </td>
+
+                                            <td
+                                                class="paid-column"
+                                                data-label="Paid"
+                                            >
+                                                <input
+                                                    class="paid-checkbox"
+                                                    type="checkbox"
+                                                    [checked]="entry.isPaid"
+                                                    (change)="
+                                                        updatePaidStatus(entry)
+                                                    "
+                                                    [attr.aria-label]="
+                                                        entry.isPaid
+                                                            ? 'Mark ' + entry.name + ' as unpaid'
+                                                            : 'Mark ' + entry.name + ' as paid'
+                                                    "
+                                                />
+                                            </td>
+
+                                            <td
+                                                class="more-column"
+                                                data-label="More"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    (click)="
+                                                        openEntryDetails(entry)
+                                                    "
+                                                >
+                                                    More
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
 
-            <div class="table-wrapper">
-                <table class="finance-table">
-                    <thead>
-                        <tr>
-                            <th class="item-column">
-                                Item
-                            </th>
+            @if (activeView === 'savings') {
+                <div class="savings-view">
+                    <app-savings-goals />
+                </div>
+            }
 
-                            @if (bankAccounts.length > 0) {
-                                <th class="account-column">
-                                    Account
-                                </th>
-                            }
+            @if (activeView === 'payslips') {
+                <div class="payslips-view">
+                    <div class="entries-header">
+                        <div>
+                            <h3>
+                                Payslips
+                            </h3>
 
-                            <th class="amount-column">
-                                Amount
-                            </th>
+                            <p>
+                                Track your income and deductions.
+                            </p>
+                        </div>
 
-                            <th class="next-due-column">
-                                Next due
-                            </th>
-
-                            <th class="paid-column">
-                                Paid
-                            </th>
-
-                            <th class="more-column">
-                                More
-                            </th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr class="group-heading">
-                            <td
-                                [attr.colspan]="
-                                    bankAccounts.length > 0
-                                        ? 6
-                                        : 5
-                                "
+                        <div class="entries-actions">
+                            <button
+                                type="button"
+                                (click)="openAddForm()"
                             >
-                                Income
-                            </td>
-                        </tr>
+                                + Add item
+                            </button>
+                        </div>
+                    </div>
 
-                        @for (
-                            entry of incomeEntries;
-                            track entry.id
-                        ) {
-                            <tr class="finance-row">
-                                <td
-                                    class="item-column"
-                                    data-label="Item"
-                                >
-                                    {{ entry.name }}
-                                </td>
+                    <p>
+                        Payslip dashboard coming later.
+                    </p>
+                </div>
+            }
 
-                                @if (bankAccounts.length > 0) {
-                                    <td
-                                        class="account-column"
-                                        data-label="Account"
-                                    >
-                                        @if (
-                                            entry.bankName !== null &&
-                                            entry.bankAccountName !== null
-                                        ) {
-                                            {{ entry.bankName }} -
-                                            {{ entry.bankAccountName }}
-                                        } @else {
-                                            —
-                                        }
-                                    </td>
-                                }
-
-                                <td
-                                    class="amount-column"
-                                    data-label="Amount"
-                                >
-                                    {{
-                                        entry.amount
-                                            | currency:'GBP':'symbol':'1.2-2'
-                                    }}
-                                </td>
-
-                                <td
-                                    class="next-due-column"
-                                    data-label="Next due"
-                                >
-                                    @if (
-                                        getNextDueDate(entry);
-                                        as nextDueDate
-                                    ) {
-                                        {{
-                                            nextDueDate
-                                                | date:'d MMM yyyy'
-                                        }}
-                                    } @else {
-                                        —
-                                    }
-                                </td>
-
-                                <td
-                                    class="paid-column"
-                                    data-label="Paid"
-                                >
-                                    <input
-                                        class="paid-checkbox"
-                                        type="checkbox"
-                                        [checked]="entry.isPaid"
-                                        (change)="updatePaidStatus(entry)"
-                                        [attr.aria-label]="
-                                            entry.isPaid
-                                                ? 'Mark ' + entry.name + ' as unpaid'
-                                                : 'Mark ' + entry.name + ' as paid'
-                                        "
-                                    />
-                                </td>
-
-                                <td
-                                    class="more-column"
-                                    data-label="More"
-                                >
-                                    <button
-                                        type="button"
-                                        (click)="openEntryDetails(entry)"
-                                    >
-                                        More
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-
-                        <tr class="group-heading">
-                            <td
-                                [attr.colspan]="
-                                    bankAccounts.length > 0
-                                        ? 6
-                                        : 5
-                                "
-                            >
-                                Outgoings
-                            </td>
-                        </tr>
-
-                        @for (
-                            entry of outgoingEntries;
-                            track entry.id
-                        ) {
-                            <tr class="finance-row">
-                                <td
-                                    class="item-column"
-                                    data-label="Item"
-                                >
-                                    {{ entry.name }}
-                                </td>
-
-                                @if (bankAccounts.length > 0) {
-                                    <td
-                                        class="account-column"
-                                        data-label="Account"
-                                    >
-                                        @if (
-                                            entry.bankName !== null &&
-                                            entry.bankAccountName !== null
-                                        ) {
-                                            {{ entry.bankName }} -
-                                            {{ entry.bankAccountName }}
-                                        } @else {
-                                            —
-                                        }
-                                    </td>
-                                }
-
-                                <td
-                                    class="amount-column"
-                                    data-label="Amount"
-                                >
-                                    {{
-                                        entry.amount
-                                            | currency:'GBP':'symbol':'1.2-2'
-                                    }}
-                                </td>
-
-                                <td
-                                    class="next-due-column"
-                                    data-label="Next due"
-                                >
-                                    @if (
-                                        getNextDueDate(entry);
-                                        as nextDueDate
-                                    ) {
-                                        {{
-                                            nextDueDate
-                                                | date:'d MMM yyyy'
-                                        }}
-                                    } @else {
-                                        —
-                                    }
-                                </td>
-
-                                <td
-                                    class="paid-column"
-                                    data-label="Paid"
-                                >
-                                    <input
-                                        class="paid-checkbox"
-                                        type="checkbox"
-                                        [checked]="entry.isPaid"
-                                        (change)="updatePaidStatus(entry)"
-                                        [attr.aria-label]="
-                                            entry.isPaid
-                                                ? 'Mark ' + entry.name + ' as unpaid'
-                                                : 'Mark ' + entry.name + ' as paid'
-                                        "
-                                    />
-                                </td>
-
-                                <td
-                                    class="more-column"
-                                    data-label="More"
-                                >
-                                    <button
-                                        type="button"
-                                        (click)="openEntryDetails(entry)"
-                                    >
-                                        More
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 
@@ -766,9 +865,7 @@
                     }
 
                     @if (itemKind === 'savings') {
-                        <p>
-                            Savings form will go here.
-                        </p>
+                        <app-savings-goal-form />
                     }
 
                     @if (itemKind === 'payslip') {
@@ -806,7 +903,9 @@
                         selectedEntryPaymentHistoryForDisplay.length > 1
                     ) {
                         <app-monthly-cost-trend
-                            [financeEntries]="selectedEntryPaymentHistoryForDisplay"
+                            [financeEntries]="
+                                selectedEntryPaymentHistoryForDisplay
+                            "
                         />
                     }
 
@@ -823,6 +922,7 @@
                                 }}
                             </strong>
                         </div>
+
                         @if (
                             selectedEntryAnnualProjection !== null
                         ) {
@@ -969,7 +1069,9 @@
                                     <button
                                         type="button"
                                         class="remove-entry-button"
-                                        (click)="deleteFinanceEntry(selectedEntry)"
+                                        (click)="
+                                            deleteFinanceEntry(selectedEntry)
+                                        "
                                     >
                                         @if (
                                             selectedEntry.recurringFinanceItemId !== null
@@ -1182,7 +1284,7 @@
                                 </option>
                             </select>
 
-                            @if (
+                           @if (
                                 editOutgoingCategoryInput.invalid &&
                                 (
                                     editOutgoingCategoryInput.touched ||

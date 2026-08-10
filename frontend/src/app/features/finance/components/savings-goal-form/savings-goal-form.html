@@ -1,0 +1,59 @@
+<form (ngSubmit)="onSubmit()">
+    <h3>
+        Add savings goal
+    </h3>
+
+    <label for="name">
+        Goal name
+    </label>
+
+    <input
+        id="name"
+        name="name"
+        type="text"
+        [(ngModel)]="name"
+        required
+    >
+
+    <label for="targetAmount">
+        Target amount
+    </label>
+
+    <input
+        id="targetAmount"
+        name="targetAmount"
+        type="number"
+        min="0.01"
+        step="0.01"
+        [(ngModel)]="targetAmount"
+        required
+    >
+
+    <label for="currentAmount">
+        Current amount
+    </label>
+
+    <input
+        id="currentAmount"
+        name="currentAmount"
+        type="number"
+        min="0"
+        step="0.01"
+        [(ngModel)]="currentAmount"
+    >
+
+    <label for="targetDate">
+        Target date
+    </label>
+
+    <input
+        id="targetDate"
+        name="targetDate"
+        type="date"
+        [(ngModel)]="targetDate"
+    >
+
+    <button type="submit">
+        Create goal
+    </button>
+</form>
