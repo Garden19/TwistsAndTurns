@@ -98,10 +98,23 @@ public class FinanceEntriesController : ControllerBase
             BankAccountId = financeEntry.BankAccountId,
             BankAccountName = bankAccount?.Name,
             BankName = bankAccount?.BankName,
+
             RecurringFinanceItemId =
                 financeEntry.RecurringFinanceItemId,
+
             IsRecurringActive = false,
-            IsSkipped = financeEntry.IsSkipped
+
+            IsSkipped =
+                financeEntry.IsSkipped,
+
+            IsPaid =
+                financeEntry.IsPaid,
+
+            RecurrenceUnit = null,
+
+            RecurrenceInterval = null,
+
+            RecurrenceStartDate = null
         };
 
         return Ok(response);
@@ -140,22 +153,47 @@ public class FinanceEntriesController : ControllerBase
                         EntryDate = entry.EntryDate,
                         CreatedAt = entry.CreatedAt,
                         Category = entry.Category,
+
                         BankAccountId =
                             entry.BankAccountId,
+
                         BankAccountName =
                             entry.BankAccount == null
                                 ? null
                                 : entry.BankAccount.Name,
+
                         BankName =
                             entry.BankAccount == null
                                 ? null
                                 : entry.BankAccount.BankName,
+
                         RecurringFinanceItemId =
                             entry.RecurringFinanceItemId,
+
                         IsRecurringActive =
                             entry.RecurringFinanceItem != null &&
                             entry.RecurringFinanceItem.IsActive,
-                        IsSkipped = entry.IsSkipped
+
+                        IsSkipped =
+                            entry.IsSkipped,
+
+                        IsPaid =
+                            entry.IsPaid,
+
+                        RecurrenceUnit =
+                            entry.RecurringFinanceItem == null
+                                ? null
+                                : entry.RecurringFinanceItem.RecurrenceUnit,
+
+                        RecurrenceInterval =
+                            entry.RecurringFinanceItem == null
+                                ? null
+                                : entry.RecurringFinanceItem.RecurrenceInterval,
+
+                        RecurrenceStartDate =
+                            entry.RecurringFinanceItem == null
+                                ? null
+                                : entry.RecurringFinanceItem.StartDate
                     }
             )
             .ToListAsync();
@@ -289,14 +327,75 @@ public class FinanceEntriesController : ControllerBase
             BankAccountId = financeEntry.BankAccountId,
             BankAccountName = bankAccount?.Name,
             BankName = bankAccount?.BankName,
+
             RecurringFinanceItemId =
                 financeEntry.RecurringFinanceItemId,
+
             IsRecurringActive =
                 financeEntry.RecurringFinanceItem != null &&
                 financeEntry.RecurringFinanceItem.IsActive,
-            IsSkipped = financeEntry.IsSkipped
+
+            IsSkipped =
+                financeEntry.IsSkipped,
+
+            IsPaid =
+                financeEntry.IsPaid,
+
+            RecurrenceUnit =
+                financeEntry.RecurringFinanceItem == null
+                    ? null
+                    : financeEntry.RecurringFinanceItem.RecurrenceUnit,
+
+            RecurrenceInterval =
+                financeEntry.RecurringFinanceItem == null
+                    ? null
+                    : financeEntry.RecurringFinanceItem.RecurrenceInterval,
+
+            RecurrenceStartDate =
+                financeEntry.RecurringFinanceItem == null
+                    ? null
+                    : financeEntry.RecurringFinanceItem.StartDate
         };
 
         return Ok(response);
+    }
+
+    [HttpPatch("{id:int}/paid-status")]
+    public async Task<IActionResult> UpdatePaidStatus(
+        int id,
+        UpdateFinanceEntryPaidStatusRequest request
+    )
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "The logged-in user could not be identified"
+            });
+        }
+
+        var financeEntry = await _dbContext.FinanceEntries
+            .FirstOrDefaultAsync(
+                entry =>
+                    entry.Id == id &&
+                    entry.UserId == user.Id
+            );
+
+        if (financeEntry is null)
+        {
+            return NotFound(new
+            {
+                message = "Finance entry could not be found"
+            });
+        }
+
+        financeEntry.IsPaid =
+            request.IsPaid;
+
+        await _dbContext.SaveChangesAsync();
+
+        return NoContent();
     }
 }

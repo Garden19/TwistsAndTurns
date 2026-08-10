@@ -1,10 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CurrencyPipe, PercentPipe } from '@angular/common';
+import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-    FinanceEntryType,
-    type FinanceEntry
-} from '../../models/finance-entry';
+import { FinanceEntryType, type FinanceEntry } from '../../models/finance-entry';
 import { CreateFinanceEntryRequest } from '../../models/create-finance-entry-request';
 import { FinanceOverviewChart } from '../finance-overview-chart/finance-overview-chart';
 import { Finance } from '../../services/finance';
@@ -22,12 +19,16 @@ import { RecurringFinanceItems } from '../../services/recurring-finance-items';
         PercentPipe,
         FinanceOverviewChart,
         FormsModule,
-        BankAccountManager
+        BankAccountManager,
+        DatePipe
     ],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
 })
 export class FinanceManager implements OnInit {
+
+     @ViewChild('financeDrawer')
+    financeDrawer?: ElementRef<HTMLElement>;
 
     constructor(
         private financeService: Finance,
@@ -70,6 +71,19 @@ export class FinanceManager implements OnInit {
         this.loadSelectedMonth();
     }
 
+    resetDrawerScroll(): void {
+        setTimeout(
+            () => {
+                this.financeDrawer
+                    ?.nativeElement
+                    .scrollTo({
+                        top: 0,
+                        behavior: 'auto'
+                    });
+            }
+        );
+    }
+
     startDeleteConfirmation(): void {
         this.isConfirmingDelete = true;
     }
@@ -78,9 +92,13 @@ export class FinanceManager implements OnInit {
         this.isConfirmingDelete = false;
     }
 
-    openEntryDetails(entry: FinanceEntry): void {
+    openEntryDetails(
+        entry: FinanceEntry
+    ): void {
         this.selectedEntry = entry;
         this.activeDrawer = 'entryDetails';
+
+        this.resetDrawerScroll();
     }
 
     loadBankAccounts(): void {
@@ -123,10 +141,12 @@ export class FinanceManager implements OnInit {
 
     openBankAccounts(): void {
         this.activeDrawer = 'bankAccounts';
+        this.resetDrawerScroll();
     }
 
     openAddForm(): void {
         this.activeDrawer = 'addItem';
+        this.resetDrawerScroll();
     }
 
     closeDrawer(): void {
@@ -393,6 +413,60 @@ export class FinanceManager implements OnInit {
             });
     }
 
+    getNextDueDate(
+        entry: FinanceEntry
+    ): Date | null {
+        if (
+            entry.recurringFinanceItemId === null ||
+            !entry.isRecurringActive ||
+            entry.recurrenceUnit === null ||
+            entry.recurrenceInterval === null ||
+            entry.recurrenceStartDate === null
+        ) {
+            return null;
+        }
+
+        let nextDate = new Date(
+            entry.recurrenceStartDate
+        );
+
+        const today = new Date();
+
+        while (nextDate <= today) {
+            if (
+                entry.recurrenceUnit ===
+                RecurrenceUnit.Week
+            ) {
+                nextDate.setDate(
+                    nextDate.getDate() +
+                    7 * entry.recurrenceInterval
+                );
+            }
+
+            if (
+                entry.recurrenceUnit ===
+                RecurrenceUnit.Month
+            ) {
+                nextDate.setMonth(
+                    nextDate.getMonth() +
+                    entry.recurrenceInterval
+                );
+            }
+
+            if (
+                entry.recurrenceUnit ===
+                RecurrenceUnit.Year
+            ) {
+                nextDate.setFullYear(
+                    nextDate.getFullYear() +
+                    entry.recurrenceInterval
+                );
+            }
+        }
+
+        return nextDate;
+    }
+
     stopSelectedRecurringItem(): void {
         if (
             this.selectedEntry === null ||
@@ -415,6 +489,39 @@ export class FinanceManager implements OnInit {
                     console.error(error);
                 }
             });
+    }
+
+    updatePaidStatus(
+        entry: FinanceEntry
+    ): void {
+        const newPaidStatus = !entry.isPaid;
+
+        this.financeService
+            .updatePaidStatus(
+                entry.id,
+                newPaidStatus
+            )
+            .subscribe({
+                next: () => {
+                    entry.isPaid = newPaidStatus;
+                },
+                error: (error) => {
+                    console.error(error);
+                }
+            });
+    }
+
+    get leftToPay(): number {
+        return this.outgoingEntries
+            .filter(
+                (entry) =>
+                    !entry.isPaid
+            )
+            .reduce(
+                (total, entry) =>
+                    total + entry.amount,
+                0
+            );
     }
 
     get selectedMonthEntries(): FinanceEntry[] {

@@ -22,4 +22,5 @@ public class FinanceEntry
     public int? RecurringFinanceItemId { get; set; }
     public RecurringFinanceItem? RecurringFinanceItem { get; set; }
     public bool IsSkipped { get; set; } = false;
+    public bool IsPaid { get; set; } = false;
 }

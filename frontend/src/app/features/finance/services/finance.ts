@@ -46,4 +46,19 @@ export class Finance {
             { withCredentials: true }
         );
     }
+
+    updatePaidStatus(
+        id: number,
+        isPaid: boolean
+    ): Observable<void> {
+        return this.http.patch<void>(
+            `${this.apiUrl}/${id}/paid-status`,
+            {
+                isPaid: isPaid
+            },
+            {
+                withCredentials: true
+            }
+        );
+    }
 }

@@ -19,4 +19,8 @@ public class FinanceEntryResponse
     public int? RecurringFinanceItemId { get; set; }
     public bool IsRecurringActive { get; set; }
     public bool IsSkipped { get; set; }
+    public bool IsPaid { get; set; }
+    public RecurrenceUnit? RecurrenceUnit { get; set; }
+    public int? RecurrenceInterval { get; set; }
+    public DateTime? RecurrenceStartDate { get; set; }
 }

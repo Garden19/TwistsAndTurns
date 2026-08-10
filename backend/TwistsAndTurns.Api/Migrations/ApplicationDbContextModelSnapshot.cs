@@ -289,6 +289,9 @@ namespace TwistsAndTurns.Api.Migrations
                     b.Property<int>("EntryType")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsSkipped")
                         .HasColumnType("bit");
 

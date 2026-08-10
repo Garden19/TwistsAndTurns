@@ -1,3 +1,5 @@
+import { RecurrenceUnit } from './recurring-finance-item';
+
 export enum FinanceEntryType {
     Income = 0,
     Expense = 1,
@@ -17,4 +19,8 @@ export interface FinanceEntry {
     recurringFinanceItemId: number | null;
     isRecurringActive: boolean;
     isSkipped: boolean;
+    isPaid: boolean;
+    recurrenceUnit: RecurrenceUnit | null;
+    recurrenceInterval: number | null;
+    recurrenceStartDate: string | null;
 }
