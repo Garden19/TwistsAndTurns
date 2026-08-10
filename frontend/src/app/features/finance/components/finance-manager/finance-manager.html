@@ -803,9 +803,9 @@
                 @if (!isEditingEntry) {
                     @if (
                         selectedEntry.recurringFinanceItemId !== null &&
-                        selectedEntryPaymentHistoryForDisplay.length > 0
+                        selectedEntryPaymentHistoryForDisplay.length > 1
                     ) {
-                        <app-payment-history-chart
+                        <app-monthly-cost-trend
                             [financeEntries]="selectedEntryPaymentHistoryForDisplay"
                         />
                     }

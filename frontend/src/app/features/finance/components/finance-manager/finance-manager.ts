@@ -12,6 +12,7 @@ import { RecurrenceUnit } from '../../models/recurring-finance-item';
 import { CreateRecurringFinanceItemRequest } from '../../models/create-recurring-finance-item-request';
 import { RecurringFinanceItems } from '../../services/recurring-finance-items';
 import { PaymentHistoryChart } from "../payment-history-chart/payment-history-chart";
+import { MonthlyCostTrend } from '../monthly-cost-trend/monthly-cost-trend';
 
 @Component({
     selector: 'app-finance-manager',
@@ -22,7 +23,7 @@ import { PaymentHistoryChart } from "../payment-history-chart/payment-history-ch
     FormsModule,
     BankAccountManager,
     DatePipe,
-    PaymentHistoryChart
+    MonthlyCostTrend
 ],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',

@@ -1,0 +1,205 @@
+:host {
+    display: block;
+
+    width: 100%;
+}
+
+.cost-trend-chart {
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-top: 0.75rem;
+    padding: 0.85rem 1rem;
+
+    background-color: var(--colour-off-white);
+
+    border: 1px solid #e4e4e4;
+    border-radius: var(--border-radius);
+}
+
+.trend-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+
+    margin-bottom: 0.75rem;
+}
+
+.trend-header h4 {
+    margin: 0 0 0.2rem;
+
+    font-size: 0.95rem;
+}
+
+.trend-header p {
+    margin: 0;
+
+    color: var(--colour-text-muted);
+
+    font-size: 0.75rem;
+}
+
+.trend-summary {
+    flex-shrink: 0;
+
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.trend-graph {
+    position: relative;
+
+    width: 100%;
+    height: 175px;
+
+    padding-top: 0.75rem;
+}
+
+.trend-svg {
+    position: absolute;
+
+    top: 0.75rem;
+    left: 0;
+
+    width: 100%;
+    height: 90px;
+
+    overflow: visible;
+}
+
+.trend-line {
+    fill: none;
+
+    stroke: #333;
+    stroke-width: 2;
+
+    vector-effect: non-scaling-stroke;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.trend-points {
+    position: absolute;
+
+    top: 0.75rem;
+    left: 0;
+
+    display: flex;
+
+    width: 100%;
+    height: 90px;
+}
+
+.trend-point-column {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 0;
+    height: 90px;
+
+    text-align: center;
+}
+
+.trend-point {
+    position: absolute;
+
+    left: 50%;
+
+    width: 0.65rem;
+    height: 0.65rem;
+
+    background-color: #333;
+
+    border: 3px solid var(--colour-white);
+    border-radius: 50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    box-shadow:
+        0 0 0 1px #333;
+}
+
+.trend-point-column strong {
+    position: absolute;
+
+    top: 110px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    font-size: 0.7rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.trend-point-column span {
+    position: absolute;
+
+    top: 132px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    color: var(--colour-text-muted);
+
+    font-size: 0.68rem;
+
+    white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+    .cost-trend-chart {
+        margin-top: 0.75rem;
+        padding: 0.9rem 1rem;
+    }
+
+    .trend-header {
+        margin-bottom: 0.85rem;
+    }
+
+    .trend-graph {
+        height: 185px;
+
+        padding-top: 0.75rem;
+    }
+
+    .trend-svg {
+        top: 0.75rem;
+
+        height: 95px;
+    }
+
+    .trend-points {
+        top: 0.75rem;
+        height: 95px;
+    }
+
+    .trend-point {
+        width: 0.7rem;
+        height: 0.7rem;
+    }
+
+    .trend-point-column strong {
+        top: 120px;
+
+        font-size: 0.7rem;
+    }
+
+    .trend-point-column span {
+        top: 142px;
+
+        font-size: 0.68rem;
+    }
+}

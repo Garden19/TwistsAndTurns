@@ -1,0 +1,57 @@
+<section class="cost-trend-chart">
+    <div class="trend-header">
+        <div>
+            <h4>
+                Cost trend
+            </h4>
+
+            <p>
+                How this amount has changed
+            </p>
+        </div>
+
+        <strong class="trend-summary">
+            {{ trendSummary }}
+        </strong>
+    </div>
+
+    @if (trendEntries.length > 0) {
+        <div class="trend-graph">
+            <svg
+                class="trend-svg"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+            >
+                <polyline
+                    class="trend-line"
+                    [attr.points]="trendPoints"
+                />
+            </svg>
+
+            <div class="trend-points">
+                @for (
+                    entry of trendEntries;
+                    track $index
+                ) {
+                    <div class="trend-point-column">
+                        <div
+                            class="trend-point"
+                            [style.top.%]="
+                                getPointPosition(entry.amount)
+                            "
+                        >
+                        </div>
+
+                        <strong>
+                            £{{ entry.amount.toFixed(2) }}
+                        </strong>
+
+                        <span>
+                            {{ entry.label }}
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</section>
