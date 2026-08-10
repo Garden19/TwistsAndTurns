@@ -1,0 +1,67 @@
+<section class="payment-history-chart">
+    <div class="chart-header">
+        <div>
+            <h4>
+                Payment history
+            </h4>
+
+            <p>
+                Payment amounts and status
+            </p>
+        </div>
+
+        <div class="paid-summary">
+            <strong>
+                {{ paidCount }} of {{ financeEntries.length }} paid
+            </strong>
+
+            <span>
+                {{
+                    paidPercentage
+                        | percent:'1.0-0'
+                }}
+            </span>
+        </div>
+    </div>
+
+    @if (chartEntries.length > 0) {
+        <div class="chart">
+            @for (
+                entry of chartEntries;
+                track $index
+            ) {
+                <div class="chart-item">
+                    <div class="bar-area">
+                        <div
+                            class="bar"
+                            [style.height.%]="
+                                (entry.amount / highestAmount) * 100
+                            "
+                            [class.unpaid]="!entry.isPaid"
+                        >
+                        </div>
+                    </div>
+
+                    <strong>
+                        £{{ entry.amount.toFixed(2) }}
+                    </strong>
+
+                    <span>
+                        {{ entry.label }}
+                    </span>
+
+                    <span
+                        class="payment-status"
+                        [class.unpaid-status]="!entry.isPaid"
+                    >
+                        @if (entry.isPaid) {
+                            Paid
+                        } @else {
+                            Unpaid
+                        }
+                    </span>
+                </div>
+            }
+        </div>
+    }
+</section>

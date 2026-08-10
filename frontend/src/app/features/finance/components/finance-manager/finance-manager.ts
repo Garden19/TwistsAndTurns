@@ -11,17 +11,19 @@ import { BankAccounts } from '../../services/bank-accounts';
 import { RecurrenceUnit } from '../../models/recurring-finance-item';
 import { CreateRecurringFinanceItemRequest } from '../../models/create-recurring-finance-item-request';
 import { RecurringFinanceItems } from '../../services/recurring-finance-items';
+import { PaymentHistoryChart } from "../payment-history-chart/payment-history-chart";
 
 @Component({
     selector: 'app-finance-manager',
     imports: [
-        CurrencyPipe,
-        PercentPipe,
-        FinanceOverviewChart,
-        FormsModule,
-        BankAccountManager,
-        DatePipe
-    ],
+    CurrencyPipe,
+    PercentPipe,
+    FinanceOverviewChart,
+    FormsModule,
+    BankAccountManager,
+    DatePipe,
+    PaymentHistoryChart
+],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
 })
@@ -91,6 +93,72 @@ export class FinanceManager implements OnInit {
     cancelDeleteConfirmation(): void {
         this.isConfirmingDelete = false;
     }
+
+    get selectedEntryAnnualProjection(): number | null {
+      if (
+          this.selectedEntry === null ||
+          this.selectedEntry.recurringFinanceItemId === null ||
+          this.selectedEntry.recurrenceUnit === null ||
+          this.selectedEntry.recurrenceInterval === null ||
+          this.selectedEntry.recurrenceInterval <= 0
+      ) {
+          return null;
+      }
+
+      if (
+          this.selectedEntry.recurrenceUnit ===
+          RecurrenceUnit.Week
+      ) {
+          return (
+              this.selectedEntry.amount *
+              (52 / this.selectedEntry.recurrenceInterval)
+          );
+      }
+
+      if (
+          this.selectedEntry.recurrenceUnit ===
+          RecurrenceUnit.Month
+      ) {
+          return (
+              this.selectedEntry.amount *
+              (12 / this.selectedEntry.recurrenceInterval)
+          );
+      }
+
+      if (
+          this.selectedEntry.recurrenceUnit ===
+          RecurrenceUnit.Year
+      ) {
+          return (
+              this.selectedEntry.amount *
+              (1 / this.selectedEntry.recurrenceInterval)
+          );
+      }
+
+      return null;
+  }
+
+  get selectedEntryPaymentHistory(): FinanceEntry[] {
+    if (
+        this.selectedEntry === null ||
+        this.selectedEntry.recurringFinanceItemId === null
+    ) {
+        return [];
+    }
+
+    return this.financeEntries
+        .filter(
+            (entry) =>
+                entry.recurringFinanceItemId ===
+                this.selectedEntry?.recurringFinanceItemId &&
+                !entry.isSkipped
+        )
+        .sort(
+            (a, b) =>
+                new Date(a.entryDate).getTime() -
+                new Date(b.entryDate).getTime()
+        );
+      }
 
     openEntryDetails(
         entry: FinanceEntry
@@ -650,5 +718,18 @@ export class FinanceManager implements OnInit {
             var(--colour-primary) 0deg ${degrees}deg,
             #e8e8e8 ${degrees}deg 360deg
         )`;
+    }
+
+    get selectedEntryPaymentHistoryForDisplay(): FinanceEntry[] {
+      const history = this.selectedEntryPaymentHistory;
+
+      if (
+          typeof window !== 'undefined' &&
+          window.innerWidth <= 700
+      ) {
+          return history.slice(-6);
+      }
+
+      return history;
     }
 }

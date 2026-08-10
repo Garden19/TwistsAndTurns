@@ -1,0 +1,190 @@
+:host {
+    display: block;
+
+    width: 100%;
+}
+
+.payment-history-chart {
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 1rem;
+    padding: 1rem;
+
+    background-color: var(--colour-off-white);
+
+    border: 1px solid #e8e8e8;
+    border-radius: var(--border-radius);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+
+    margin-bottom: 1rem;
+}
+
+.chart-header h4 {
+    margin: 0 0 0.25rem;
+
+    font-size: 1rem;
+}
+
+.chart-header p {
+    margin: 0;
+
+    color: var(--colour-text-muted);
+
+    font-size: 0.8rem;
+}
+
+.paid-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+
+    flex-shrink: 0;
+}
+
+.paid-summary strong {
+    font-size: 0.75rem;
+
+    white-space: nowrap;
+}
+
+.paid-summary span {
+    color: var(--colour-text-muted);
+
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.6rem;
+
+    width: 100%;
+    min-height: 210px;
+
+    overflow-x: auto;
+
+    padding: 0.5rem 0 0.25rem;
+}
+
+.chart-item {
+    display: grid;
+    flex: 1 0 52px;
+
+    grid-template-rows:
+        130px
+        auto
+        auto
+        auto;
+
+    justify-items: center;
+    gap: 0.25rem;
+
+    min-width: 52px;
+}
+
+.bar-area {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    width: 100%;
+    height: 130px;
+
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.bar {
+    width: 65%;
+    min-height: 6px;
+
+    background-color: #333;
+
+    border-radius: 0.4rem 0.4rem 0 0;
+
+    transition:
+        height 200ms ease,
+        opacity 200ms ease,
+        transform 150ms ease;
+}
+
+.bar:hover {
+    transform: scaleX(1.05);
+}
+
+.bar.unpaid {
+    opacity: 0.25;
+}
+
+.chart-item strong {
+    font-size: 0.72rem;
+
+    white-space: nowrap;
+}
+
+.chart-item > span {
+    color: var(--colour-text-muted);
+
+    font-size: 0.72rem;
+}
+
+.payment-status {
+    padding: 0.15rem 0.4rem;
+
+    background-color: var(--colour-white);
+
+    border-radius: 999px;
+
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.payment-status.unpaid-status {
+    color: var(--colour-error);
+
+    background-color: rgb(217 45 32 / 8%);
+}
+
+@media (max-width: 700px) {
+    .payment-history-chart {
+        padding: 0.85rem;
+    }
+
+    .chart {
+        gap: 0.45rem;
+        min-height: 190px;
+    }
+
+    .chart-item {
+        flex-basis: 46px;
+
+        grid-template-rows:
+            115px
+            auto
+            auto
+            auto;
+
+        min-width: 46px;
+    }
+
+    .bar-area {
+        height: 115px;
+    }
+
+    .chart-item strong,
+    .chart-item > span {
+        font-size: 0.68rem;
+    }
+
+    .payment-status {
+        font-size: 0.64rem;
+    }
+}

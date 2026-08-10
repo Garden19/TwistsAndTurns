@@ -801,27 +801,14 @@
                 </div>
 
                 @if (!isEditingEntry) {
-                    <div class="entry-chart-section">
-                        <div
-                            class="entry-donut-chart"
-                            [style.background]="
-                                selectedEntryIncomeChartBackground
-                            "
-                        >
-                            <div class="entry-donut-centre">
-                                <strong>
-                                    {{
-                                        selectedEntryIncomePercentage
-                                            | percent:'1.0-1'
-                                    }}
-                                </strong>
-
-                                <span>
-                                    of income
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    @if (
+                        selectedEntry.recurringFinanceItemId !== null &&
+                        selectedEntryPaymentHistoryForDisplay.length > 0
+                    ) {
+                        <app-payment-history-chart
+                            [financeEntries]="selectedEntryPaymentHistoryForDisplay"
+                        />
+                    }
 
                     <div class="entry-details">
                         <div class="entry-detail">
@@ -836,6 +823,22 @@
                                 }}
                             </strong>
                         </div>
+                        @if (
+                            selectedEntryAnnualProjection !== null
+                        ) {
+                            <div class="entry-detail">
+                                <span>
+                                    Yearly projection
+                                </span>
+
+                                <strong>
+                                    {{
+                                        selectedEntryAnnualProjection
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+                        }
 
                         <div class="entry-detail">
                             <span>
