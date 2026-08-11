@@ -1,0 +1,300 @@
+<section class="payslips-dashboard">
+    @if (isLoading) {
+        <div class="payslips-state">
+            <p>
+                Loading payslips...
+            </p>
+        </div>
+    } @else if (loadErrorMessage !== '') {
+        <div
+            class="
+                payslips-state
+                payslips-error-state
+            "
+        >
+            <h3>
+                Payslips unavailable
+            </h3>
+
+            <p>
+                {{ loadErrorMessage }}
+            </p>
+
+            <button
+                type="button"
+                (click)="loadPayslips()"
+            >
+                Try again
+            </button>
+        </div>
+    } @else if (payslips.length === 0) {
+        <div class="payslips-state">
+            <h3>
+                No payslips yet
+            </h3>
+
+            <p>
+                Add your first payslip using the
+                Add payslip button.
+            </p>
+        </div>
+    } @else {
+        <div class="payslip-toolbar">
+            <div class="tax-year-control">
+                <label for="payslip-tax-year">
+                    Tax year
+                </label>
+
+                <select
+                    id="payslip-tax-year"
+                    name="selectedTaxYearStart"
+                    [(ngModel)]="
+                        selectedTaxYearStart
+                    "
+                >
+                    @for (
+                        year of availableTaxYears;
+                        track year
+                    ) {
+                        <option [ngValue]="year">
+                            {{
+                                getTaxYearLabel(year)
+                            }}
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <span class="payslip-count">
+                {{ displayedPayslips.length }}
+
+                @if (
+                    displayedPayslips.length === 1
+                ) {
+                    payslip
+                } @else {
+                    payslips
+                }
+            </span>
+        </div>
+
+        <div class="payslip-summary">
+            <div class="payslip-summary-item">
+                <span>
+                    Gross pay
+                </span>
+
+                <strong>
+                    {{
+                        totalGrossPay
+                            | currency:'GBP':'symbol':'1.2-2'
+                    }}
+                </strong>
+            </div>
+
+            <div class="payslip-summary-item">
+                <span>
+                    Deductions
+                </span>
+
+                <strong>
+                    {{
+                        totalDeductions
+                            | currency:'GBP':'symbol':'1.2-2'
+                    }}
+                </strong>
+            </div>
+
+            <div
+                class="
+                    payslip-summary-item
+                    net-summary-item
+                "
+            >
+                <span>
+                    Net pay
+                </span>
+
+                <strong>
+                    {{
+                        totalNetPay
+                            | currency:'GBP':'symbol':'1.2-2'
+                    }}
+                </strong>
+            </div>
+        </div>
+
+        @if (displayedPayslips.length === 0) {
+            <div
+                class="
+                    payslips-state
+                    compact-state
+                "
+            >
+                <h3>
+                    No payslips in this tax year
+                </h3>
+
+                <p>
+                    Choose another tax year or add
+                    a payslip.
+                </p>
+            </div>
+        } @else {
+            <div class="payslip-list">
+                @for (
+                    payslip of displayedPayslips;
+                    track payslip.id
+                ) {
+                    <article class="payslip-card">
+                        <div class="payslip-card-header">
+                            <div class="payslip-title">
+                                <h3>
+                                    {{
+                                        payslip.employerName
+                                    }}
+                                </h3>
+
+                                <p>
+                                    {{
+                                        payslip.payDate
+                                            | date:'d MMMM yyyy'
+                                    }}
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="
+                                    manage-payslip-button
+                                "
+                                [attr.aria-label]="
+                                    'Manage payslip from ' +
+                                    payslip.employerName
+                                "
+                                (click)="
+                                    requestManagePayslip(
+                                        payslip
+                                    )
+                                "
+                            >
+                                Manage
+                            </button>
+                        </div>
+
+                        <div class="payslip-net-pay">
+                            <span>
+                                Net pay
+                            </span>
+
+                            <strong>
+                                {{
+                                    payslip.netPay
+                                        | currency:'GBP':'symbol':'1.2-2'
+                                }}
+                            </strong>
+                        </div>
+
+                        <div class="payslip-details">
+                            <div class="payslip-detail-row">
+                                <span>
+                                    Gross pay
+                                </span>
+
+                                <strong>
+                                    {{
+                                        payslip.grossPay
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+
+                            <div class="payslip-detail-row">
+                                <span>
+                                    Income tax
+                                </span>
+
+                                <strong>
+                                    {{
+                                        payslip.incomeTax
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+
+                            <div class="payslip-detail-row">
+                                <span>
+                                    National Insurance
+                                </span>
+
+                                <strong>
+                                    {{
+                                        payslip
+                                            .nationalInsurance
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+
+                            <div class="payslip-detail-row">
+                                <span>
+                                    Pension
+                                </span>
+
+                                <strong>
+                                    {{
+                                        payslip
+                                            .pensionContribution
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+
+                            <div class="payslip-detail-row">
+                                <span>
+                                    Other deductions
+                                </span>
+
+                                <strong>
+                                    {{
+                                        payslip
+                                            .otherDeductions
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+
+                            <div
+                                class="
+                                    payslip-detail-row
+                                    deductions-row
+                                "
+                            >
+                                <span>
+                                    Total deductions
+                                </span>
+
+                                <strong>
+                                    {{
+                                        getPayslipDeductions(
+                                            payslip
+                                        )
+                                            | currency:'GBP':'symbol':'1.2-2'
+                                    }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        @if (
+                            payslip.notes !== null
+                        ) {
+                            <p class="payslip-notes">
+                                {{ payslip.notes }}
+                            </p>
+                        }
+                    </article>
+                }
+            </div>
+        }
+    }
+</section>

@@ -1,0 +1,426 @@
+<form
+    #payslipForm="ngForm"
+    class="payslip-form"
+    (ngSubmit)="onSubmit()"
+>
+    <div class="payslip-field">
+        <label for="payslip-employer">
+            Employer
+            <span class="required-marker">*</span>
+        </label>
+
+        <input
+            #employerInput="ngModel"
+            id="payslip-employer"
+            name="employerName"
+            type="text"
+            maxlength="100"
+            autocomplete="organization"
+            required
+            [(ngModel)]="employerName"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        />
+
+        @if (
+            employerInput.invalid &&
+            (
+                employerInput.touched ||
+                payslipForm.submitted
+            )
+        ) {
+            <p class="field-error">
+                Please enter the employer name.
+            </p>
+        }
+    </div>
+
+    <div class="payslip-field">
+        <label for="payslip-pay-date">
+            Pay date
+            <span class="required-marker">*</span>
+        </label>
+
+        <input
+            #payDateInput="ngModel"
+            id="payslip-pay-date"
+            name="payDate"
+            type="date"
+            required
+            [(ngModel)]="payDate"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        />
+
+        @if (
+            payDateInput.invalid &&
+            (
+                payDateInput.touched ||
+                payslipForm.submitted
+            )
+        ) {
+            <p class="field-error">
+                Please select the pay date.
+            </p>
+        }
+    </div>
+
+    <div class="payslip-field">
+        <label for="payslip-gross-pay">
+            Gross pay
+            <span class="required-marker">*</span>
+        </label>
+
+        <input
+            #grossPayInput="ngModel"
+            id="payslip-gross-pay"
+            name="grossPay"
+            type="number"
+            min="0.01"
+            step="0.01"
+            inputmode="decimal"
+            required
+            [(ngModel)]="grossPay"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        />
+
+        @if (
+            grossPayInput.invalid &&
+            (
+                grossPayInput.touched ||
+                payslipForm.submitted
+            )
+        ) {
+            <p class="field-error">
+                Gross pay must be greater than £0.
+            </p>
+        }
+    </div>
+
+    <fieldset class="deductions-group">
+        <legend>
+            Deductions
+        </legend>
+
+        <div class="payslip-field">
+            <label for="payslip-income-tax">
+                Income tax
+            </label>
+
+            <input
+                #incomeTaxInput="ngModel"
+                id="payslip-income-tax"
+                name="incomeTax"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                [(ngModel)]="incomeTax"
+                [disabled]="
+                    isSaving ||
+                    isArchiving
+                "
+            />
+
+            @if (
+                incomeTaxInput.invalid &&
+                (
+                    incomeTaxInput.touched ||
+                    payslipForm.submitted
+                )
+            ) {
+                <p class="field-error">
+                    Income tax cannot be negative.
+                </p>
+            }
+        </div>
+
+        <div class="payslip-field">
+            <label for="payslip-national-insurance">
+                National Insurance
+            </label>
+
+            <input
+                #nationalInsuranceInput="ngModel"
+                id="payslip-national-insurance"
+                name="nationalInsurance"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                [(ngModel)]="nationalInsurance"
+                [disabled]="
+                    isSaving ||
+                    isArchiving
+                "
+            />
+
+            @if (
+                nationalInsuranceInput.invalid &&
+                (
+                    nationalInsuranceInput.touched ||
+                    payslipForm.submitted
+                )
+            ) {
+                <p class="field-error">
+                    National Insurance cannot be negative.
+                </p>
+            }
+        </div>
+
+        <div class="payslip-field">
+            <label for="payslip-pension">
+                Pension contribution
+            </label>
+
+            <input
+                #pensionInput="ngModel"
+                id="payslip-pension"
+                name="pensionContribution"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                [(ngModel)]="pensionContribution"
+                [disabled]="
+                    isSaving ||
+                    isArchiving
+                "
+            />
+
+            @if (
+                pensionInput.invalid &&
+                (
+                    pensionInput.touched ||
+                    payslipForm.submitted
+                )
+            ) {
+                <p class="field-error">
+                    The pension contribution cannot
+                    be negative.
+                </p>
+            }
+        </div>
+
+        <div class="payslip-field">
+            <label for="payslip-other-deductions">
+                Other deductions
+            </label>
+
+            <input
+                #otherDeductionsInput="ngModel"
+                id="payslip-other-deductions"
+                name="otherDeductions"
+                type="number"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                [(ngModel)]="otherDeductions"
+                [disabled]="
+                    isSaving ||
+                    isArchiving
+                "
+            />
+
+            @if (
+                otherDeductionsInput.invalid &&
+                (
+                    otherDeductionsInput.touched ||
+                    payslipForm.submitted
+                )
+            ) {
+                <p class="field-error">
+                    Other deductions cannot be negative.
+                </p>
+            }
+        </div>
+
+        <div class="deductions-total">
+            <span>
+                Total deductions
+            </span>
+
+            <strong>
+                £{{ totalDeductions.toFixed(2) }}
+            </strong>
+        </div>
+    </fieldset>
+
+    <div class="payslip-field">
+        <label for="payslip-net-pay">
+            Net pay
+            <span class="required-marker">*</span>
+        </label>
+
+        <input
+            #netPayInput="ngModel"
+            id="payslip-net-pay"
+            name="netPay"
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            required
+            [(ngModel)]="netPay"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        />
+
+        @if (
+            netPayInput.invalid &&
+            (
+                netPayInput.touched ||
+                payslipForm.submitted
+            )
+        ) {
+            <p class="field-error">
+                Please enter a net pay amount of
+                £0 or more.
+            </p>
+        }
+    </div>
+
+    <div class="payslip-field">
+        <label for="payslip-notes">
+            Notes
+            <span class="optional-label">
+                Optional
+            </span>
+        </label>
+
+        <textarea
+            id="payslip-notes"
+            name="notes"
+            rows="4"
+            maxlength="1000"
+            [(ngModel)]="notes"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        ></textarea>
+    </div>
+
+    @if (errorMessage !== '') {
+        <p
+            class="form-error"
+            role="alert"
+        >
+            {{ errorMessage }}
+        </p>
+    }
+
+    <div class="payslip-form-actions">
+        <button
+            type="submit"
+            class="save-payslip-button"
+            [disabled]="
+                isSaving ||
+                isArchiving ||
+                payslipForm.invalid
+            "
+        >
+            @if (isSaving) {
+                @if (isEditing) {
+                    Saving...
+                } @else {
+                    Creating...
+                }
+            } @else {
+                @if (isEditing) {
+                    Save changes
+                } @else {
+                    Create payslip
+                }
+            }
+        </button>
+
+        <button
+            type="button"
+            class="cancel-payslip-button"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+            (click)="cancel()"
+        >
+            Cancel
+        </button>
+    </div>
+
+    @if (payslip !== null) {
+        <section class="archive-payslip-section">
+            @if (showArchiveConfirmation) {
+                <div
+                    class="archive-confirmation"
+                    role="alert"
+                >
+                    <strong>
+                        Archive this payslip?
+                    </strong>
+
+                    <p>
+                        It will disappear from the
+                        dashboard, but its stored data
+                        will remain.
+                    </p>
+
+                    <div
+                        class="
+                            archive-confirmation-actions
+                        "
+                    >
+                        <button
+                            type="button"
+                            class="confirm-archive-button"
+                            [disabled]="
+                                isSaving ||
+                                isArchiving
+                            "
+                            (click)="archivePayslip()"
+                        >
+                            @if (isArchiving) {
+                                Archiving...
+                            } @else {
+                                Yes, archive
+                            }
+                        </button>
+
+                        <button
+                            type="button"
+                            class="keep-payslip-button"
+                            [disabled]="
+                                isSaving ||
+                                isArchiving
+                            "
+                            (click)="cancelArchive()"
+                        >
+                            Keep payslip
+                        </button>
+                    </div>
+                </div>
+            } @else {
+                <button
+                    type="button"
+                    class="archive-payslip-button"
+                    [disabled]="
+                        isSaving ||
+                        isArchiving
+                    "
+                    (click)="requestArchive()"
+                >
+                    Archive payslip
+                </button>
+            }
+        </section>
+    }
+</form>

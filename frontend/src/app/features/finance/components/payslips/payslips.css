@@ -1,0 +1,287 @@
+:host {
+    display: block;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+    box-sizing: border-box;
+    scrollbar-gutter: stable;
+}
+
+.payslips-dashboard {
+    width: 100%;
+    min-width: 0;
+}
+
+.payslip-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tax-year-control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.tax-year-control label {
+    color: var(--colour-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.tax-year-control select {
+    min-width: 130px;
+    padding: 0.48rem 0.65rem;
+    background-color: var(--colour-white);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+    border-radius: 0.55rem;
+    font: inherit;
+    font-size: 0.82rem;
+}
+
+.payslip-count {
+    color: var(--colour-text-muted);
+    font-size: 0.8rem;
+}
+
+.payslip-summary {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.payslip-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+    padding: 0.7rem 0;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.payslip-summary-item span {
+    color: var(--colour-text-muted);
+    font-size: 0.76rem;
+}
+
+.payslip-summary-item strong {
+    color: var(--colour-text);
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+}
+
+.net-summary-item {
+    border-bottom-color: var(--colour-primary);
+}
+
+.payslip-list {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(300px, 1fr)
+        );
+    align-items: start;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
+}
+
+.payslip-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    min-width: 0;
+    padding: 1rem;
+    background-color: var(--colour-off-white);
+    border-radius: 0.9rem;
+}
+
+.payslip-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.payslip-title {
+    min-width: 0;
+}
+
+.payslip-title h3 {
+    margin: 0 0 0.2rem;
+    color: var(--colour-text);
+    font-size: 1rem;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.payslip-title p {
+    margin: 0;
+    color: var(--colour-text-muted);
+    font-size: 0.76rem;
+}
+
+.manage-payslip-button {
+    flex-shrink: 0;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0.38rem 0.48rem;
+    background-color: transparent;
+    color: var(--colour-text-muted);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.manage-payslip-button:hover {
+    background-color: #e6e7e9;
+    color: var(--colour-text);
+    transform: none;
+}
+
+.payslip-net-pay {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0.8rem;
+    background-color: rgb(255 59 48 / 8%);
+    border-radius: 0.65rem;
+}
+
+.payslip-net-pay span {
+    color: var(--colour-text-muted);
+    font-size: 0.78rem;
+}
+
+.payslip-net-pay strong {
+    color: var(--colour-primary);
+    font-size: 1.05rem;
+}
+
+.payslip-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.payslip-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid #e3e4e6;
+}
+
+.payslip-detail-row span {
+    color: var(--colour-text-muted);
+    font-size: 0.75rem;
+}
+
+.payslip-detail-row strong {
+    color: var(--colour-text);
+    font-size: 0.78rem;
+    text-align: right;
+}
+
+.deductions-row {
+    border-bottom: none;
+    font-weight: 700;
+}
+
+.payslip-notes {
+    margin: 0;
+    padding-top: 0.75rem;
+    color: var(--colour-text-muted);
+    border-top: 1px solid #e3e4e6;
+    font-size: 0.76rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.payslips-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 240px;
+    padding: 2rem;
+    box-sizing: border-box;
+    color: var(--colour-text-muted);
+    text-align: center;
+}
+
+.payslips-state h3,
+.payslips-state p {
+    margin: 0;
+}
+
+.payslips-state h3 {
+    color: var(--colour-text);
+    font-size: 1rem;
+}
+
+.payslips-state p {
+    max-width: 360px;
+    font-size: 0.84rem;
+}
+
+.payslips-state button {
+    width: auto;
+    margin-top: 0.5rem;
+}
+
+.payslips-error-state {
+    color: var(--colour-error);
+}
+
+.compact-state {
+    min-height: 180px;
+}
+
+@media (max-width: 900px) {
+    :host {
+        flex: none;
+        min-height: auto;
+        overflow: visible;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .payslip-summary {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .payslip-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    .payslip-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .tax-year-control select {
+        width: 100%;
+    }
+}

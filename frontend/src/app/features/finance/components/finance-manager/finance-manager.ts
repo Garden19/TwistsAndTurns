@@ -17,6 +17,9 @@ import { SavingsGoalForm } from "../savings-goal-form/savings-goal-form";
 import { SavingsGoals } from "../savings-goals/savings-goals";
 import { FinanceEntryTable } from '../finance-entry-table/finance-entry-table';
 import { type SavingsGoal } from '../../models/savings-goal';
+import { type Payslip } from '../../models/payslip';
+import { Payslips } from '../payslips/payslips';
+import { PayslipForm } from '../payslip-form/payslip-form';
 type FinanceView = 'transactions' | 'savings' | 'payslips';
 
 @Component({
@@ -29,7 +32,9 @@ type FinanceView = 'transactions' | 'savings' | 'payslips';
     MonthlyCostTrend,
     SavingsGoalForm,
     SavingsGoals,
-    FinanceEntryTable
+    FinanceEntryTable,
+    Payslips,
+    PayslipForm
 ],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',
@@ -40,6 +45,8 @@ export class FinanceManager implements OnInit {
     financeDrawer?: ElementRef<HTMLElement>;
     @ViewChild(SavingsGoals)
     savingsGoalsComponent?: SavingsGoals;
+    @ViewChild(Payslips)
+    payslipsComponent?: Payslips;
 
     constructor(
         private financeService: Finance,
@@ -80,10 +87,12 @@ export class FinanceManager implements OnInit {
     | 'bankAccounts'
     | 'entryDetails'
     | 'savingsGoal'
+    | 'payslip'
     | null = null;
 
     selectedEntry: FinanceEntry | null = null;
     selectedSavingsGoal: SavingsGoal | null = null;
+    selectedPayslip: Payslip | null = null;
 
     ngOnInit(): void {
         this.loadBankAccounts();
@@ -235,12 +244,13 @@ export class FinanceManager implements OnInit {
     }
 
     closeDrawer(): void {
-      this.activeDrawer = null;
-      this.selectedEntry = null;
-      this.selectedSavingsGoal = null;
-      this.isConfirmingDelete = false;
-      this.isEditingEntry = false;
-    }
+    this.activeDrawer = null;
+    this.selectedEntry = null;
+    this.selectedSavingsGoal = null;
+    this.selectedPayslip = null;
+    this.isConfirmingDelete = false;
+    this.isEditingEntry = false;
+  }
 
     startEditingEntry(): void {
         if (this.selectedEntry === null) {
@@ -517,6 +527,28 @@ export class FinanceManager implements OnInit {
     handleSavingsGoalArchived(): void {
         this.savingsGoalsComponent
             ?.loadSavingsGoals();
+
+        this.closeDrawer();
+    }
+
+    openPayslipForm(
+        payslip: Payslip | null = null
+    ): void {
+        this.selectedPayslip = payslip;
+        this.activeDrawer = 'payslip';
+        this.resetDrawerScroll();
+    }
+
+    handlePayslipSaved(): void {
+        this.payslipsComponent
+            ?.loadPayslips();
+
+        this.closeDrawer();
+    }
+
+    handlePayslipArchived(): void {
+        this.payslipsComponent
+            ?.loadPayslips();
 
         this.closeDrawer();
     }

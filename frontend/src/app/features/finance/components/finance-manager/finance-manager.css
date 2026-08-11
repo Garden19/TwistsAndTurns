@@ -105,14 +105,14 @@
     border-color: #333;
 }
 
-.finance-view-tabs .savings-page-action {
+.finance-view-tabs .finance-page-action {
     margin-left: auto;
     background-color: var(--colour-primary);
     color: var(--colour-white);
     border-color: var(--colour-primary);
 }
 
-.finance-view-tabs .savings-page-action:hover {
+.finance-view-tabs .finance-page-action:hover {
     background-color: var(--colour-primary-hover);
     color: var(--colour-white);
 }
@@ -508,7 +508,7 @@
         font-size: 0.75rem;
     }
 
-    .finance-view-tabs .savings-page-action {
+    .finance-view-tabs .finance-page-action {
         grid-column: 1 / -1;
         margin-left: 0;
     }

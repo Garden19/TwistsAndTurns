@@ -114,10 +114,20 @@
                 @if (activeView === 'savings') {
                     <button
                         type="button"
-                        class="savings-page-action"
+                        class="finance-page-action"
                         (click)="openSavingsGoalForm()"
                     >
                         + Add goal
+                    </button>
+                }
+
+                @if (activeView === 'payslips') {
+                    <button
+                        type="button"
+                        class="finance-page-action"
+                        (click)="openPayslipForm()"
+                    >
+                        + Add payslip
                     </button>
                 }
             </div>
@@ -192,30 +202,11 @@
 
             @if (activeView === 'payslips') {
                 <div class="payslips-view">
-                    <div class="entries-header">
-                        <div>
-                            <h3>
-                                Payslips
-                            </h3>
-
-                            <p>
-                                Track your income and deductions.
-                            </p>
-                        </div>
-
-                        <div class="entries-actions">
-                            <button
-                                type="button"
-                                (click)="openAddForm()"
-                            >
-                                + Add item
-                            </button>
-                        </div>
-                    </div>
-
-                    <p>
-                        Payslip dashboard coming later.
-                    </p>
+                    <app-payslips
+                        (managePayslipRequested)="
+                            openPayslipForm($event)
+                        "
+                    />
                 </div>
             }
         </div>
@@ -276,6 +267,38 @@
                     "
                     (goalArchived)="
                         handleSavingsGoalArchived()
+                    "
+                    (cancelRequested)="closeDrawer()"
+                />
+            }
+
+            @if (activeDrawer === 'payslip') {
+                <div class="drawer-header">
+                    <h3>
+                        @if (
+                            selectedPayslip === null
+                        ) {
+                            Add payslip
+                        } @else {
+                            Manage payslip
+                        }
+                    </h3>
+
+                    <button
+                        type="button"
+                        (click)="closeDrawer()"
+                    >
+                        Close
+                    </button>
+                </div>
+
+                <app-payslip-form
+                    [payslip]="selectedPayslip"
+                    (payslipSaved)="
+                        handlePayslipSaved()
+                    "
+                    (payslipArchived)="
+                        handlePayslipArchived()
                     "
                     (cancelRequested)="closeDrawer()"
                 />
@@ -534,7 +557,9 @@
                                 account of bankAccounts;
                                 track account.id
                             ) {
-                                <option [ngValue]="account.id">
+                                <option
+                                    [ngValue]="account.id"
+                                >
                                     {{ account.bankName }} -
                                     {{ account.name }}
                                 </option>
@@ -555,7 +580,9 @@
                         </div>
 
                         @if (itemIsRecurring) {
-                            <label for="item-recurrence-interval">
+                            <label
+                                for="item-recurrence-interval"
+                            >
                                 Repeat every
                                 <span class="required-marker">
                                     *
@@ -587,7 +614,9 @@
                                 </p>
                             }
 
-                            <label for="item-recurrence-unit">
+                            <label
+                                for="item-recurrence-unit"
+                            >
                                 Period
                                 <span class="required-marker">
                                     *
@@ -681,9 +710,15 @@
                     }
 
                     @if (itemKind === 'payslip') {
-                        <p>
-                            Payslip form will go here.
-                        </p>
+                        <app-payslip-form
+                            [payslip]="null"
+                            (payslipSaved)="
+                                handlePayslipSaved()
+                            "
+                            (cancelRequested)="
+                                closeDrawer()
+                            "
+                        />
                     }
                 </div>
             }
@@ -901,9 +936,7 @@
                                 >
                                     <button
                                         type="button"
-                                        class="
-                                            cancel-delete-button
-                                        "
+                                        class="cancel-delete-button"
                                         (click)="
                                             cancelDeleteConfirmation()
                                         "
@@ -913,9 +946,7 @@
 
                                     <button
                                         type="button"
-                                        class="
-                                            remove-entry-button
-                                        "
+                                        class="remove-entry-button"
                                         (click)="
                                             deleteFinanceEntry(
                                                 selectedEntry
@@ -1025,7 +1056,9 @@
                         }
 
                         @if (itemKind === 'income') {
-                            <label for="edit-income-category">
+                            <label
+                                for="edit-income-category"
+                            >
                                 Category
                                 <span class="required-marker">
                                     *
@@ -1081,7 +1114,9 @@
                         }
 
                         @if (itemKind === 'outgoing') {
-                            <label for="edit-outgoing-category">
+                            <label
+                                for="edit-outgoing-category"
+                            >
                                 Category
                                 <span class="required-marker">
                                     *
@@ -1165,7 +1200,9 @@
                                 account of bankAccounts;
                                 track account.id
                             ) {
-                                <option [ngValue]="account.id">
+                                <option
+                                    [ngValue]="account.id"
+                                >
                                     {{ account.bankName }} -
                                     {{ account.name }}
                                 </option>
@@ -1175,9 +1212,7 @@
                         <div class="edit-entry-actions">
                             <button
                                 type="button"
-                                (click)="
-                                    cancelEditingEntry()
-                                "
+                                (click)="cancelEditingEntry()"
                             >
                                 Cancel
                             </button>

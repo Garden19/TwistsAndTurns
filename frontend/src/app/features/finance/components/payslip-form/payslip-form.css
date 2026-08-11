@@ -1,0 +1,228 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.payslip-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    width: 100%;
+}
+
+.payslip-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.payslip-field label,
+.deductions-group legend {
+    color: var(--colour-text);
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.payslip-field input,
+.payslip-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.62rem 0.72rem;
+    background-color: var(--colour-white);
+    color: var(--colour-text);
+    border: 1px solid var(--colour-border);
+    border-radius: 0.55rem;
+    font: inherit;
+    font-size: 0.88rem;
+}
+
+.payslip-field textarea {
+    min-height: 88px;
+    resize: vertical;
+}
+
+.payslip-field input:focus,
+.payslip-field textarea:focus {
+    outline: none;
+    border-color: var(--colour-primary);
+    box-shadow:
+        0 0 0 3px
+        rgb(255 59 48 / 12%);
+}
+
+.payslip-field input:disabled,
+.payslip-field textarea:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.required-marker {
+    color: var(--colour-error);
+}
+
+.optional-label {
+    margin-left: 0.25rem;
+    color: var(--colour-text-muted);
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.deductions-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0.9rem;
+    background-color: var(--colour-off-white);
+    border: 1px solid var(--colour-border);
+    border-radius: 0.7rem;
+}
+
+.deductions-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0.8rem;
+    background-color: var(--colour-off-white);
+    border: 1px solid var(--colour-border);
+    border-radius: 0.7rem;
+}
+
+.deductions-group legend {
+    padding: 0 0.3rem;
+}
+
+.deductions-group .payslip-field {
+    min-width: 0;
+}
+
+.deductions-group .payslip-field label {
+    font-size: 0.78rem;
+    line-height: 1.25;
+}
+
+.deductions-group .payslip-field input {
+    min-height: 44px;
+    padding: 0.55rem 0.65rem;
+}
+
+.deductions-total {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--colour-border);
+}
+
+.deductions-total span {
+    color: var(--colour-text-muted);
+    font-size: 0.8rem;
+}
+
+.deductions-total strong {
+    color: var(--colour-text);
+    font-size: 0.92rem;
+}
+
+.field-error,
+.form-error {
+    margin: 0;
+    color: var(--colour-error);
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.form-error {
+    padding: 0.7rem;
+    background-color: rgb(217 45 32 / 7%);
+    border:
+        1px solid
+        rgb(217 45 32 / 25%);
+    border-radius: 0.55rem;
+}
+
+.payslip-form-actions,
+.archive-confirmation-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    width: 100%;
+}
+
+.payslip-form-actions button,
+.archive-confirmation-actions button {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+.cancel-payslip-button,
+.keep-payslip-button {
+    background-color: #667085;
+}
+
+.archive-payslip-section {
+    margin-top: 0.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e8e8e8;
+}
+
+.archive-payslip-button {
+    width: 100%;
+    margin: 0;
+    background-color: transparent;
+    color: var(--colour-error);
+    border: 1px solid var(--colour-error);
+}
+
+.archive-payslip-button:hover:not(:disabled) {
+    background-color: var(--colour-error);
+    color: var(--colour-white);
+}
+
+.archive-confirmation {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0.85rem;
+    background-color: rgb(217 45 32 / 7%);
+    border:
+        1px solid
+        rgb(217 45 32 / 30%);
+    border-radius: 0.65rem;
+}
+
+.archive-confirmation strong {
+    color: var(--colour-text);
+    font-size: 0.88rem;
+}
+
+.archive-confirmation p {
+    margin: 0;
+    color: var(--colour-text-muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.confirm-archive-button {
+    background-color: var(--colour-error);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+@media (max-width: 420px) {
+    .payslip-form-actions,
+    .archive-confirmation-actions {
+        grid-template-columns: 1fr;
+    }
+}
