@@ -1,7 +1,6 @@
 :host {
     display: flex;
     flex: 1;
-
     width: 100%;
     min-width: 0;
     min-height: 0;
@@ -9,26 +8,19 @@
 
 .finance-manager {
     position: relative;
-
     display: flex;
     flex: 1;
     flex-direction: column;
-
     width: 100%;
     min-width: 0;
     min-height: 0;
-
     background-color: var(--colour-white);
 }
 
 .manager-grid {
     display: grid;
     flex: 1;
-
-    grid-template-columns:
-        minmax(260px, 1fr)
-        minmax(0, 3fr);
-
+    grid-template-columns: minmax(260px, 1fr) minmax(0, 3fr);
     width: 100%;
     min-width: 0;
     min-height: 0;
@@ -37,18 +29,13 @@
 .manager-column {
     min-width: 0;
     min-height: 0;
-
-    box-sizing: border-box;
-
     padding: 1.5rem;
 }
 
 .summary-column {
     display: flex;
     flex-direction: column;
-
     min-height: 0;
-
     overflow: hidden;
 }
 
@@ -59,56 +46,37 @@
 
 .summary-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap:
-        0
-        1.25rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.25rem;
 }
 
 .summary-item {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-
     min-width: 0;
-
     padding: 0.75rem 0;
-
-    border-bottom:
-        1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .summary-item span {
-    color:
-        var(--colour-text-muted);
-
+    color: var(--colour-text-muted);
     font-size: 0.9rem;
 }
 
 .summary-item strong {
     font-size: 1.25rem;
     line-height: 1.2;
-
     overflow-wrap: anywhere;
 }
 
 .entries-column {
     display: flex;
     flex-direction: column;
-
     min-width: 0;
     min-height: 0;
-
     overflow: hidden;
-
-    border-left:
-        1px solid #e8e8e8;
+    border-left: 1px solid #e8e8e8;
 }
 
 .finance-view-tabs {
@@ -116,35 +84,18 @@
     flex-shrink: 0;
     align-items: center;
     gap: 0.5rem;
-
     width: 100%;
-
     margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-
-    border-bottom:
-        1px solid #e8e8e8;
 }
 
 .finance-view-tabs button {
     width: auto;
     min-width: 0;
-
-    padding:
-        0.45rem
-        0.8rem;
-
-    background-color:
-        var(--colour-off-white);
-
-    color:
-        var(--colour-text);
-
-    border:
-        1px solid #dedede;
-    border-radius:
-        var(--border-radius);
-
+    padding: 0.45rem 0.8rem;
+    background-color: var(--colour-off-white);
+    color: var(--colour-text);
+    border: 1px solid #dedede;
+    border-radius: var(--border-radius);
     font-size: 0.85rem;
 }
 
@@ -155,8 +106,19 @@
 .finance-view-tabs button.active {
     background-color: #333;
     color: var(--colour-white);
-
     border-color: #333;
+}
+
+.finance-view-tabs .savings-page-action {
+    margin-left: auto;
+    background-color: var(--colour-primary);
+    color: var(--colour-white);
+    border-color: var(--colour-primary);
+}
+
+.finance-view-tabs .savings-page-action:hover {
+    background-color: var(--colour-primary-hover);
+    color: var(--colour-white);
 }
 
 .transactions-view,
@@ -164,9 +126,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-
     min-height: 0;
-
     overflow: hidden;
 }
 
@@ -174,56 +134,33 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-
     min-height: 0;
-
-    overflow-y: auto;
     overflow-x: hidden;
-
-    padding-right: 0.25rem;
-
+    overflow-y: auto;
+    padding-right: 0.5rem;
     scrollbar-gutter: stable;
     overscroll-behavior: contain;
 }
 
-@media (max-width: 900px) {
-    .savings-view {
-        flex: none;
-
-        min-height: auto;
-
-        overflow: visible;
-
-        padding-right: 0;
-    }
-}
-
 .savings-view > app-savings-goals {
-    flex: 1;
-
-    min-height: 0;
+    display: block;
+    flex: none;
+    width: 100%;
+    min-height: auto;
 }
 
 .month-navigation {
     display: grid;
     flex-shrink: 0;
-
-    grid-template-columns:
-        1fr
-        auto
-        1fr;
-
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 1rem;
-
     width: 100%;
-
     margin-bottom: 1rem;
 }
 
 .month-navigation h3 {
     margin: 0;
-
     text-align: center;
 }
 
@@ -238,11 +175,9 @@
 .entries-header {
     display: flex;
     flex-shrink: 0;
-
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-
     margin-bottom: 1rem;
 }
 
@@ -251,14 +186,8 @@
 }
 
 .entries-header p {
-    margin:
-        0.25rem
-        0
-        0;
-
-    color:
-        var(--colour-text-muted);
-
+    margin: 0.25rem 0 0;
+    color: var(--colour-text-muted);
     font-size: 0.85rem;
 }
 
@@ -266,250 +195,18 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-
     gap: 0.75rem;
-}
-
-.table-wrapper {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-
-    overflow: hidden;
-}
-
-.finance-table-scroll {
-    flex: 1;
-
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-
-    overflow-y: auto;
-    overflow-x: auto;
-
-    scrollbar-gutter: stable;
-}
-
-.finance-table {
-    width: 100%;
-
-    border-collapse: collapse;
-
-    table-layout: fixed;
-}
-
-.finance-table th,
-.finance-table td {
-    min-width: 0;
-
-    padding:
-        0.9rem
-        0.75rem;
-
-    vertical-align: middle;
-
-    border-bottom:
-        1px solid #ececec;
-}
-
-.finance-table thead th {
-    position: sticky;
-
-    top: 0;
-
-    z-index: 2;
-
-    background-color:
-        var(--colour-white);
-
-    color:
-        var(--colour-text-muted);
-
-    font-size: 0.8rem;
-    font-weight: 600;
-
-    text-transform: uppercase;
-
-    letter-spacing: 0.03rem;
-}
-
-.item-column {
-    width: auto;
-
-    text-align: left;
-}
-
-.account-column {
-    width: 26%;
-
-    text-align: left;
-
-    overflow-wrap: anywhere;
-}
-
-.amount-column {
-    width: 110px;
-
-    text-align: right;
-}
-
-.next-due-column {
-    width: 125px;
-
-    text-align: center;
-}
-
-.paid-column {
-    width: 70px;
-
-    text-align: center;
-    vertical-align: middle;
-}
-
-.more-column {
-    width: 85px;
-
-    text-align: center;
-}
-
-.finance-table td.paid-column {
-    padding-left: 0.4rem;
-    padding-right: 0.4rem;
-}
-
-.paid-checkbox {
-    appearance: none;
-
-    display: grid;
-    place-content: center;
-
-    width: 1.5rem;
-    height: 1.5rem;
-    min-height: 0;
-
-    margin: 0 auto;
-    padding: 0;
-
-    background-color:
-        var(--colour-white);
-
-    border:
-        2px solid #555;
-    border-radius: 0.35rem;
-
-    cursor: pointer;
-
-    transition:
-        background-color 150ms ease,
-        border-color 150ms ease,
-        transform 150ms ease;
-}
-
-.paid-checkbox::before {
-    content: "";
-
-    width: 0.65rem;
-    height: 0.35rem;
-
-    border-left:
-        2px solid white;
-    border-bottom:
-        2px solid white;
-
-    transform:
-        rotate(-45deg)
-        scale(0);
-
-    transition:
-        transform 150ms ease;
-}
-
-.paid-checkbox:checked {
-    background-color: #333;
-
-    border-color: #333;
-}
-
-.paid-checkbox:checked::before {
-    transform:
-        rotate(-45deg)
-        scale(1);
-}
-
-.paid-checkbox:hover {
-    border-color: #222;
-
-    transform:
-        scale(1.05);
-}
-
-.paid-checkbox:focus-visible {
-    outline:
-        3px solid
-        rgb(0 0 0 / 20%);
-
-    outline-offset: 2px;
-}
-
-.more-column button {
-    width: auto;
-    min-width: 0;
-    max-width: 100%;
-
-    padding:
-        0.5rem
-        0.7rem;
-
-    white-space: nowrap;
-}
-
-.group-heading td {
-    width: auto;
-
-    padding:
-        0.75rem
-        1rem;
-
-    background-color:
-        var(--colour-off-white);
-
-    color:
-        var(--colour-text-muted);
-
-    font-size: 0.8rem;
-    font-weight: 700;
-
-    text-align: left;
-    text-transform: uppercase;
-
-    letter-spacing: 0.03rem;
-}
-
-.finance-row:hover {
-    background-color: #fafafa;
-}
-
-.empty-column {
-    visibility: hidden;
 }
 
 .add-item-form {
     display: flex;
     flex-direction: column;
-
     gap: 0.45rem;
-
     width: 100%;
 }
 
 .add-item-form label {
     margin: 0;
-
     font-size: 0.85rem;
     font-weight: 600;
 }
@@ -517,88 +214,57 @@
 .add-item-form input,
 .add-item-form select {
     width: 100%;
-
-    box-sizing: border-box;
-
-    padding:
-        0.5rem
-        0.65rem;
-
-    background-color:
-        var(--colour-white);
-
-    border:
-        1px solid #d5d5d5;
+    padding: 0.5rem 0.65rem;
+    background-color: var(--colour-white);
+    border: 1px solid #d5d5d5;
     border-radius: 6px;
-
     font: inherit;
     font-size: 0.9rem;
 }
 
 .add-item-form input:focus,
 .add-item-form select:focus {
-    outline:
-        2px solid
-        currentColor;
-
+    outline: 2px solid currentColor;
     outline-offset: 2px;
 }
 
 .add-item-form button {
     width: 100%;
-
     margin-top: 0.15rem;
-
-    padding:
-        0.55rem
-        0.75rem;
+    padding: 0.55rem 0.75rem;
 }
 
 .checkbox-field {
     display: flex;
     align-items: center;
-
     gap: 0.45rem;
-
     width: fit-content;
-
     padding-block: 0.1rem;
 }
 
 .checkbox-field input[type="checkbox"] {
     width: 1rem;
     height: 1rem;
-
     margin: 0;
     padding: 0;
-
     cursor: pointer;
 }
 
 .checkbox-field label {
     margin: 0;
-
     cursor: pointer;
-
     font-size: 0.85rem;
     font-weight: 600;
 }
 
 .drawer-backdrop {
     position: absolute;
-
     inset: 0;
-
     z-index: 100;
-
-    background-color:
-        rgb(0 0 0 / 35%);
-
+    background-color: rgb(0 0 0 / 35%);
     opacity: 0;
     visibility: hidden;
-
     pointer-events: none;
-
     transition:
         opacity 300ms ease,
         visibility 0s linear 300ms;
@@ -607,9 +273,7 @@
 .drawer-backdrop.drawer-open {
     opacity: 1;
     visibility: visible;
-
     pointer-events: auto;
-
     transition:
         opacity 300ms ease,
         visibility 0s linear 0s;
@@ -617,86 +281,49 @@
 
 .finance-drawer {
     position: absolute;
-
     top: 0;
     right: 0;
-
-    width:
-        min(
-            340px,
-            100%
-        );
-
+    width: min(340px, 100%);
     height: 100%;
-
-    box-sizing: border-box;
-
-    padding:
-        1rem
-        1.25rem;
-
-    background-color:
-        var(--colour-white);
-
+    padding: 1rem 1.25rem;
+    background-color: var(--colour-white);
     overflow-x: hidden;
     overflow-y: auto;
-
-    transform:
-        translateX(100%);
-
-    transition:
-        transform 300ms ease;
+    transform: translateX(100%);
+    transition: transform 300ms ease;
 }
 
-.drawer-backdrop.drawer-open
-.finance-drawer {
-    transform:
-        translateX(0);
+.drawer-backdrop.drawer-open .finance-drawer {
+    transform: translateX(0);
 }
 
 .drawer-header {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
-
     gap: 0.75rem;
-
     margin-bottom: 0.75rem;
     padding-bottom: 0.6rem;
-
-    border-bottom:
-        1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .drawer-header h3 {
     margin: 0;
-
     font-size: 1.05rem;
 }
 
 .drawer-header button {
     width: auto;
-
-    padding:
-        0.45rem
-        0.7rem;
+    padding: 0.45rem 0.7rem;
 }
 
 .required-marker {
-    color:
-        var(--colour-error);
+    color: var(--colour-error);
 }
 
 .field-error {
-    margin:
-        -0.15rem
-        0
-        0.15rem;
-
-    color:
-        var(--colour-error);
-
+    margin: -0.15rem 0 0.15rem;
+    color: var(--colour-error);
     font-size: 0.8rem;
     font-weight: 600;
     line-height: 1.3;
@@ -704,207 +331,98 @@
 
 .add-item-form input.ng-invalid.ng-touched,
 .add-item-form select.ng-invalid.ng-touched {
-    border-color:
-        var(--colour-error);
+    border-color: var(--colour-error);
 }
 
 .add-item-form input.ng-invalid.ng-touched:focus,
 .add-item-form select.ng-invalid.ng-touched:focus {
-    border-color:
-        var(--colour-error);
-
-    box-shadow:
-        0 0 0 3px
-        rgb(217 45 32 / 15%);
+    border-color: var(--colour-error);
+    box-shadow: 0 0 0 3px rgb(217 45 32 / 15%);
 }
 
 .entry-details {
     display: flex;
     flex-direction: column;
-
     width: 100%;
 }
 
 .entry-detail {
     display: flex;
-
     justify-content: space-between;
     align-items: center;
-
     gap: 1rem;
-
-    padding:
-        0.8rem
-        0;
-
-    border-bottom:
-        1px solid #e8e8e8;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .entry-detail span {
-    color:
-        var(--colour-text-muted);
-
+    color: var(--colour-text-muted);
     font-size: 0.85rem;
 }
 
 .entry-detail strong {
     font-size: 0.9rem;
-
     text-align: right;
-
     overflow-wrap: anywhere;
-}
-
-.entry-chart-section {
-    display: flex;
-
-    justify-content: center;
-
-    width: 100%;
-
-    padding:
-        1rem
-        0
-        0.75rem;
-}
-
-.entry-donut-chart {
-    display: grid;
-
-    place-items: center;
-
-    width: 130px;
-
-    aspect-ratio:
-        1 / 1;
-
-    border-radius: 50%;
-}
-
-.entry-donut-centre {
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 74%;
-
-    aspect-ratio:
-        1 / 1;
-
-    background-color:
-        var(--colour-white);
-
-    border-radius: 50%;
-}
-
-.entry-donut-centre strong {
-    font-size: 1.15rem;
-}
-
-.entry-donut-centre span {
-    color:
-        var(--colour-text-muted);
-
-    font-size: 0.75rem;
 }
 
 .entry-actions {
     display: grid;
-
-    grid-template-columns:
-        1fr
-        1fr;
-
+    grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
-
     width: 100%;
-
     margin-top: 1rem;
 }
 
 .entry-actions > button {
     width: 100%;
     min-width: 0;
-
     margin: 0;
 }
 
-.edit-entry-button {
+.edit-entry-button,
+.remove-entry-button {
     width: 100%;
 }
 
 .remove-entry-button {
-    width: 100%;
-
-    background-color:
-        var(--colour-error);
+    background-color: var(--colour-error);
 }
 
 .delete-confirmation {
-    grid-column:
-        1 / -1;
-
+    grid-column: 1 / -1;
     display: flex;
-
     flex-direction: column;
-
     gap: 0.75rem;
-
     width: 100%;
-
-    box-sizing: border-box;
-
     padding: 1rem;
-
-    background-color:
-        rgb(217 45 32 / 6%);
-
-    border:
-        1px solid
-        rgb(217 45 32 / 35%);
-
-    border-radius:
-        var(--border-radius);
+    background-color: rgb(217 45 32 / 6%);
+    border: 1px solid rgb(217 45 32 / 35%);
+    border-radius: var(--border-radius);
 }
 
 .delete-confirmation strong {
-    color:
-        var(--colour-text);
-
+    color: var(--colour-text);
     font-size: 1rem;
 }
 
 .delete-confirmation p {
     margin: 0;
-
-    color:
-        var(--colour-text-muted);
-
+    color: var(--colour-text-muted);
     font-size: 0.85rem;
-
     line-height: 1.5;
 }
 
 .delete-confirmation-actions {
     display: grid;
-
-    grid-template-columns:
-        1fr
-        1fr;
-
+    grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
-
     width: 100%;
 }
 
 .delete-confirmation-actions button {
     width: 100%;
     min-width: 0;
-
     margin: 0;
 }
 
@@ -918,11 +436,8 @@
 
 .edit-entry-form {
     display: flex;
-
     flex-direction: column;
-
     gap: 0.5rem;
-
     width: 100%;
 }
 
@@ -933,15 +448,9 @@
 
 .edit-entry-actions {
     display: grid;
-
-    grid-template-columns:
-        1fr
-        1fr;
-
+    grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
-
     width: 100%;
-
     margin-top: 0.75rem;
 }
 
@@ -950,114 +459,20 @@
     min-width: 0;
 }
 
-.finance-view-tabs {
-    padding-bottom: 0;
-
-    border-bottom: none;
-}
-
-.finance-view-tabs
-.savings-page-action {
-    margin-left: auto;
-
-    background-color:
-        var(--colour-primary);
-
-    color:
-        var(--colour-white);
-
-    border-color:
-        var(--colour-primary);
-}
-
-.finance-view-tabs
-.savings-page-action:hover {
-    background-color:
-        var(--colour-primary-hover);
-
-    color:
-        var(--colour-white);
-}
-
-.savings-view {
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding-right: 0.25rem;
-}
-
-.savings-view >
-app-savings-goals {
-    flex: none;
-
-    min-height: auto;
-}
-
-@media (max-width: 900px) {
-    .finance-view-tabs
-    .savings-page-action {
-        grid-column:
-            1 / -1;
-
-        width: 100%;
-
-        margin-left: 0;
-    }
-
-    .savings-view {
-        overflow: visible;
-
-        padding-right: 0;
-    }
-}
-
 @media (min-width: 901px) {
     .finance-manager {
-        height:
-            calc(
-                100dvh - 170px
-            );
-
+        height: calc(100dvh - 170px);
         overflow: hidden;
     }
 
     .manager-grid {
         height: 100%;
-
         overflow: hidden;
     }
-}
 
-@media (max-width: 1100px) {
-    .account-column {
-        width: 24%;
-    }
-
-    .amount-column {
-        width: 100px;
-    }
-
-    .next-due-column {
-        width: 110px;
-    }
-
-    .paid-column {
-        width: 65px;
-    }
-
-    .more-column {
-        width: 80px;
-    }
-
-    .finance-table th,
-    .finance-table td {
-        padding:
-            0.75rem
-            0.5rem;
-    }
-
-    .finance-table {
-        font-size: 0.9rem;
+    .savings-view {
+        flex: 1 1 0;
+        height: 0;
     }
 }
 
@@ -1068,40 +483,29 @@ app-savings-goals {
 
     .finance-manager {
         display: block;
-
         overflow: visible;
     }
 
     .manager-grid {
         display: grid;
-
         grid-template-columns: 1fr;
-
         height: auto;
-
         overflow: visible;
     }
 
-    .manager-column {
+    .manager-column,
+    .summary-column {
         overflow: visible;
     }
 
     .summary-column {
         display: block;
-
-        overflow: visible;
     }
 
     .entries-column {
-        display: flex;
-
         min-height: auto;
-
         overflow: visible;
-
-        border-top:
-            1px solid #e8e8e8;
-
+        border-top: 1px solid #e8e8e8;
         border-left: none;
     }
 
@@ -1109,27 +513,12 @@ app-savings-goals {
     .savings-view,
     .payslips-view {
         flex: none;
-
         min-height: auto;
-
         overflow: visible;
     }
 
-    .table-wrapper {
-        flex: none;
-
-        min-height: auto;
-
-        overflow: visible;
-    }
-
-    .finance-table-scroll {
-        flex: none;
-
-        max-height: 520px;
-
-        overflow-y: auto;
-        overflow-x: auto;
+    .savings-view {
+        padding-right: 0;
     }
 }
 
@@ -1140,303 +529,64 @@ app-savings-goals {
 
     .finance-view-tabs {
         display: grid;
-
-        grid-template-columns:
-            repeat(
-                3,
-                minmax(0, 1fr)
-            );
-
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 0.4rem;
     }
 
     .finance-view-tabs button {
         width: 100%;
-
-        padding:
-            0.45rem
-            0.4rem;
-
+        padding: 0.45rem 0.4rem;
         font-size: 0.75rem;
     }
 
-    .finance-table-scroll {
-        max-height: 620px;
-    }
-
-    .finance-table {
-        display: block;
-
-        width: 100%;
-
-        table-layout: auto;
-    }
-
-    .finance-table thead {
-        display: none;
-    }
-
-    .finance-table tbody {
-        display: block;
-
-        width: 100%;
-    }
-
-    .finance-table tr {
-        display: block;
-
-        width: 100%;
-    }
-
-    .group-heading {
-        margin-top: 0.75rem;
-    }
-
-    .group-heading td {
-        display: block;
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        padding: 0.75rem;
-
-        background-color:
-            var(--colour-off-white);
-    }
-
-    .finance-row {
-        display: block;
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        padding:
-            0.75rem
-            0;
-
-        border-bottom:
-            1px solid #e8e8e8;
-    }
-
-    .finance-row td {
-        display: grid;
-
-        grid-template-columns:
-            minmax(
-                100px,
-                130px
-            )
-            minmax(
-                0,
-                1fr
-            );
-
-        align-items: center;
-        gap: 1rem;
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        padding:
-            0.5rem
-            0.75rem;
-
-        border-bottom: none;
-
-        text-align: right;
-    }
-
-    .finance-row td::before {
-        content:
-            attr(data-label);
-
-        display: block;
-
-        color:
-            var(--colour-text-muted);
-
-        font-size: 0.8rem;
-        font-weight: 600;
-
-        text-align: left;
-        text-transform: uppercase;
-    }
-
-    .finance-row .item-column,
-    .finance-row .account-column,
-    .finance-row .amount-column,
-    .finance-row .next-due-column,
-    .finance-row .paid-column,
-    .finance-row .more-column {
-        width: 100%;
-
-        text-align: right;
-    }
-
-    .finance-row .item-column {
-        font-weight: 700;
-    }
-
-    .finance-row .account-column {
-        color:
-            var(--colour-text);
-    }
-
-    .finance-row .next-due-column {
-        color:
-            var(--colour-text);
-    }
-
-    .finance-table
-    .finance-row
-    td.paid-column {
-        display: grid;
-
-        grid-template-columns:
-            minmax(
-                100px,
-                130px
-            )
-            minmax(
-                0,
-                1fr
-            );
-
-        align-items: center;
-        gap: 1rem;
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        padding:
-            0.5rem
-            0.75rem;
-
-        text-align: right;
-    }
-
-    .finance-row .paid-checkbox {
-        justify-self: end;
-
-        margin: 0;
-    }
-
-    .finance-table
-    .finance-row
-    td.more-column {
-        display: grid;
-
-        grid-template-columns:
-            minmax(
-                100px,
-                130px
-            )
-            minmax(
-                0,
-                1fr
-            );
-
-        align-items: center;
-        gap: 1rem;
-
-        width: 100%;
-
-        box-sizing: border-box;
-
-        padding:
-            0.5rem
-            0.75rem;
-
-        text-align: right;
-    }
-
-    .finance-row
-    .more-column
-    button {
-        justify-self: end;
-
-        width: auto;
-        min-width: 90px;
-
-        margin: 0;
+    .finance-view-tabs .savings-page-action {
+        grid-column: 1 / -1;
+        margin-left: 0;
     }
 
     .drawer-backdrop {
         position: fixed;
-
-        inset: 0;
-
         width: 100%;
         height: 100dvh;
-
         z-index: 1000;
     }
 
     .finance-drawer {
-        position: absolute;
-
-        top: 0;
-        right: 0;
-
-        width:
-            min(
-                400px,
-                100%
-            );
-
+        width: min(400px, 100%);
         height: 100dvh;
         max-height: 100dvh;
-
-        overflow-y: auto;
-
-        overscroll-behavior:
-            contain;
+        overscroll-behavior: contain;
     }
 }
 
 @media (max-width: 600px) {
     .month-navigation {
-        grid-template-columns:
-            1fr
-            1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
     .month-navigation h3 {
-        grid-column:
-            1 / -1;
-
+        grid-column: 1 / -1;
         grid-row: 1;
     }
 
     .month-navigation button:first-child {
         grid-column: 1;
-
         grid-row: 2;
     }
 
     .month-navigation button:last-child {
         grid-column: 2;
-
         grid-row: 2;
     }
 
     .entries-header {
         flex-direction: column;
-
         align-items: stretch;
     }
 
     .entries-actions {
         display: grid;
-
-        grid-template-columns:
-            1fr
-            1fr;
-
+        grid-template-columns: 1fr 1fr;
         width: 100%;
     }
 
@@ -1444,28 +594,15 @@ app-savings-goals {
         width: 100%;
     }
 
-    .savings-view
-    .entries-actions,
-    .payslips-view
-    .entries-actions {
+    .payslips-view .entries-actions {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 420px) {
     .summary-grid {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(
-                    0,
-                    1fr
-                )
-            );
-
-        gap:
-            0
-            1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 1rem;
     }
 
     .summary-column h3 {
@@ -1473,9 +610,7 @@ app-savings-goals {
     }
 
     .summary-item {
-        padding:
-            0.65rem
-            0;
+        padding: 0.65rem 0;
     }
 
     .summary-item span {
@@ -1486,86 +621,18 @@ app-savings-goals {
         font-size: 1.05rem;
     }
 
-    .finance-view-tabs {
-        grid-template-columns: 1fr;
-    }
-
+    .finance-view-tabs,
     .entries-actions {
         grid-template-columns: 1fr;
     }
 
     .finance-drawer {
         width: 100%;
-
-        padding:
-            0.85rem
-            1rem;
+        padding: 0.85rem 1rem;
     }
 
-    .edit-entry-actions {
-        grid-template-columns: 1fr;
-    }
-
+    .edit-entry-actions,
     .entry-actions {
         grid-template-columns: 1fr;
-    }
-
-    .delete-confirmation-actions {
-        grid-template-columns:
-            1fr
-            1fr;
-    }
-}
-
-.transactions-view,
-.savings-view,
-.payslips-view {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    min-height: 0;
-
-    overflow: hidden;
-}
-
-.table-wrapper {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    min-height: 0;
-
-    overflow: hidden;
-}
-
-.finance-table-scroll {
-    flex: 1;
-
-    min-height: 0;
-
-    overflow-y: auto;
-    overflow-x: auto;
-}
-
-@media (min-width: 901px) {
-    .savings-view {
-        flex: 1 1 0;
-        height: 0;
-        min-height: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding-right: 0.5rem;
-        scrollbar-gutter: stable;
-        overscroll-behavior: contain;
-    }
-
-    .savings-view >
-    app-savings-goals {
-        display: block;
-        flex: none;
-
-        width: 100%;
-        min-height: auto;
     }
 }

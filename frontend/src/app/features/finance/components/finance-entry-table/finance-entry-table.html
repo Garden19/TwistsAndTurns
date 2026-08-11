@@ -1,0 +1,245 @@
+<div class="table-wrapper">
+    <div class="finance-table-scroll">
+        <table class="finance-table">
+            <thead>
+                <tr>
+                    <th class="item-column">
+                        Item
+                    </th>
+
+                    @if (
+                        bankAccounts.length > 0
+                    ) {
+                        <th class="account-column">
+                            Account
+                        </th>
+                    }
+
+                    <th class="amount-column">
+                        Amount
+                    </th>
+
+                    <th class="next-due-column">
+                        Next due
+                    </th>
+
+                    <th class="paid-column">
+                        Paid
+                    </th>
+
+                    <th class="more-column">
+                        More
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="group-heading">
+                    <td
+                        [attr.colspan]="
+                            bankAccounts.length > 0
+                                ? 6
+                                : 5
+                        "
+                    >
+                        Income
+                    </td>
+                </tr>
+
+                @for (
+                    entry of incomeEntries;
+                    track entry.id
+                ) {
+                    <tr class="finance-row">
+                        <td
+                            class="item-column"
+                            data-label="Item"
+                        >
+                            {{ entry.name }}
+                        </td>
+
+                        @if (
+                            bankAccounts.length > 0
+                        ) {
+                            <td
+                                class="account-column"
+                                data-label="Account"
+                            >
+                                @if (
+                                    entry.bankName !== null &&
+                                    entry.bankAccountName !== null
+                                ) {
+                                    {{ entry.bankName }} -
+                                    {{ entry.bankAccountName }}
+                                } @else {
+                                    —
+                                }
+                            </td>
+                        }
+
+                        <td
+                            class="amount-column"
+                            data-label="Amount"
+                        >
+                            {{
+                                entry.amount
+                                    | currency:'GBP':'symbol':'1.2-2'
+                            }}
+                        </td>
+
+                        <td
+                            class="next-due-column"
+                            data-label="Next due"
+                        >
+                            @if (
+                                getNextDueDate(entry);
+                                as nextDueDate
+                            ) {
+                                {{
+                                    nextDueDate
+                                        | date:'d MMM yyyy'
+                                }}
+                            } @else {
+                                —
+                            }
+                        </td>
+
+                        <td
+                            class="paid-column"
+                            data-label="Paid"
+                        >
+                            <input
+                                class="paid-checkbox"
+                                type="checkbox"
+                                [checked]="entry.isPaid"
+                                (change)="
+                                    togglePaidStatus(entry)
+                                "
+                                [attr.aria-label]="
+                                    entry.isPaid
+                                        ? 'Mark ' + entry.name + ' as unpaid'
+                                        : 'Mark ' + entry.name + ' as paid'
+                                "
+                            />
+                        </td>
+
+                        <td
+                            class="more-column"
+                            data-label="More"
+                        >
+                            <button
+                                type="button"
+                                (click)="selectEntry(entry)"
+                            >
+                                More
+                            </button>
+                        </td>
+                    </tr>
+                }
+
+                <tr class="group-heading">
+                    <td
+                        [attr.colspan]="
+                            bankAccounts.length > 0
+                                ? 6
+                                : 5
+                        "
+                    >
+                        Outgoings
+                    </td>
+                </tr>
+
+                @for (
+                    entry of outgoingEntries;
+                    track entry.id
+                ) {
+                    <tr class="finance-row">
+                        <td
+                            class="item-column"
+                            data-label="Item"
+                        >
+                            {{ entry.name }}
+                        </td>
+
+                        @if (
+                            bankAccounts.length > 0
+                        ) {
+                            <td
+                                class="account-column"
+                                data-label="Account"
+                            >
+                                @if (
+                                    entry.bankName !== null &&
+                                    entry.bankAccountName !== null
+                                ) {
+                                    {{ entry.bankName }} -
+                                    {{ entry.bankAccountName }}
+                                } @else {
+                                    —
+                                }
+                            </td>
+                        }
+
+                        <td
+                            class="amount-column"
+                            data-label="Amount"
+                        >
+                            {{
+                                entry.amount
+                                    | currency:'GBP':'symbol':'1.2-2'
+                            }}
+                        </td>
+
+                        <td
+                            class="next-due-column"
+                            data-label="Next due"
+                        >
+                            @if (
+                                getNextDueDate(entry);
+                                as nextDueDate
+                            ) {
+                                {{
+                                    nextDueDate
+                                        | date:'d MMM yyyy'
+                                }}
+                            } @else {
+                                —
+                            }
+                        </td>
+
+                        <td
+                            class="paid-column"
+                            data-label="Paid"
+                        >
+                            <input
+                                class="paid-checkbox"
+                                type="checkbox"
+                                [checked]="entry.isPaid"
+                                (change)="
+                                    togglePaidStatus(entry)
+                                "
+                                [attr.aria-label]="
+                                    entry.isPaid
+                                        ? 'Mark ' + entry.name + ' as unpaid'
+                                        : 'Mark ' + entry.name + ' as paid'
+                                "
+                            />
+                        </td>
+
+                        <td
+                            class="more-column"
+                            data-label="More"
+                        >
+                            <button
+                                type="button"
+                                (click)="selectEntry(entry)"
+                            >
+                                More
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -15,6 +15,7 @@ import { PaymentHistoryChart } from "../payment-history-chart/payment-history-ch
 import { MonthlyCostTrend } from '../monthly-cost-trend/monthly-cost-trend';
 import { SavingsGoalForm } from "../savings-goal-form/savings-goal-form";
 import { SavingsGoals } from "../savings-goals/savings-goals";
+import { FinanceEntryTable } from '../finance-entry-table/finance-entry-table';
 type FinanceView = 'transactions' | 'savings' | 'payslips';
 
 @Component({
@@ -24,10 +25,10 @@ type FinanceView = 'transactions' | 'savings' | 'payslips';
     PercentPipe,
     FormsModule,
     BankAccountManager,
-    DatePipe,
     MonthlyCostTrend,
     SavingsGoalForm,
-    SavingsGoals
+    SavingsGoals,
+    FinanceEntryTable
 ],
     templateUrl: './finance-manager.html',
     styleUrl: './finance-manager.css',

@@ -4,5 +4,6 @@ export interface SavingsGoal {
     targetAmount: number;
     currentAmount: number;
     targetDate: string | null;
+    isActive: boolean;
     createdAt: string;
 }

@@ -58,5 +58,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             builder.Entity<SavingsGoal>()
                 .Property(goal => goal.CurrentAmount)
                 .HasPrecision(18, 2);
+
+            builder.Entity<SavingsGoal>()
+                .Property(goal => goal.IsActive)
+                .HasDefaultValue(true);
         }
 }

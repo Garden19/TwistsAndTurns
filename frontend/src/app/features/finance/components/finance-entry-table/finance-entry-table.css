@@ -1,0 +1,443 @@
+:host {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.table-wrapper {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.finance-table-scroll {
+    flex: 1;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: auto;
+
+    scrollbar-gutter: stable;
+}
+
+.finance-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+}
+
+.finance-table th,
+.finance-table td {
+    min-width: 0;
+
+    padding:
+        0.9rem
+        0.75rem;
+
+    vertical-align: middle;
+
+    border-bottom:
+        1px solid #ececec;
+}
+
+.finance-table thead th {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 2;
+
+    background-color:
+        var(--colour-white);
+
+    color:
+        var(--colour-text-muted);
+
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.03rem;
+}
+
+.item-column {
+    width: auto;
+
+    text-align: left;
+}
+
+.account-column {
+    width: 26%;
+
+    text-align: left;
+
+    overflow-wrap: anywhere;
+}
+
+.amount-column {
+    width: 110px;
+
+    text-align: right;
+}
+
+.next-due-column {
+    width: 125px;
+
+    text-align: center;
+}
+
+.paid-column {
+    width: 70px;
+
+    text-align: center;
+    vertical-align: middle;
+}
+
+.more-column {
+    width: 85px;
+
+    text-align: center;
+}
+
+.finance-table td.paid-column {
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+}
+
+.paid-checkbox {
+    appearance: none;
+
+    display: grid;
+    place-content: center;
+
+    width: 1.5rem;
+    height: 1.5rem;
+    min-height: 0;
+
+    margin: 0 auto;
+    padding: 0;
+
+    background-color:
+        var(--colour-white);
+
+    border:
+        2px solid #555;
+
+    border-radius: 0.35rem;
+
+    cursor: pointer;
+
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        transform 150ms ease;
+}
+
+.paid-checkbox::before {
+    content: "";
+
+    width: 0.65rem;
+    height: 0.35rem;
+
+    border-left:
+        2px solid white;
+
+    border-bottom:
+        2px solid white;
+
+    transform:
+        rotate(-45deg)
+        scale(0);
+
+    transition:
+        transform 150ms ease;
+}
+
+.paid-checkbox:checked {
+    background-color: #333;
+
+    border-color: #333;
+}
+
+.paid-checkbox:checked::before {
+    transform:
+        rotate(-45deg)
+        scale(1);
+}
+
+.paid-checkbox:hover {
+    border-color: #222;
+
+    transform:
+        scale(1.05);
+}
+
+.paid-checkbox:focus-visible {
+    outline:
+        3px solid
+        rgb(0 0 0 / 20%);
+
+    outline-offset: 2px;
+}
+
+.more-column button {
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+
+    padding:
+        0.5rem
+        0.7rem;
+
+    white-space: nowrap;
+}
+
+.group-heading td {
+    width: auto;
+
+    padding:
+        0.75rem
+        1rem;
+
+    background-color:
+        var(--colour-off-white);
+
+    color:
+        var(--colour-text-muted);
+
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    text-align: left;
+    text-transform: uppercase;
+
+    letter-spacing: 0.03rem;
+}
+
+.finance-row:hover {
+    background-color: #fafafa;
+}
+
+@media (max-width: 1100px) {
+    .account-column {
+        width: 24%;
+    }
+
+    .amount-column {
+        width: 100px;
+    }
+
+    .next-due-column {
+        width: 110px;
+    }
+
+    .paid-column {
+        width: 65px;
+    }
+
+    .more-column {
+        width: 80px;
+    }
+
+    .finance-table th,
+    .finance-table td {
+        padding:
+            0.75rem
+            0.5rem;
+    }
+
+    .finance-table {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 900px) {
+    :host {
+        flex: none;
+
+        min-height: auto;
+    }
+
+    .table-wrapper {
+        flex: none;
+
+        min-height: auto;
+
+        overflow: visible;
+    }
+
+    .finance-table-scroll {
+        flex: none;
+
+        max-height: 520px;
+
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .finance-table-scroll {
+        max-height: 620px;
+    }
+
+    .finance-table {
+        display: block;
+
+        width: 100%;
+
+        table-layout: auto;
+    }
+
+    .finance-table thead {
+        display: none;
+    }
+
+    .finance-table tbody,
+    .finance-table tr {
+        display: block;
+
+        width: 100%;
+    }
+
+    .group-heading {
+        margin-top: 0.75rem;
+    }
+
+    .group-heading td {
+        display: block;
+
+        width: 100%;
+
+        padding: 0.75rem;
+    }
+
+    .finance-row {
+        display: block;
+
+        width: 100%;
+
+        padding:
+            0.75rem
+            0;
+
+        border-bottom:
+            1px solid #e8e8e8;
+    }
+
+    .finance-row td {
+        display: grid;
+
+        grid-template-columns:
+            minmax(100px, 130px)
+            minmax(0, 1fr);
+
+        align-items: center;
+        gap: 1rem;
+
+        width: 100%;
+
+        padding:
+            0.5rem
+            0.75rem;
+
+        border-bottom: none;
+
+        text-align: right;
+    }
+
+    .finance-row td::before {
+        content:
+            attr(data-label);
+
+        display: block;
+
+        color:
+            var(--colour-text-muted);
+
+        font-size: 0.8rem;
+        font-weight: 600;
+
+        text-align: left;
+        text-transform: uppercase;
+    }
+
+    .finance-row
+    .item-column,
+    .finance-row
+    .account-column,
+    .finance-row
+    .amount-column,
+    .finance-row
+    .next-due-column,
+    .finance-row
+    .paid-column,
+    .finance-row
+    .more-column {
+        width: 100%;
+
+        text-align: right;
+    }
+
+    .finance-row
+    .item-column {
+        font-weight: 700;
+    }
+
+    .finance-table
+    .finance-row
+    td.paid-column,
+    .finance-table
+    .finance-row
+    td.more-column {
+        display: grid;
+
+        grid-template-columns:
+            minmax(100px, 130px)
+            minmax(0, 1fr);
+
+        align-items: center;
+        gap: 1rem;
+
+        width: 100%;
+
+        padding:
+            0.5rem
+            0.75rem;
+
+        text-align: right;
+    }
+
+    .finance-row
+    .paid-checkbox,
+    .finance-row
+    .more-column
+    button {
+        justify-self: end;
+
+        margin: 0;
+    }
+
+    .finance-row
+    .more-column
+    button {
+        width: auto;
+        min-width: 90px;
+    }
+}
