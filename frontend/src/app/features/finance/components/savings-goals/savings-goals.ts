@@ -24,13 +24,20 @@ export class SavingsGoals implements OnInit {
     savingsGoals: SavingsGoal[] = [];
 
     activeAddGoalId: number | null = null;
+    savingGoalId: number | null = null;
 
     goalAmounts: Record<
         number,
         number | null
     > = {};
 
-    isSavingAmount = false;
+    contributionErrors: Record<
+        number,
+        string
+    > = {};
+
+    isLoading = true;
+    loadErrorMessage = '';
 
     constructor(
         private savingsGoalService: SavingsGoalService
@@ -42,14 +49,23 @@ export class SavingsGoals implements OnInit {
     }
 
     loadSavingsGoals(): void {
+        this.isLoading = true;
+        this.loadErrorMessage = '';
+
         this.savingsGoalService
             .getSavingsGoals()
             .subscribe({
                 next: (goals) => {
                     this.savingsGoals = goals;
+                    this.isLoading = false;
                 },
                 error: (error) => {
                     console.error(error);
+
+                    this.loadErrorMessage =
+                        'Your savings goals could not be loaded.';
+
+                    this.isLoading = false;
                 }
             });
     }
@@ -57,6 +73,10 @@ export class SavingsGoals implements OnInit {
     toggleAddAmount(
         goalId: number
     ): void {
+        delete this.contributionErrors[
+            goalId
+        ];
+
         if (
             this.activeAddGoalId === goalId
         ) {
@@ -80,15 +100,22 @@ export class SavingsGoals implements OnInit {
         const amount =
             this.goalAmounts[goal.id];
 
+        delete this.contributionErrors[
+            goal.id
+        ];
+
         if (
             amount === null ||
             amount === undefined ||
             amount <= 0
         ) {
+            this.contributionErrors[goal.id] =
+                'Please enter an amount greater than £0.';
+
             return;
         }
 
-        this.isSavingAmount = true;
+        this.savingGoalId = goal.id;
 
         this.savingsGoalService
             .addContribution(
@@ -108,11 +135,15 @@ export class SavingsGoals implements OnInit {
 
                     this.goalAmounts[goal.id] = null;
                     this.activeAddGoalId = null;
-                    this.isSavingAmount = false;
+                    this.savingGoalId = null;
                 },
                 error: (error) => {
                     console.error(error);
-                    this.isSavingAmount = false;
+
+                    this.contributionErrors[goal.id] =
+                        'The contribution could not be added.';
+
+                    this.savingGoalId = null;
                 }
             });
     }
