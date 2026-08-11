@@ -16,6 +16,7 @@ import { MonthlyCostTrend } from '../monthly-cost-trend/monthly-cost-trend';
 import { SavingsGoalForm } from "../savings-goal-form/savings-goal-form";
 import { SavingsGoals } from "../savings-goals/savings-goals";
 import { FinanceEntryTable } from '../finance-entry-table/finance-entry-table';
+import { type SavingsGoal } from '../../models/savings-goal';
 type FinanceView = 'transactions' | 'savings' | 'payslips';
 
 @Component({
@@ -75,12 +76,14 @@ export class FinanceManager implements OnInit {
     }
 
     activeDrawer:
-        | 'addItem'
-        | 'bankAccounts'
-        | 'entryDetails'
-        | null = null;
+    | 'addItem'
+    | 'bankAccounts'
+    | 'entryDetails'
+    | 'savingsGoal'
+    | null = null;
 
     selectedEntry: FinanceEntry | null = null;
+    selectedSavingsGoal: SavingsGoal | null = null;
 
     ngOnInit(): void {
         this.loadBankAccounts();
@@ -232,10 +235,11 @@ export class FinanceManager implements OnInit {
     }
 
     closeDrawer(): void {
-        this.activeDrawer = null;
-        this.selectedEntry = null;
-        this.isConfirmingDelete = false;
-        this.isEditingEntry = false;
+      this.activeDrawer = null;
+      this.selectedEntry = null;
+      this.selectedSavingsGoal = null;
+      this.isConfirmingDelete = false;
+      this.isEditingEntry = false;
     }
 
     startEditingEntry(): void {
@@ -495,12 +499,22 @@ export class FinanceManager implements OnInit {
             });
     }
 
-    openSavingsGoalForm(): void {
-        this.itemKind = 'savings';
-        this.openAddForm();
+    openSavingsGoalForm(
+        goal: SavingsGoal | null = null
+    ): void {
+        this.selectedSavingsGoal = goal;
+        this.activeDrawer = 'savingsGoal';
+        this.resetDrawerScroll();
     }
 
-    handleSavingsGoalCreated(): void {
+    handleSavingsGoalSaved(): void {
+        this.savingsGoalsComponent
+            ?.loadSavingsGoals();
+
+        this.closeDrawer();
+    }
+
+    handleSavingsGoalArchived(): void {
         this.savingsGoalsComponent
             ?.loadSavingsGoals();
 

@@ -58,19 +58,42 @@
                             </p>
                         </div>
 
-                        <button
-                            type="button"
-                            class="add-toggle-button"
-                            (click)="toggleAddAmount(goal.id)"
-                        >
-                            @if (
-                                activeAddGoalId === goal.id
-                            ) {
-                                Close
-                            } @else {
-                                Add
-                            }
-                        </button>
+                        <div class="savings-goal-actions">
+                            <button
+                                type="button"
+                                class="manage-goal-button"
+                                [attr.aria-label]="
+                                    'Manage ' + goal.name
+                                "
+                                (click)="
+                                    requestManageGoal(goal)
+                                "
+                            >
+                                Manage
+                            </button>
+
+                            <button
+                                type="button"
+                                class="add-toggle-button"
+                                [attr.aria-expanded]="
+                                    activeAddGoalId === goal.id
+                                "
+                                [attr.aria-controls]="
+                                    'add-savings-' + goal.id
+                                "
+                                (click)="
+                                    toggleAddAmount(goal.id)
+                                "
+                            >
+                                @if (
+                                    activeAddGoalId === goal.id
+                                ) {
+                                    Close
+                                } @else {
+                                    Add
+                                }
+                            </button>
+                        </div>
                     </div>
 
                     <div class="savings-goal-content">
@@ -158,7 +181,12 @@
                     @if (
                         activeAddGoalId === goal.id
                     ) {
-                        <div class="add-savings-panel">
+                        <div
+                            class="add-savings-panel"
+                            [id]="
+                                'add-savings-' + goal.id
+                            "
+                        >
                             <label
                                 [for]="
                                     'add-amount-' + goal.id
@@ -188,11 +216,11 @@
                                 <button
                                     type="button"
                                     class="confirm-add-button"
-                                    (click)="
-                                        confirmAddAmount(goal)
-                                    "
                                     [disabled]="
                                         savingGoalId === goal.id
+                                    "
+                                    (click)="
+                                        confirmAddAmount(goal)
                                     "
                                 >
                                     @if (
@@ -208,7 +236,10 @@
                             @if (
                                 contributionErrors[goal.id]
                             ) {
-                                <p class="field-error">
+                                <p
+                                    class="field-error"
+                                    role="alert"
+                                >
                                     {{
                                         contributionErrors[
                                             goal.id

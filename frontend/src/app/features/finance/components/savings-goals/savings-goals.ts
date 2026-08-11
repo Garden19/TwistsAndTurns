@@ -4,7 +4,9 @@ import {
 } from '@angular/common';
 import {
     Component,
-    OnInit
+    EventEmitter,
+    OnInit,
+    Output
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { type SavingsGoal } from '../../models/savings-goal';
@@ -21,6 +23,10 @@ import { SavingsGoalService } from '../../services/savings-goal.service';
     styleUrl: './savings-goals.css'
 })
 export class SavingsGoals implements OnInit {
+    @Output()
+    manageGoalRequested =
+        new EventEmitter<SavingsGoal>();
+
     savingsGoals: SavingsGoal[] = [];
 
     activeAddGoalId: number | null = null;
@@ -68,6 +74,15 @@ export class SavingsGoals implements OnInit {
                     this.isLoading = false;
                 }
             });
+    }
+
+    requestManageGoal(
+        goal: SavingsGoal
+    ): void {
+        this.activeAddGoalId = null;
+        this.goalAmounts[goal.id] = null;
+
+        this.manageGoalRequested.emit(goal);
     }
 
     toggleAddAmount(

@@ -1,6 +1,5 @@
 <article class="finance-manager">
     <div class="manager-grid">
-
         <div class="manager-column summary-column">
             <h3>
                 Summary
@@ -75,7 +74,6 @@
         </div>
 
         <div class="manager-column entries-column">
-
             <div class="finance-view-tabs">
                 <button
                     type="button"
@@ -184,7 +182,11 @@
 
             @if (activeView === 'savings') {
                 <div class="savings-view">
-                    <app-savings-goals />
+                    <app-savings-goals
+                        (manageGoalRequested)="
+                            openSavingsGoalForm($event)
+                        "
+                    />
                 </div>
             }
 
@@ -216,7 +218,6 @@
                     </p>
                 </div>
             }
-
         </div>
     </div>
 
@@ -231,7 +232,6 @@
             role="dialog"
             aria-modal="true"
         >
-
             @if (activeDrawer === 'bankAccounts') {
                 <div class="drawer-header">
                     <h3>
@@ -247,6 +247,38 @@
                 </div>
 
                 <app-bank-account-manager />
+            }
+
+            @if (activeDrawer === 'savingsGoal') {
+                <div class="drawer-header">
+                    <h3>
+                        @if (
+                            selectedSavingsGoal === null
+                        ) {
+                            Add savings goal
+                        } @else {
+                            Manage savings goal
+                        }
+                    </h3>
+
+                    <button
+                        type="button"
+                        (click)="closeDrawer()"
+                    >
+                        Close
+                    </button>
+                </div>
+
+                <app-savings-goal-form
+                    [goal]="selectedSavingsGoal"
+                    (goalSaved)="
+                        handleSavingsGoalSaved()
+                    "
+                    (goalArchived)="
+                        handleSavingsGoalArchived()
+                    "
+                    (cancelRequested)="closeDrawer()"
+                />
             }
 
             @if (activeDrawer === 'addItem') {
@@ -536,7 +568,9 @@
                                 name="itemRecurrenceInterval"
                                 min="1"
                                 required
-                                [(ngModel)]="itemRecurrenceInterval"
+                                [(ngModel)]="
+                                    itemRecurrenceInterval
+                                "
                                 #itemRecurrenceIntervalInput="ngModel"
                             />
 
@@ -548,7 +582,8 @@
                                 )
                             ) {
                                 <p class="field-error">
-                                    Repeat interval must be at least 1.
+                                    Repeat interval must be
+                                    at least 1.
                                 </p>
                             }
 
@@ -562,22 +597,30 @@
                             <select
                                 id="item-recurrence-unit"
                                 name="itemRecurrenceUnit"
-                                [(ngModel)]="itemRecurrenceUnit"
+                                [(ngModel)]="
+                                    itemRecurrenceUnit
+                                "
                             >
                                 <option
-                                    [ngValue]="recurrenceUnits.Week"
+                                    [ngValue]="
+                                        recurrenceUnits.Week
+                                    "
                                 >
                                     Week
                                 </option>
 
                                 <option
-                                    [ngValue]="recurrenceUnits.Month"
+                                    [ngValue]="
+                                        recurrenceUnits.Month
+                                    "
                                 >
                                     Month
                                 </option>
 
                                 <option
-                                    [ngValue]="recurrenceUnits.Year"
+                                    [ngValue]="
+                                        recurrenceUnits.Year
+                                    "
                                 >
                                     Year
                                 </option>
@@ -627,8 +670,12 @@
 
                     @if (itemKind === 'savings') {
                         <app-savings-goal-form
-                            (goalCreated)="
-                                handleSavingsGoalCreated()
+                            [goal]="null"
+                            (goalSaved)="
+                                handleSavingsGoalSaved()
+                            "
+                            (cancelRequested)="
+                                closeDrawer()
                             "
                         />
                     }
@@ -664,8 +711,10 @@
 
                 @if (!isEditingEntry) {
                     @if (
-                        selectedEntry.recurringFinanceItemId !== null &&
-                        selectedEntryPaymentHistoryForDisplay.length > 1
+                        selectedEntry.recurringFinanceItemId !==
+                            null &&
+                        selectedEntryPaymentHistoryForDisplay
+                            .length > 1
                     ) {
                         <app-monthly-cost-trend
                             [financeEntries]="
@@ -689,7 +738,8 @@
                         </div>
 
                         @if (
-                            selectedEntryAnnualProjection !== null
+                            selectedEntryAnnualProjection !==
+                                null
                         ) {
                             <div class="entry-detail">
                                 <span>
@@ -747,7 +797,8 @@
 
                         @if (
                             selectedEntry.bankName !== null &&
-                            selectedEntry.bankAccountName !== null
+                            selectedEntry.bankAccountName !==
+                                null
                         ) {
                             <div class="entry-detail">
                                 <span>
@@ -755,8 +806,12 @@
                                 </span>
 
                                 <strong>
-                                    {{ selectedEntry.bankName }} -
-                                    {{ selectedEntry.bankAccountName }}
+                                    {{ selectedEntry.bankName }}
+                                    -
+                                    {{
+                                        selectedEntry
+                                            .bankAccountName
+                                    }}
                                 </strong>
                             </div>
                         }
@@ -773,12 +828,17 @@
                             </button>
 
                             @if (
-                                selectedEntry.recurringFinanceItemId !== null &&
-                                selectedEntry.isRecurringActive
+                                selectedEntry
+                                    .recurringFinanceItemId !==
+                                    null &&
+                                selectedEntry
+                                    .isRecurringActive
                             ) {
                                 <button
                                     type="button"
-                                    (click)="stopSelectedRecurringItem()"
+                                    (click)="
+                                        stopSelectedRecurringItem()
+                                    "
                                 >
                                     Stop recurring
                                 </button>
@@ -787,10 +847,14 @@
                             <button
                                 type="button"
                                 class="remove-entry-button"
-                                (click)="startDeleteConfirmation()"
+                                (click)="
+                                    startDeleteConfirmation()
+                                "
                             >
                                 @if (
-                                    selectedEntry.recurringFinanceItemId !== null
+                                    selectedEntry
+                                        .recurringFinanceItemId !==
+                                        null
                                 ) {
                                     Skip occurrence
                                 } @else {
@@ -801,45 +865,67 @@
                             <div class="delete-confirmation">
                                 <strong>
                                     @if (
-                                        selectedEntry.recurringFinanceItemId !== null
+                                        selectedEntry
+                                            .recurringFinanceItemId !==
+                                            null
                                     ) {
-                                        Skip {{ selectedEntry.name }}?
+                                        Skip
+                                        {{ selectedEntry.name }}?
                                     } @else {
-                                        Remove {{ selectedEntry.name }}?
+                                        Remove
+                                        {{ selectedEntry.name }}?
                                     }
                                 </strong>
 
                                 @if (
-                                    selectedEntry.recurringFinanceItemId !== null
+                                    selectedEntry
+                                        .recurringFinanceItemId !==
+                                        null
                                 ) {
                                     <p>
-                                        This occurrence will be skipped.
-                                        Future occurrences will continue as normal.
+                                        This occurrence will be
+                                        skipped. Future occurrences
+                                        will continue as normal.
                                     </p>
                                 } @else {
                                     <p>
-                                        This will permanently remove this finance item.
+                                        This will permanently
+                                        remove this finance item.
                                     </p>
                                 }
 
-                                <div class="delete-confirmation-actions">
+                                <div
+                                    class="
+                                        delete-confirmation-actions
+                                    "
+                                >
                                     <button
                                         type="button"
-                                        class="cancel-delete-button"
-                                        (click)="cancelDeleteConfirmation()"
+                                        class="
+                                            cancel-delete-button
+                                        "
+                                        (click)="
+                                            cancelDeleteConfirmation()
+                                        "
                                     >
                                         Cancel
                                     </button>
 
                                     <button
                                         type="button"
-                                        class="remove-entry-button"
+                                        class="
+                                            remove-entry-button
+                                        "
                                         (click)="
-                                            deleteFinanceEntry(selectedEntry)
+                                            deleteFinanceEntry(
+                                                selectedEntry
+                                            )
                                         "
                                     >
                                         @if (
-                                            selectedEntry.recurringFinanceItemId !== null
+                                            selectedEntry
+                                                .recurringFinanceItemId !==
+                                                null
                                         ) {
                                             Skip occurrence
                                         } @else {
@@ -1049,7 +1135,7 @@
                                 </option>
                             </select>
 
-                           @if (
+                            @if (
                                 editOutgoingCategoryInput.invalid &&
                                 (
                                     editOutgoingCategoryInput.touched ||
@@ -1089,7 +1175,9 @@
                         <div class="edit-entry-actions">
                             <button
                                 type="button"
-                                (click)="cancelEditingEntry()"
+                                (click)="
+                                    cancelEditingEntry()
+                                "
                             >
                                 Cancel
                             </button>
@@ -1109,7 +1197,6 @@
                     </div>
                 }
             }
-
         </aside>
     </div>
 </article>

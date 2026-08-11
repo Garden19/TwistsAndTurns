@@ -1,75 +1,263 @@
-<form #goalForm="ngForm" (ngSubmit)="onSubmit()">
-    <h3>
-        Add savings goal
-    </h3>
+<form
+    #goalForm="ngForm"
+    class="savings-goal-form"
+    (ngSubmit)="onSubmit()"
+>
+    <div class="savings-goal-field">
+        <label for="savings-goal-name">
+            Goal name
+            <span class="required-marker">*</span>
+        </label>
 
-    <label for="name">
-        Goal name
-    </label>
+        <input
+            #nameInput="ngModel"
+            id="savings-goal-name"
+            name="name"
+            type="text"
+            maxlength="100"
+            autocomplete="off"
+            required
+            [(ngModel)]="name"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        />
 
-    <input
-        id="name"
-        name="name"
-        type="text"
-        [(ngModel)]="name"
-        required
-    >
+        @if (
+            nameInput.invalid &&
+            (
+                nameInput.touched ||
+                goalForm.submitted
+            )
+        ) {
+            <p class="field-error">
+                Please enter a name for the goal.
+            </p>
+        }
+    </div>
 
-    <label for="targetAmount">
-        Target amount
-    </label>
+    <div class="savings-goal-field">
+        <label for="savings-goal-target">
+            Target amount
+            <span class="required-marker">*</span>
+        </label>
 
-    <input
-        id="targetAmount"
-        name="targetAmount"
-        type="number"
-        min="0.01"
-        step="0.01"
-        [(ngModel)]="targetAmount"
-        required
-    >
+        <input
+            #targetAmountInput="ngModel"
+            id="savings-goal-target"
+            name="targetAmount"
+            type="number"
+            [min]="
+                goal === null ||
+                goal.currentAmount < 0.01
+                    ? 0.01
+                    : goal.currentAmount
+            "
+            step="0.01"
+            inputmode="decimal"
+            required
+            [(ngModel)]="targetAmount"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        />
 
-    <label for="currentAmount">
-        Current amount
-    </label>
+        @if (
+            targetAmountInput.invalid &&
+            (
+                targetAmountInput.touched ||
+                goalForm.submitted
+            )
+        ) {
+            <p class="field-error">
+                @if (goal !== null) {
+                    The target cannot be less than
+                    the amount already saved.
+                } @else {
+                    Enter a target amount greater than £0.
+                }
+            </p>
+        }
+    </div>
 
-    <input
-        id="currentAmount"
-        name="currentAmount"
-        type="number"
-        min="0"
-        step="0.01"
-        [(ngModel)]="currentAmount"
-    >
+    @if (goal !== null) {
+        <div class="current-savings-summary">
+            <span>Already saved</span>
 
-    <label for="targetDate">
-        Target date
-    </label>
+            <strong>
+                £{{ goal.currentAmount.toFixed(2) }}
+            </strong>
+        </div>
+    } @else {
+        <div class="savings-goal-field">
+            <label for="savings-goal-current">
+                Current amount
+            </label>
 
-    <input
-        id="targetDate"
-        name="targetDate"
-        type="date"
-        [(ngModel)]="targetDate"
-    >
+            <input
+                #currentAmountInput="ngModel"
+                id="savings-goal-current"
+                name="currentAmount"
+                type="number"
+                min="0"
+                [max]="targetAmount ?? 0"
+                step="0.01"
+                inputmode="decimal"
+                [(ngModel)]="currentAmount"
+                [disabled]="
+                    isSaving ||
+                    isArchiving
+                "
+            />
+
+            @if (
+                currentAmountInput.invalid &&
+                (
+                    currentAmountInput.touched ||
+                    goalForm.submitted
+                )
+            ) {
+                <p class="field-error">
+                    The current amount must be between
+                    £0 and the target amount.
+                </p>
+            }
+        </div>
+    }
+
+    <div class="savings-goal-field">
+        <label for="savings-goal-date">
+            Target date
+            <span class="optional-label">
+                Optional
+            </span>
+        </label>
+
+        <input
+            id="savings-goal-date"
+            name="targetDate"
+            type="date"
+            [(ngModel)]="targetDate"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+        />
+    </div>
 
     @if (errorMessage !== '') {
-        <p class="field-error">
+        <p
+            class="form-error"
+            role="alert"
+        >
             {{ errorMessage }}
         </p>
     }
 
-    <button
-        type="submit"
-        [disabled]="
-            isSaving ||
-            goalForm.invalid
-        "
-    >
-        @if (isSaving) {
-            Creating...
-        } @else {
-            Create goal
-        }
-    </button>
+    <div class="savings-goal-form-actions">
+        <button
+            type="submit"
+            class="save-goal-button"
+            [disabled]="
+                isSaving ||
+                isArchiving ||
+                goalForm.invalid
+            "
+        >
+            @if (isSaving) {
+                @if (isEditing) {
+                    Saving...
+                } @else {
+                    Creating...
+                }
+            } @else {
+                @if (isEditing) {
+                    Save changes
+                } @else {
+                    Create goal
+                }
+            }
+        </button>
+
+        <button
+            type="button"
+            class="cancel-goal-button"
+            [disabled]="
+                isSaving ||
+                isArchiving
+            "
+            (click)="cancel()"
+        >
+            Cancel
+        </button>
+    </div>
+
+    @if (goal !== null) {
+        <section class="archive-goal-section">
+            @if (showArchiveConfirmation) {
+                <div
+                    class="archive-confirmation"
+                    role="alert"
+                >
+                    <strong>
+                        Archive {{ goal.name }}?
+                    </strong>
+
+                    <p>
+                        It will disappear from your
+                        dashboard, but its saved data
+                        will remain.
+                    </p>
+
+                    <div
+                        class="
+                            archive-confirmation-actions
+                        "
+                    >
+                        <button
+                            type="button"
+                            class="confirm-archive-button"
+                            [disabled]="
+                                isSaving ||
+                                isArchiving
+                            "
+                            (click)="archiveGoal()"
+                        >
+                            @if (isArchiving) {
+                                Archiving...
+                            } @else {
+                                Yes, archive
+                            }
+                        </button>
+
+                        <button
+                            type="button"
+                            class="keep-goal-button"
+                            [disabled]="
+                                isSaving ||
+                                isArchiving
+                            "
+                            (click)="cancelArchive()"
+                        >
+                            Keep goal
+                        </button>
+                    </div>
+                </div>
+            } @else {
+                <button
+                    type="button"
+                    class="archive-goal-button"
+                    [disabled]="
+                        isSaving ||
+                        isArchiving
+                    "
+                    (click)="requestArchive()"
+                >
+                    Archive goal
+                </button>
+            }
+        </section>
+    }
 </form>

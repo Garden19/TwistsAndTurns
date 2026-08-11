@@ -99,10 +99,6 @@
     font-size: 0.85rem;
 }
 
-.finance-view-tabs button:hover {
-    background-color: #e9e9e9;
-}
-
 .finance-view-tabs button.active {
     background-color: #333;
     color: var(--colour-white);
@@ -140,13 +136,6 @@
     padding-right: 0.5rem;
     scrollbar-gutter: stable;
     overscroll-behavior: contain;
-}
-
-.savings-view > app-savings-goals {
-    display: block;
-    flex: none;
-    width: 100%;
-    min-height: auto;
 }
 
 .month-navigation {
@@ -334,12 +323,6 @@
     border-color: var(--colour-error);
 }
 
-.add-item-form input.ng-invalid.ng-touched:focus,
-.add-item-form select.ng-invalid.ng-touched:focus {
-    border-color: var(--colour-error);
-    box-shadow: 0 0 0 3px rgb(217 45 32 / 15%);
-}
-
 .entry-details {
     display: flex;
     flex-direction: column;
@@ -380,11 +363,6 @@
     margin: 0;
 }
 
-.edit-entry-button,
-.remove-entry-button {
-    width: 100%;
-}
-
 .remove-entry-button {
     background-color: var(--colour-error);
 }
@@ -399,11 +377,6 @@
     background-color: rgb(217 45 32 / 6%);
     border: 1px solid rgb(217 45 32 / 35%);
     border-radius: var(--border-radius);
-}
-
-.delete-confirmation strong {
-    color: var(--colour-text);
-    font-size: 1rem;
 }
 
 .delete-confirmation p {
@@ -428,10 +401,6 @@
 
 .cancel-delete-button {
     background-color: #667085;
-}
-
-.cancel-delete-button:hover:not(:disabled) {
-    background-color: #475467;
 }
 
 .edit-entry-form {
