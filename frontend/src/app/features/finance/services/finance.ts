@@ -12,6 +12,13 @@ export class Finance {
 
     constructor(private http: HttpClient) {}
 
+    exportTransactions(): Observable<Blob> {
+        return this.http.get(`${this.apiUrl}/export`, {
+            withCredentials: true,
+            responseType: 'blob'
+        });
+    }
+
     getFinanceEntries(): Observable<FinanceEntry[]> {
         return this.http.get<FinanceEntry[]>(
             this.apiUrl,
