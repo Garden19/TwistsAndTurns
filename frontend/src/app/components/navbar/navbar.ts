@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { Authentication } from '../../features/authentication/services/authentication';
 
 @Component({
@@ -9,7 +9,7 @@ import { Authentication } from '../../features/authentication/services/authentic
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  constructor(private authentication: Authentication) {}
+  constructor(private authentication: Authentication, private router: Router) {}
   
   isLoggedIn(): Boolean {
     return this.authentication.isLoggedIn();
@@ -17,6 +17,9 @@ export class Navbar {
 
   logOut(): void {
     this.authentication.logout().subscribe({
+      next: () => {
+        void this.router.navigate(['/login'], { replaceUrl: true });
+      },
       error: () => {
         console.error('Logout failed');
       },
