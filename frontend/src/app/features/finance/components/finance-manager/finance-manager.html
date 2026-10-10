@@ -162,6 +162,18 @@
                         <div class="entries-actions">
                             <button
                                 type="button"
+                                (click)="exportTransactions()"
+                                [disabled]="isExporting"
+                            >
+                                @if (isExporting) {
+                                    Exporting...
+                                } @else {
+                                    Export all CSV
+                                }
+                            </button>
+
+                            <button
+                                type="button"
                                 (click)="openBankAccounts()"
                             >
                                 Bank accounts
@@ -175,6 +187,12 @@
                             </button>
                         </div>
                     </div>
+
+                    @if (exportErrorMessage) {
+                        <p class="field-error" role="alert">
+                            {{ exportErrorMessage }}
+                        </p>
+                    }
 
                     <app-finance-entry-table
                         [bankAccounts]="bankAccounts"
