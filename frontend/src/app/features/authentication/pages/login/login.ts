@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Authentication } from '../../services/authentication';
 import { AuthForm } from '../../components/auth-form/auth-form';
@@ -17,7 +18,7 @@ export class Login {
   loginMessage = '';
   loginSuccessful = false;
 
-  constructor(private authentication: Authentication){}
+  constructor(private authentication: Authentication, private router: Router){}
 
   onSubmit(): void {
     const loginRequest: LoginRequest = {
@@ -29,6 +30,7 @@ export class Login {
       next: (response) => {
         this.loginSuccessful = true;
         this.loginMessage = response.message;
+        void this.router.navigate(['/finance'], { replaceUrl: true });
       },
       error: (error: HttpErrorResponse) => {
         this.loginSuccessful = false;
