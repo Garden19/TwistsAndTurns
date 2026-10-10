@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 import type { NewUser } from '../models/new-user';
 import type { RegisterResponse } from '../models/register-response';
 import type { LoginRequest } from '../models/login-request';
@@ -59,19 +59,20 @@ export class Authentication {
     );
   }
 
-  restoreLoginState(): void {
-    this.http.get<LoginResponse>(
+  checkSession(): Observable<boolean> {
+    return this.http.get<LoginResponse>(
       `${this.apiUrl}/me`,
-      {
-        withCredentials: true,
-      }
-    ).subscribe({
-      next: () => {
-        this.loggedIn = true;
-      },
-      error: () => {
-        this.loggedIn = false;
-      },
-    });
+      { withCredentials: true }
+    ).pipe(
+      map(() => true),
+      catchError(() => of(false)),
+      tap((authenticated) => {
+        this.loggedIn = authenticated;
+      })
+    );
+  }
+
+  restoreLoginState(): void {
+    this.checkSession().subscribe();
   }
 }
