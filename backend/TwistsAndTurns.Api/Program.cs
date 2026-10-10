@@ -30,6 +30,11 @@ builder.Services
     {
         options.User.RequireUniqueEmail = true;
 
+        // Limit repeated password guesses per account.
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+
         options.Password.RequiredLength = 8;
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
@@ -43,7 +48,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+        ? CookieSecurePolicy.SameAsRequest
+        : CookieSecurePolicy.Always;
 });
 
 builder.Services.AddCors(options =>
