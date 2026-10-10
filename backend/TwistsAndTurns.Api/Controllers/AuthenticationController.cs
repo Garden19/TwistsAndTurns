@@ -104,8 +104,16 @@ public async Task<IActionResult> Login(
             user,
             request.Password,
             isPersistent: true,
-            lockoutOnFailure: false
+            lockoutOnFailure: true
         );
+
+        if (result.IsLockedOut)
+        {
+            return StatusCode(StatusCodes.Status429TooManyRequests, new
+            {
+                message = "Too many unsuccessful attempts. Try again in 15 minutes."
+            });
+        }
 
         if (!result.Succeeded)
         {
