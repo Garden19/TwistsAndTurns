@@ -83,6 +83,10 @@ public class FinanceExportController : ControllerBase
             DateTime.UtcNow.ToString("yyyyMMdd", CultureInfo.InvariantCulture) +
             ".csv";
 
+        // Financial downloads should not be cached by proxies or browsers.
+        Response.Headers.CacheControl = "private, no-store";
+        Response.Headers.Pragma = "no-cache";
+
         return File(bytes, "text/csv; charset=utf-8", filename);
     }
 
