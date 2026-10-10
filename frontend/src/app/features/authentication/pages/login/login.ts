@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Authentication } from '../../services/authentication';
 import { AuthForm } from '../../components/auth-form/auth-form';
@@ -29,9 +30,11 @@ export class Login {
         this.loginSuccessful = true;
         this.loginMessage = response.message;
       },
-      error: () => {
+      error: (error: HttpErrorResponse) => {
         this.loginSuccessful = false;
-        this.loginMessage = 'Incorrect email or password';
+        this.loginMessage = error.status === 429
+          ? 'Too many unsuccessful attempts. Try again in 15 minutes.'
+          : 'Incorrect email or password';
       },
     });
   }
