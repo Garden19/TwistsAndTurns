@@ -76,6 +76,39 @@ export class FinanceManager implements OnInit {
     isEditingEntry = false;
 
     activeView: FinanceView = 'transactions';
+    isExporting = false;
+    exportErrorMessage = '';
+
+    exportTransactions(): void {
+        if (this.isExporting) {
+            return;
+        }
+
+        this.isExporting = true;
+        this.exportErrorMessage = '';
+
+        this.financeService.exportTransactions().subscribe({
+            next: (file) => {
+                const url = URL.createObjectURL(file);
+                const anchor = document.createElement('a');
+
+                anchor.href = url;
+                anchor.download = 'twistsandturns-transactions-' +
+                    new Date().toISOString().slice(0, 10) + '.csv';
+
+                document.body.appendChild(anchor);
+                anchor.click();
+                anchor.remove();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                this.isExporting = false;
+            },
+            error: () => {
+                this.isExporting = false;
+                this.exportErrorMessage =
+                    'Unable to export transactions. Please try again.';
+            }
+        });
+    }
     setActiveView(
         view: FinanceView
     ): void {
