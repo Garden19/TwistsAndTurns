@@ -1,59 +1,72 @@
 # TwistsAndTurns
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.32.
+TwistsAndTurns is a personal finance web application built with Angular and ASP.NET Core. Track income and expenses, bank accounts, recurring payments, savings goals and payslips in one place.
 
-## Development server
+## Technology
 
-To start a local development server, run:
+- **Frontend:** Angular 20, TypeScript and Chart.js
+- **Backend:** ASP.NET Core (.NET 10), Entity Framework Core and ASP.NET Core Identity
+- **Database:** Microsoft SQL Server (the development connection targets a local SQL Server Express instance)
 
-```bash
-ng serve
+## Getting started (Windows PowerShell)
+
+### Prerequisites
+
+Install Node.js, the .NET 10 SDK and SQL Server Express (or another compatible SQL Server instance). The backend uses Windows integrated authentication in the checked-in development connection string. Update the connection string for your own environment without committing credentials.
+
+Clone the repository, then navigate to its folder:
+
+```powershell
+git clone https://github.com/Garden19/TwistsAndTurns.git
+Set-Location .\TwistsAndTurns
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+If you have not already installed the Entity Framework Core CLI:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```powershell
+dotnet tool install --global dotnet-ef --version "10.*"
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Apply the existing database migrations:
 
-```bash
-ng generate --help
+```powershell
+dotnet ef database update --project .\backend\TwistsAndTurns.Api\TwistsAndTurns.Api.csproj
 ```
 
-## Building
+Run the API in the first terminal:
 
-To build the project run:
-
-```bash
-ng build
+```powershell
+dotnet run --project .\backend\TwistsAndTurns.Api\TwistsAndTurns.Api.csproj --launch-profile http
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The development API listens on **http://localhost:5200**.
 
-## Running unit tests
+In a separate PowerShell terminal, from the repository root:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+```powershell
+Set-Location .\frontend
+npm ci
+npm start
 ```
 
-## Running end-to-end tests
+Open **http://localhost:4200** to use the Angular application.
 
-For end-to-end (e2e) testing, run:
+## Main features
 
-```bash
-ng e2e
-```
+- **Finance:** Add, edit and categorise income and expenses, associate bank accounts, and mark payments as paid.
+- **Recurring items:** Generate entries for selected dates and stop future occurrences.
+- **Savings:** Create savings goals, record contributions, edit and archive goals.
+- **Payslips:** Manually enter pay and deductions, filter by UK tax year, and edit or archive existing records.
+- **CSV export:** In Finance → Transactions, select **Export all CSV** to download the signed-in user's transaction history. It includes records from all months, including skipped recurring entries flagged as skipped.
+- **Account security:** Cookie-based authentication, a 15-minute lockout after five failed sign-in attempts, and session checks before opening the finance screen.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Checks
 
-## Additional Resources
+GitHub Actions runs an Angular production build and a .NET Release build for changes pushed to `master`. A successful build does not guarantee runtime behaviour or database connectivity.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Security and deployment notes
+
+- Financial records and database backups must not be committed to the repository.
+- Keep database passwords, signing material and other secrets outside tracked source files.
+- The development setup permits local HTTP; deploy behind HTTPS and review cookie, CORS, CSRF and authentication settings before public use.
+- Plan secure backups, database access controls, privacy documentation, monitoring and integration tests before handling live financial data at scale.
